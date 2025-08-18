@@ -166,7 +166,7 @@ layerrule = blur, ^eqsh-blur$
 
 ## ⚖️ License
 
-This project is released under the **GNU GPL v3 License**.  
+This project is released under the **APACHE-2.0 License**.  
 You are free to use, modify, and distribute — but all changes must remain open-source.
 
 ---
