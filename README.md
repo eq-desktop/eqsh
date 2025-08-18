@@ -11,7 +11,7 @@
 
 <table align="center">
   <tr>
-    <td><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></td>
+    <td><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a></td>
     <td><a href="https://github.com/e3nviction/eqSh/stargazers"><img src="https://img.shields.io/github/stars/e3nviction/eqSh?style=flat" alt="GitHub stars"></a></td>
     <td><a href="https://github.com/e3nviction/eqSh/issues"><img src="https://img.shields.io/github/issues/e3nviction/eqSh" alt="GitHub issues"></a></td>
     <td><a href="https://github.com/e3nviction/eqSh"><img src="https://img.shields.io/github/last-commit/e3nviction/eqSh" alt="GitHub last commit"></a></td>
