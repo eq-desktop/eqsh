@@ -5,13 +5,9 @@
 
 ---
 
-<table align="center">
-  <tr>
-	<td align="center">
-	  <img src="./assets/logo.svg" alt="eqSh Logo" width="160"/>
-	</td>
-  </tr>
-</table>
+<p align="center">
+	<img src="./assets/logo.svg" alt="eqSh Logo" width="160"/>
+</p>
 
 <table align="center">
   <tr>
