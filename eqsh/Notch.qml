@@ -88,7 +88,7 @@ Scope {
           animationSpeed: 200
           animationSpeed2: 150
 
-          highlight: root.expanded ? '#fff' : "transparent"
+          highlight: root.expanded ? '#aaa' : "transparent"
           weakHighlight: root.expanded ? '#000' : "transparent"
 
           HyprlandFocusGrab {
