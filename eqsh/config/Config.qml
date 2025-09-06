@@ -85,7 +85,7 @@ Singleton {
 		property bool   liquidBlur: false
 		property bool   liquidBlurMax: false
 		property int    liquidDuration: 7000
-		property real   zoom: 1.5
+		property real   zoom: 1.05
 		property int    zoomDuration: 300
 		property bool   useCustomWallpaper: false
 		property string customWallpaperPath: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
