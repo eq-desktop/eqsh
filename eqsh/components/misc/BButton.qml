@@ -12,6 +12,8 @@ import qs.components.misc
 import QtQuick.Controls.Fusion
 
 Button {
+  id: root
+  signal click()
   palette.buttonText: "#fff"
   Layout.minimumWidth: 50
   Layout.preferredHeight: 25
@@ -22,22 +24,18 @@ Button {
     radius: 20
     highlight: "transparent"
     weakHighlight: "transparent"
-    borderColor: "transparent"
   }
   MouseArea {
     anchors.fill: parent
     hoverEnabled: true
     onEntered: {
-      bgRect.color = "#22555555";
-      bgRect.borderColor = Config.bar.glintButtons ? "#ffaaaaaa" : "transparent";
-      bgRect.highlight = Config.bar.glintButtons ? 'rgba(255, 255, 255, 0.5)' : "transparent";
-      bgRect.weakHighlight = Config.bar.glintButtons ? 'rgba(255, 255, 255, 0.3)' : "transparent";
+      bgRect.color = "#22ffffff";
     }
     onExited: {
       bgRect.color = "transparent";
-      bgRect.borderColor = "transparent";
-      bgRect.highlight = "transparent";
-      bgRect.weakHighlight = "transparent";
+    }
+    onClicked: {
+      root.click()
     }
   }
 }

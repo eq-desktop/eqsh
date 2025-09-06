@@ -29,7 +29,7 @@ AniRectangle {
 	implicitHeight:	notifSize
 	implicitWidth: 400
 
-	borderColor: modelData.urgency == "critical" ? "#ff555555" : "#22555555"
+	highlight: modelData.urgency == "critical" ? "#ff555555" : "#22555555"
 
 	anchors.topMargin: 20
 

@@ -6,7 +6,7 @@ import qs.config
 
 ShellRoot {
 	id: root
-	property bool visible: Config.misc.activateLinux
+	property bool visible: Config.general.activationKey == ""
 	Variants {
 		model: Quickshell.screens
 
@@ -42,13 +42,13 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Activate Linux"
+					text: "Activate eqOS"
 					color: "#50ffffff"
 					font.pointSize: 22
 				}
 
 				Text {
-					text: "Go to Settings to activate Linux"
+					text: "Go to Settings to activate eqOS"
 					color: "#50ffffff"
 					font.pointSize: 14
 				}

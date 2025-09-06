@@ -6,7 +6,7 @@ import qs.config
 
 ShellRoot {
 	id: root
-	property bool visible: Config.misc.betaVersion
+	property bool visible: Config.misc.showVersion
 	Variants {
 		model: Quickshell.screens
 
@@ -42,7 +42,7 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Beta 0.0.57"
+					text: "Beta 0.0.60"
 					color: "#50ffffff"
 					font.pointSize: 22
 				}

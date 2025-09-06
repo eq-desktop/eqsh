@@ -30,8 +30,27 @@ Rectangle {
 	function unlock() {
 		if (fadeOutAnim.running)
 			return;
-
 		fadeOutAnim.start();
+		scaleAnim.start();
+		scaleAnim2.start();
+	}
+
+
+	PropertyAnimation {
+		id: scaleAnim
+		target: contentItem
+		property: "scale"
+		to: Config.lockScreen.zoom
+		duration: Config.lockScreen.zoomDuration
+		easing.type: Easing.InOutQuad
+	}
+	PropertyAnimation {
+		id: scaleAnim2
+		target: contentItem
+		property: "opacity"
+		to: 0
+		duration: Config.lockScreen.zoomDuration
+		easing.type: Easing.InOutQuad
 	}
 
 	opacity: 0;
@@ -50,9 +69,8 @@ Rectangle {
 		anchors.fill: backgroundImage
 		source: backgroundImage
 		blurEnabled: true
-		visible: !Config.lockScreen.xRay && Config.lockScreen.blur
 		autoPaddingEnabled: false
-		blur: 1
+		blur: Config.lockScreen.blur
 		blurMax: 64 * Config.lockScreen.blurStrength
 		blurMultiplier: 1
 		SequentialAnimation on blur {
@@ -69,26 +87,6 @@ Rectangle {
 		}
 	}
 
-	ScreencopyView {
-		id: screencopy
-		anchors.fill: parent
-		visible: Config.lockScreen.xRay
-		paintCursor: false
-		captureSource: Quickshell.screens[0]
-	}
-
-	MultiEffect {
-		id: screencopyBlur
-		anchors.fill: screencopy
-		source: screencopy
-		visible: Config.lockScreen.xRayBlur && Config.lockScreen.xRay
-		autoPaddingEnabled: false
-		blurEnabled: true
-		blur: 1
-		blurMax: 64 * Config.lockScreen.blurStrength
-		blurMultiplier: 1
-	}
-
 	ShaderEffect {
 		id: shader
 		visible: Config.lockScreen.enableShader
@@ -96,7 +94,7 @@ Rectangle {
 		property vector2d sourceResolution: Qt.vector2d(width, height)
 		property vector2d resolution: Qt.vector2d(width, height)
 		property real time: 0
-		property variant source: Config.lockScreen.xRay ? screencopy : backgroundImage
+		property variant source: backgroundImage
 		FrameAnimation {
 			running: true
 			onTriggered: {
@@ -110,145 +108,161 @@ Rectangle {
 	Image {
 		id: backgroundImage
 		source: wallpaperImage
-		visible: !Config.lockScreen.xRay
 		fillMode: Image.PreserveAspectCrop
 		opacity: 0
 		anchors.fill: parent
 	}
-
-	Label {
-		id: clock
-		property var date: new Date()
-
-		anchors {
-			horizontalCenter: parent.horizontalCenter
-			top: parent.top
-			topMargin: 100
+	Item {
+		id: contentItem
+		anchors.fill: parent
+		scale: Config.lockScreen.zoom
+		opacity: 0
+		Component.onCompleted: {
+			contentItem.scale = 1;
+			contentItem.opacity = 1;
 		}
-
-		renderType: Text.NativeRendering
-		color: "#aaffffff"
-		font.pointSize: 80
-
-		Timer {
-			running: true
-			repeat: true
-			interval: 1000
-
-			onTriggered: clock.date = new Date();
+		Behavior on scale {
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
 		}
-
-		text: {
-			const hours = this.date.getHours().toString().padStart(2, '0');
-			const minutes = this.date.getMinutes().toString().padStart(2, '0');
-			return `${hours}:${minutes}`;
+		Behavior on opacity {
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
 		}
-	}
+		Label {
+			id: clock
+			property var date: new Date()
 
-	Label {
-		id: dateClock
-		property var date: new Date()
-
-		anchors {
-			horizontalCenter: parent.horizontalCenter
-			top: parent.top
-			topMargin: 75
-		}
-
-		renderType: Text.NativeRendering
-		color: "#aaffffff"
-		font.pointSize: 16
-
-		Timer {
-			running: true
-			repeat: true
-			interval: 60000
-
-			onTriggered: clock.date = new Date();
-		}
-
-		text: {
-			return Qt.formatDateTime(clock.date, "ddd MMM dd");
-		}
-	}
-
-	ColumnLayout {
-
-		anchors {
-			horizontalCenter: parent.horizontalCenter
-			bottom: parent.bottom
-			bottomMargin: 25
-		}
-
-		RowLayout {
-			Box {
-				id: passwordBoxContainer
-				width: 400
-				height: 35
-				borderColor: "#55ffffff"
-				color: "transparent"
-				TextField {
-					id: passwordBox
-
-					background: Rectangle {
-						color: "transparent";
-					}
-					color: "#fff";
-
-					implicitWidth: 400
-					implicitHeight: 35
-					padding: 10
-
-					focus: true
-					enabled: !root.context.unlockInProgress
-					echoMode: TextInput.Password
-					inputMethodHints: Qt.ImhSensitiveData
-
-					onTextChanged: root.context.currentText = this.text;
-
-					onAccepted: root.context.tryUnlock();
-
-					Connections {
-						target: root.context
-
-						function onCurrentTextChanged() {
-							passwordBox.text = root.context.currentText;
-						}
-					}
-				}
+			anchors {
+				horizontalCenter: parent.horizontalCenter
+				top: parent.top
+				topMargin: 100
 			}
 
-			Box {
-				width: 35
-				height: 35
-				color: "transparent"
-				Button {
-					text: "\u2192"
-					padding: 10
-					background: Rectangle {
-						color: "transparent";
-					}
-					palette.button: "white";
-					palette.buttonText: "white";
+			renderType: Text.NativeRendering
+			color: "#ddffffff"
+			font.pointSize: 80
 
-					font.pointSize: 14
+			Timer {
+				running: true
+				repeat: true
+				interval: 1000
 
-					implicitWidth: 35;
-					implicitHeight: 35;
+				onTriggered: clock.date = new Date();
+			}
 
-					focusPolicy: Qt.NoFocus
-
-					enabled: !root.context.unlockInProgress && root.context.currentText !== "";
-					onClicked: root.context.tryUnlock();
-				}
+			text: {
+				const hours = this.date.getHours().toString().padStart(2, '0');
+				const minutes = this.date.getMinutes().toString().padStart(2, '0');
+				return `${hours}:${minutes}`;
 			}
 		}
 
 		Label {
-			visible: root.context.showFailure
-			text: "Incorrect password"
+			id: dateClock
+			property var date: new Date()
+
+			anchors {
+				horizontalCenter: parent.horizontalCenter
+				top: parent.top
+				topMargin: 75
+			}
+
+			renderType: Text.NativeRendering
+			color: "#aaffffff"
+			font.pointSize: 16
+
+			Timer {
+				running: true
+				repeat: true
+				interval: 60000
+
+				onTriggered: clock.date = new Date();
+			}
+
+			text: {
+				return Qt.formatDateTime(clock.date, "ddd MMM dd");
+			}
+		}
+
+		ColumnLayout {
+
+			anchors {
+				horizontalCenter: parent.horizontalCenter
+				bottom: parent.bottom
+				bottomMargin: 25
+			}
+
+			RowLayout {
+				Box {
+					id: passwordBoxContainer
+					width: 400
+					height: 35
+					highlight: "#ffffff"
+					color: "#dd555555"
+					TextField {
+						id: passwordBox
+
+						background: Rectangle {
+							color: "transparent";
+						}
+						color: "#fff";
+
+						implicitWidth: 400
+						implicitHeight: 35
+						padding: 10
+
+						focus: true
+						enabled: !root.context.unlockInProgress
+						echoMode: TextInput.Password
+						inputMethodHints: Qt.ImhSensitiveData
+
+						onTextChanged: root.context.currentText = this.text;
+
+						onAccepted: root.context.tryUnlock();
+
+						Connections {
+							target: root.context
+
+							function onCurrentTextChanged() {
+								passwordBox.text = root.context.currentText;
+							}
+						}
+					}
+				}
+
+				Box {
+					width: 35
+					height: 35
+					color: "#dd555555"
+					Button {
+						text: "\u2192"
+						padding: 10
+						background: Rectangle {
+							color: "transparent";
+						}
+						palette.button: "white";
+						palette.buttonText: "white";
+
+						font.pointSize: 14
+
+						implicitWidth: 35;
+						implicitHeight: 35;
+
+						focusPolicy: Qt.NoFocus
+
+						enabled: !root.context.unlockInProgress && root.context.currentText !== "";
+						onClicked: root.context.tryUnlock();
+					}
+				}
+			}
+
+			Label {
+				visible: root.context.showFailure
+				color: "#fff"
+				text: "Incorrect password"
+			}
 		}
 	}
+	
 	Item {
 		anchors {
 			top: parent.top

@@ -88,9 +88,8 @@ Scope {
           animationSpeed: 200
           animationSpeed2: 150
 
-          borderColor: root.expanded ? "#ff555555" : "transparent"
-          highlight: root.expanded ? 'rgba(255, 255, 255, 0.5)' : "transparent"
-          weakHighlight: root.expanded ? 'rgba(255, 255, 255, 0.3)' : "transparent"
+          highlight: root.expanded ? '#fff' : "transparent"
+          weakHighlight: root.expanded ? '#000' : "transparent"
 
           HyprlandFocusGrab {
             id: grab
@@ -144,7 +143,6 @@ Scope {
               }
               root.expanded = false;
               grab.active = false;
-              searchInput.focus = false;
             }
           }
 

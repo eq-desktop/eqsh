@@ -5,7 +5,6 @@ import QtQuick.Shapes
 Item {
     id: root
     anchors.fill: parent
-
     property var cornerType: "cubic" // cubic, rounded or inverted
     property int cornerHeight: 30
     property int cornerWidth: cornerHeight // default is square, but you can set a separate width

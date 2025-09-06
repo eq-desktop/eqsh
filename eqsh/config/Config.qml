@@ -14,9 +14,13 @@ Singleton {
 	readonly property Notifications notifications: Notifications {}
 	readonly property Dialogs dialogs: Dialogs {}
 	readonly property General general: General {}
+	readonly property DesktopWidgets desktopWidgets: DesktopWidgets {}
+
+	property string homeDirectory: "/home/enviction"
 
 	component General: QtObject {
 		property bool darkMode: true
+		property string activationKey: "060-XXX-YYY-ZZZ-000"
 	}
 
 	component Notifications: QtObject {
@@ -39,18 +43,18 @@ Singleton {
 
 	component Notch: QtObject {
 		property bool   enable: true
-		property bool   islandMode: false // Dynamic Island
+		property bool   islandMode: true // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
 		property int    radius: 20
-		property int    height: 35
+		property int    height: 25
 		property int    minWidth: 200
 		property int    maxWidth: 400
 		property bool   onlyVisual: false
 		property int    hideDuration: 10
 		property bool   fluidEdge: true // Cutout corners
 		property real   fluidEdgeStrength: 0.4 // can be 0-1
-		property string signature: "enviction@nixos" // A custom string that displays when Notch is not being used. Leave empty to disable
+		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
 		property color  signatureColor: "#fff"
 		property bool   autohide: false
 	}
@@ -65,9 +69,6 @@ Singleton {
 		property string defaultAppName: "eqSh" // When no toplevel is focused it will show this text. Ideas: "eqSh" | "Hyprland" | "YOURUSERNAME"
 		property string dateFormat: "ddd dd MMM HH:mm"
 		property bool   autohide: false
-
-		// Asthetic
-		property bool glintButtons: true
 	}
 
 	component ScreenEdges: QtObject {
@@ -78,16 +79,16 @@ Singleton {
 
 	component LockScreen: QtObject {
 		property bool   enable: true
-		property int    fadeDuration: 700
-		property bool   xRay: false
-		property bool   xRayBlur: false
-		property bool   blur: true
+		property int    fadeDuration: 500
+		property real   blur: 0
 		property real   blurStrength: 1
-		property bool   liquidBlur: true
+		property bool   liquidBlur: false
 		property bool   liquidBlurMax: false
 		property int    liquidDuration: 7000
+		property real   zoom: 1.5
+		property int    zoomDuration: 300
 		property bool   useCustomWallpaper: false
-		property string customWallpaperPath: "/home/enviction/Pictures/wallpaper/mac/Donut.png"
+		property string customWallpaperPath: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining" // Not compatible with Blur or X-Ray
 		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
@@ -95,17 +96,25 @@ Singleton {
 	}
 
 	component Misc: QtObject {
-		property bool activateLinux: false
-		property bool betaVersion: false
+		property bool showVersion: true
 	}
 
 	component Wallpaper: QtObject {
 		property bool   enabled: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: "/home/enviction/wallpapers/collision.png"
+		property string path: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
 		property string shaderVert: "shaders/Raining.vert.qsb"
+	}
+
+	component DesktopWidgets: QtObject {
+		property bool   enabled: true
+		property bool   clockEnable: false
+		property string clockColor: "#ffffff"
+		property string clockPosition: "tr" // supports: t=top l=left r=right b=bottom v=verticalCenter h=horizontalCenter
+		property int    clockMargins: 100
+		property string clockFormat: "hh.mm"
 	}
 }

@@ -22,14 +22,11 @@ Scope {
 
 			WlSessionLock {
 				id: lock
-
 				locked: true
-
 				onLockedChanged: {
 					if (!locked)
 						loader.active = false;
 				}
-
 				WlSessionLockSurface {
 					color: "transparent"
 					LockSurface {

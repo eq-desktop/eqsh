@@ -10,6 +10,10 @@ Singleton {
     Qt.formatDateTime(clock.date, Config.bar.dateFormat);
   }
 
+  function getTime(format) {
+    return Qt.formatDateTime(clock.date, format);
+  }
+
   SystemClock {
     id: clock
     precision: SystemClock.Seconds

@@ -24,10 +24,11 @@ Scope {
     model: Quickshell.screens
 
     PanelWindow {
+      id: panelWindow
       WlrLayershell.layer: WlrLayer.Overlay
       required property var modelData
       screen: modelData
-			WlrLayershell.namespace: "eqsh-blur"
+      WlrLayershell.namespace: "eqsh-blur"
 
       property string applicationName: Config.bar.defaultAppName
 
@@ -50,6 +51,8 @@ Scope {
       color: root.appInFullscreen ? Config.bar.fullscreenColor : Config.bar.color
 
       visible: Config.bar.enable
+
+      Barblock {}
 
       RowLayout {
         spacing: -6
@@ -110,14 +113,7 @@ Scope {
 
         BButton{Battery {}}
 
-        BButton {VectorImage {
-          id: rBWifi
-          source: "../../assets/svgs/wifi-clear.svg"
-          width: 24
-          height: 24
-          preferredRendererType: VectorImage.CurveRenderer
-          anchors.centerIn: parent
-        }}
+        BButton {Wifi {}}
 
         BButton {VectorImage {
           id: rBBluetooth
@@ -139,16 +135,22 @@ Scope {
           anchors.centerIn: parent
         }}
 
-        BButton {VectorImage {
-          id: rBControlCenter
-          source: "../../assets/svgs/control-center.svg"
-          width: 24
-          height: 24
-          Layout.preferredWidth: 24
-          Layout.preferredHeight: 24
-          preferredRendererType: VectorImage.CurveRenderer
-          anchors.centerIn: parent
-        }}
+        BButton {
+          VectorImage {
+            id: rBControlCenter
+            source: "../../assets/svgs/control-center.svg"
+            width: 24
+            height: 24
+            Layout.preferredWidth: 24
+            Layout.preferredHeight: 24
+            preferredRendererType: VectorImage.CurveRenderer
+            anchors.centerIn: parent
+          }
+          onClick: controlCenter.open()
+          ControlCenter {
+            id: controlCenter
+          }
+        }
 
         BButton{
           text: Time.time

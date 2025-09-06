@@ -17,6 +17,7 @@ Scope {
   property string customAppName: ""
   Background {}
   ScreenCorners {}
+  //Dock {}
   Bar {
     id: bar
     customAppName: root.customAppName
@@ -88,12 +89,16 @@ Scope {
   }
   NotificationList {}
   ActivateLinux {}
-  Beta {}
+  Version {}
   Dialog {
     id: dialog
     onCustomAppNameChanged: {
       root.customAppName = dialog.customAppName;
     }
   }
-  //Test {}
+  // PanelWindow {
+  //   implicitHeight: 500
+  //   implicitWidth: 500
+  //   Test {}
+  // }
 }

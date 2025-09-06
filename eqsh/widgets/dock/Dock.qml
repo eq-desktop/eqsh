@@ -19,6 +19,7 @@ Scope {
     height: 50
     implicitHeight: 50
     implicitWidth: 50
+    scale: 1
     signal hover()
     signal unhover()
     MouseArea {

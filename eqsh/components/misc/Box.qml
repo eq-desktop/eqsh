@@ -7,9 +7,8 @@ Item {
 
     property color color: "#22ffffff"
     property int borderSize: 1
-    property color borderColor: '#22ffffff'
-    property string highlight: 'rgba(255, 255, 255, 0.5)'
-    property string weakHighlight: 'rgba(255, 255, 255, 0.3)'
+    property string highlight: '#fff'
+    property string weakHighlight: 'transparent'
 
     // Individual corner radii
     property int radius: 20
@@ -18,20 +17,23 @@ Item {
     property int bottomRightRadius: radius
     property int bottomLeftRadius: radius
 
-    property int animationSpeed: 50
-    property int animationSpeed2: 25
+    property int animationSpeed: 16
+    property int animationSpeed2: 16
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
     Behavior on highlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
     Behavior on weakHighlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
 
     onColorChanged: canvas.requestPaint();
-    onBorderColorChanged: canvas.requestPaint();
     onTopLeftRadiusChanged: canvas.requestPaint();
     onTopRightRadiusChanged: canvas.requestPaint();
     onBottomRightRadiusChanged: canvas.requestPaint();
     onBottomLeftRadiusChanged: canvas.requestPaint();
     onHighlightChanged: canvas.requestPaint();
+    onWeakHighlightChanged: canvas.requestPaint();
+    onWidthChanged: canvas.requestPaint();
+    onHeightChanged: canvas.requestPaint();
+    
 
     Canvas {
         id: canvas
@@ -39,8 +41,8 @@ Item {
 
         onPaint: {
             const ctx = getContext("2d");
-            const w = width;
-            const h = height;
+            const w = width - 2;
+            const h = height - 2;
 
             const tl = Math.max(0, Math.min(topLeftRadius, Math.min(w, h) / 2));
             const tr = Math.max(0, Math.min(topRightRadius, Math.min(w, h) / 2));
@@ -48,10 +50,13 @@ Item {
             const bl = Math.max(0, Math.min(bottomLeftRadius, Math.min(w, h) / 2));
 
             ctx.reset();
-            ctx.clearRect(0, 0, w, h);
+            ctx.clearRect(0, 0, width, height); // clear whole canvas
             ctx.save();
 
-            // Rounded rect path (per-corner radii)
+            // offset everything so stroke is centered
+            ctx.translate(1, 1);
+
+            // Rounded rect path
             ctx.beginPath();
             ctx.moveTo(tl, 0);
             ctx.lineTo(w - tr, 0);
@@ -68,55 +73,77 @@ Item {
             ctx.fillStyle = color;
             ctx.fill();
 
-            // Stroke border
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // Highlight lines
-            const y = 0.5;
-            const bottomY = h - 0.5;
-
-            const topGradient = ctx.createLinearGradient(tl, y, w - tr, y);
-            topGradient.addColorStop(0, highlight !== "transparent" ? weakHighlight : 'transparent');
-            topGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            const bottomGradient = ctx.createLinearGradient(bl, bottomY, w - br, bottomY);
-            bottomGradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
-            bottomGradient.addColorStop(1, highlight !== "transparent" ? weakHighlight : 'transparent');
-
-            // Top highlight
-            ctx.beginPath();
-            ctx.moveTo(tl, y);
-            ctx.lineTo(w - tr, y);
-            ctx.strokeStyle = topGradient;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            // Top-left corner highlight
+            // === Highlights ===
             ctx.beginPath();
             ctx.moveTo(tl, 0);
-            ctx.arcTo(0, 0, 0, tl, tl);
-            ctx.strokeStyle = highlight !== "transparent" ? highlight : 'transparent';
+            ctx.lineTo(w - tr, 0);
+            ctx.arcTo(w, 0, w, tr, tr);
+            ctx.lineTo(w, h - br);
+            ctx.arcTo(w, h, w - br, h, br);
+            ctx.lineTo(bl, h);
+            ctx.arcTo(0, h, 0, h - bl, bl);
+            ctx.lineTo(0, tl);
+            ctx.arcTo(0, 0, tl, 0, tl);
+            ctx.closePath();
+
+            ctx.strokeStyle = highlight;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+
+            // Erase
+            ctx.globalCompositeOperation = "destination-out";
+
+            // Top-right corner cut
+            ctx.beginPath();
+            ctx.moveTo(w - tr, 0);
+            ctx.arcTo(w, 0, w, tr, tr);
+            ctx.lineTo(w, 0);
+            ctx.closePath();
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+
+            // Bottom-left corner cut
+            ctx.beginPath();
+            ctx.moveTo(0, h - bl);
+            ctx.arcTo(0, h, bl, h, bl);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+
+            // Reset mode
+            ctx.globalCompositeOperation = "source-over";
+
+            // === "Dim" gradients ===
+            // Top-right dim
+            let trGrad = ctx.createRadialGradient(w, 0, 0, w, 0, tr * 2);
+            trGrad.addColorStop(0, weakHighlight ? weakHighlight : "transparent");
+            trGrad.addColorStop(0.1, weakHighlight ? weakHighlight : "transparent");
+            trGrad.addColorStop(1, highlight ? highlight : "transparent");
+
+            ctx.beginPath();
+            ctx.moveTo(w - tr, 0);
+            ctx.arcTo(w, 0, w, tr, tr);
+            ctx.strokeStyle = trGrad;
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            // Bottom highlight
+            // Bottom-left dim
+            let blGrad = ctx.createRadialGradient(0, h, 0, 0, h, bl * 2);
+            blGrad.addColorStop(0, weakHighlight ? weakHighlight : "transparent");
+            blGrad.addColorStop(0.1, weakHighlight ? weakHighlight : "transparent");
+            blGrad.addColorStop(1, highlight ? highlight : "transparent");
+
             ctx.beginPath();
-            ctx.moveTo(bl, bottomY);
-            ctx.lineTo(w - br, bottomY);
-            ctx.strokeStyle = bottomGradient;
+            ctx.moveTo(0, h - bl);
+            ctx.arcTo(0, h, bl, h, bl);
+            ctx.strokeStyle = blGrad;
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            // Bottom-right corner highlight
-            ctx.beginPath();
-            ctx.moveTo(w - br, h);
-            ctx.arcTo(w, h, w, h - br, br);
-            ctx.strokeStyle = highlight !== "transparent" ? highlight : 'transparent';
-            ctx.lineWidth = 1;
-            ctx.stroke();
 
             ctx.restore();
+
         }
 
         onWidthChanged: requestPaint()

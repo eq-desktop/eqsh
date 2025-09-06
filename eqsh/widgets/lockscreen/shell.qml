@@ -16,7 +16,6 @@ ShellRoot {
 
 	WlSessionLock {
 		id: lock
-
 		locked: true
 
 		WlSessionLockSurface {
