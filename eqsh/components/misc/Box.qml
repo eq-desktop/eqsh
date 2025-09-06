@@ -5,9 +5,9 @@ import QtQuick.Effects
 Item {
     id: box
 
-    property color color: "#22ffffff"
+    property color color: "#01ffffff"
     property int borderSize: 1
-    property string highlight: '#fff'
+    property string highlight: '#aaffffff'
     property string weakHighlight: 'transparent'
 
     // Individual corner radii
@@ -87,8 +87,9 @@ Item {
             ctx.closePath();
 
             ctx.strokeStyle = highlight;
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 1;
             ctx.stroke();
+            ctx.lineWidth = 0.5;
 
             // Erase
             ctx.globalCompositeOperation = "destination-out";
@@ -125,7 +126,7 @@ Item {
             ctx.moveTo(w - tr, 0);
             ctx.arcTo(w, 0, w, tr, tr);
             ctx.strokeStyle = trGrad;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
             // Bottom-left dim
@@ -138,7 +139,7 @@ Item {
             ctx.moveTo(0, h - bl);
             ctx.arcTo(0, h, bl, h, bl);
             ctx.strokeStyle = blGrad;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
 
