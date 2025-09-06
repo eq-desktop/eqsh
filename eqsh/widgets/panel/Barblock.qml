@@ -38,8 +38,6 @@ Scope {
         right: true
       }
 
-      exclusiveZone: -1
-
       implicitHeight: Config.bar.height
 
       color: "transparent"

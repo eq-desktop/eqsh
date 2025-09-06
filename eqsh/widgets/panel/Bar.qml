@@ -42,6 +42,8 @@ Scope {
         top: Config.bar.hideOnLock ? (root.visible ? (root.inFullscreen ? -Config.bar.height : 0) : -Config.bar.height) : (root.inFullscreen ? -Config.bar.height : 0)
       }
 
+      exclusiveZone: -1
+
       Behavior on margins.top {
         NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutQuad }
       }
@@ -52,7 +54,8 @@ Scope {
 
       visible: Config.bar.enable
 
-      Barblock {}
+      Barblock {
+      }
 
       RowLayout {
         spacing: -6
@@ -102,7 +105,7 @@ Scope {
       }
 
       RowLayout {
-        spacing: -2
+        spacing: -8
         anchors {
           right: parent.right
           verticalCenter: parent.verticalCenter
