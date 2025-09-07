@@ -82,7 +82,7 @@ Singleton {
 		// ISO: 
 		//     yyyy-MM-dd HH:mm:ss → 2025-09-07 15:45:10
 		property string dateFormat: "ddd, dd MMM HH:mm"
-		property bool   autohide: false
+		property bool   autohide: true
 	}
 
 	component ScreenEdges: QtObject {
@@ -94,6 +94,12 @@ Singleton {
 	component LockScreen: QtObject {
 		property bool   enable: true
 		property int    fadeDuration: 500
+		property string dateFormat: "dddd, MMMM dd"
+		property string timeFormat: "HH:mm"
+		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
+		property int    avatarSize: 100
+		property string userNote: "Welcome Back!" // A small note above the avatar
+		property string usageInfo: "Use Touch ID or Password to unlock" // A small note below the textfield
 		property real   blur: 0
 		property real   blurStrength: 1
 		property bool   liquidBlur: false
@@ -116,7 +122,7 @@ Singleton {
 	component Wallpaper: QtObject {
 		property bool   enabled: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
+		property string path: root.homeDirectory+"/eqSh/wallpaper/Sonoma.jpg"//Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert

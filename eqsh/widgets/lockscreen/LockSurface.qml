@@ -5,9 +5,11 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
+import Quickshell.Widgets
 import Quickshell
 import qs.components.misc
 import qs.config
+import qs.widgets.panel
 import qs
 
 Rectangle {
@@ -112,6 +114,7 @@ Rectangle {
 		opacity: 0
 		anchors.fill: parent
 	}
+
 	Item {
 		id: contentItem
 		anchors.fill: parent
@@ -138,8 +141,9 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#ddffffff"
+			color: "#ccffffff"
 			font.pointSize: 80
+			font.weight: Font.Bold
 
 			Timer {
 				running: true
@@ -150,9 +154,7 @@ Rectangle {
 			}
 
 			text: {
-				const hours = this.date.getHours().toString().padStart(2, '0');
-				const minutes = this.date.getMinutes().toString().padStart(2, '0');
-				return `${hours}:${minutes}`;
+				return Qt.formatDateTime(clock.date, Config.lockScreen.timeFormat);
 			}
 		}
 
@@ -167,8 +169,9 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#aaffffff"
-			font.pointSize: 16
+			color: "#bbffffff"
+			font.pointSize: 18
+			font.weight: Font.Bold
 
 			Timer {
 				running: true
@@ -179,8 +182,30 @@ Rectangle {
 			}
 
 			text: {
-				return Qt.formatDateTime(clock.date, "ddd MMM dd");
+				return Qt.formatDateTime(clock.date, Config.lockScreen.dateFormat);
 			}
+		}
+
+		Rectangle {
+			id: batteryIndicator
+			anchors {
+				top: parent.top
+				right: parent.right
+				topMargin: 10
+				rightMargin: 60
+			}
+			Battery {}
+		}
+
+		Rectangle {
+			id: wifiIndicator
+			anchors {
+				top: parent.top
+				right: parent.right
+				topMargin: 10
+				rightMargin: 30
+			}
+			Wifi {}
 		}
 
 		ColumnLayout {
@@ -188,25 +213,75 @@ Rectangle {
 			anchors {
 				horizontalCenter: parent.horizontalCenter
 				bottom: parent.bottom
-				bottomMargin: 25
+				bottomMargin: 50
+			}
+
+			width: parent.width
+
+			Text {
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: Config.lockScreen.userNote
+				color: "#bbffffff"
+				font.pointSize: 12
+				font.weight: Font.Normal
+				anchors.bottomMargin: 20
+				anchors.bottom: avatarContainer.top
+			}
+
+			ClippingRectangle {
+				id: avatarContainer
+				width: Config.lockScreen.avatarSize
+				height: Config.lockScreen.avatarSize
+				radius: 50
+				clip: true
+
+				anchors.horizontalCenter: parent.horizontalCenter
+
+				Image {
+					anchors.fill: parent
+					source: Config.lockScreen.avatarPath
+					fillMode: Image.PreserveAspectCrop
+					opacity: 0.95
+				}
 			}
 
 			RowLayout {
+				anchors.horizontalCenter: parent.horizontalCenter
 				Box {
 					id: passwordBoxContainer
-					width: 400
+					width: 200
 					height: 35
 					highlight: "#ffffff"
-					color: "#dd555555"
+					color: "#22ffffff"
+					SequentialAnimation {
+						id: wiggleAnim
+						running: false
+						loops: 1
+						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 10; duration: 100; easing.type: Easing.InOutQuad }
+						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 10; duration: 100; easing.type: Easing.InOutQuad }
+						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 7; duration: 100; easing.type: Easing.InOutQuad }
+						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 7; duration: 100; easing.type: Easing.InOutQuad }
+						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x; duration: 100; easing.type: Easing.InOutQuad }
+					}
 					TextField {
 						id: passwordBox
+						anchors.horizontalCenter: parent.horizontalCenter
 
 						background: Rectangle {
 							color: "transparent";
+							anchors.fill: parent
+							Text {
+								anchors.fill: parent
+								verticalAlignment: Text.AlignVCenter
+								text: passwordBox.text == "" ? root.context.showFailure ? "Incorrect Password" : "Enter Password" : ""
+								color: root.context.showFailure ? "#ffffff" : "#bbffffff"
+								anchors.leftMargin: 10
+								font.weight: Font.LightBold
+							}
 						}
 						color: "#fff";
 
-						implicitWidth: 400
+						implicitWidth: 200
 						implicitHeight: 35
 						padding: 10
 
@@ -225,40 +300,25 @@ Rectangle {
 							function onCurrentTextChanged() {
 								passwordBox.text = root.context.currentText;
 							}
+
+							function onShowFailureChanged() {
+								if (root.context.showFailure) {
+									wiggleAnim.start();
+								}
+							}
 						}
-					}
-				}
-
-				Box {
-					width: 35
-					height: 35
-					color: "#dd555555"
-					Button {
-						text: "\u2192"
-						padding: 10
-						background: Rectangle {
-							color: "transparent";
-						}
-						palette.button: "white";
-						palette.buttonText: "white";
-
-						font.pointSize: 14
-
-						implicitWidth: 35;
-						implicitHeight: 35;
-
-						focusPolicy: Qt.NoFocus
-
-						enabled: !root.context.unlockInProgress && root.context.currentText !== "";
-						onClicked: root.context.tryUnlock();
 					}
 				}
 			}
 
-			Label {
-				visible: root.context.showFailure
-				color: "#fff"
-				text: "Incorrect password"
+			Text {
+				anchors.horizontalCenter: parent.horizontalCenter
+				text: Config.lockScreen.usageInfo
+				color: "#bbffffff"
+				font.pointSize: 10
+				font.weight: Font.Normal
+				anchors.topMargin: 10
+				anchors.top: passwordBoxContainer.bottom
 			}
 		}
 	}
