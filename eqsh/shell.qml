@@ -15,6 +15,7 @@ import qs.utils
 Scope {
   id: root
   property string customAppName: ""
+  ReloadPopup {}
   Background {}
   ScreenCorners {}
   //Dock {}
