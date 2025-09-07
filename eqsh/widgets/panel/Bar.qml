@@ -57,6 +57,9 @@ Scope {
       Barblock {
       }
 
+      readonly property real barFS: Math.max(10, Math.min(20, Math.ceil(Config.bar.height / 1.5)))
+      readonly property real barIS: Math.max(10, Math.min(50, Math.ceil(Config.bar.height / 1.2)))
+
       RowLayout {
         spacing: -6
         anchors {
@@ -68,8 +71,8 @@ Scope {
         BButton {VectorImage {
           id: lBAppMenu
           source: "../../assets/svgs/icon.svg"
-          width: 18
-          height: 18
+          width: barFS
+          height: barFS
           preferredRendererType: VectorImage.CurveRenderer
           anchors.centerIn: parent
         }}
@@ -97,15 +100,17 @@ Scope {
 
         BButton {
           text: "Window"
+          
         }
 
         BButton {
           text: "Help"
+          
         }
       }
 
       RowLayout {
-        spacing: -8
+        spacing: Config.bar.height > 35 ? 0 : -8
         anchors {
           right: parent.right
           verticalCenter: parent.verticalCenter
@@ -114,38 +119,38 @@ Scope {
 
         SystemTray {}
 
-        BButton{Battery {}}
+        BButton{Battery {iconSize: barIS} }
 
-        BButton {Wifi {}}
+        BButton {Wifi {iconSize: barIS}}
 
         BButton {VectorImage {
           id: rBBluetooth
           source: "../../assets/svgs/bluetooth-clear.svg"
-          width: 24
-          height: 24
+          width: barIS * 1.2
+          height: barIS * 1.2
           preferredRendererType: VectorImage.CurveRenderer
           anchors.centerIn: parent
-        }}
+        } }
 
         BButton {VectorImage {
           id: rBSearch
           source: "../../assets/svgs/search.svg"
-          width: 20
-          height: 20
-          Layout.preferredWidth: 20
-          Layout.preferredHeight: 20
+          width: barIS * 0.7
+          height: barIS * 0.7
+          Layout.preferredWidth: barIS * 0.7
+          Layout.preferredHeight: barIS * 0.7
           preferredRendererType: VectorImage.CurveRenderer
           anchors.centerIn: parent
-        }}
+        } }
 
         BButton {
           VectorImage {
             id: rBControlCenter
             source: "../../assets/svgs/control-center.svg"
-            width: 24
-            height: 24
-            Layout.preferredWidth: 24
-            Layout.preferredHeight: 24
+            width: barIS
+            height: barIS
+            Layout.preferredWidth: barIS
+            Layout.preferredHeight: barIS
             preferredRendererType: VectorImage.CurveRenderer
             anchors.centerIn: parent
           }
@@ -153,6 +158,7 @@ Scope {
           ControlCenter {
             id: controlCenter
           }
+          
         }
 
         BButton{

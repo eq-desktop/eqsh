@@ -7,6 +7,8 @@ import qs.services
 Item {
   id: root
 
+  property int iconSize: 24
+
   readonly property bool wifiEnabled: Network.wifiEnabled
   readonly property int networkStrength: Network.active ? Network.active.strength : 0
   property string networkIcon: {
@@ -18,10 +20,10 @@ Item {
   VectorImage {
     id: rBWifi
     source: "../../assets/svgs/wifi/nm-signal-" + networkIcon +  "-symbolic.svg"
-    width: 24
-    height: 24
-    Layout.preferredWidth: 24
-    Layout.preferredHeight: 24
+    width: root.iconSize
+    height: root.iconSize
+    Layout.preferredWidth: root.iconSize
+    Layout.preferredHeight: root.iconSize
     preferredRendererType: VectorImage.CurveRenderer
     anchors {
       centerIn: parent

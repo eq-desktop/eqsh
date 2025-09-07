@@ -7,6 +7,8 @@ import Quickshell.Services.UPower
 Item {
   id: root
 
+  property int iconSize: 24
+
   readonly property bool batCharging: UPower.onBattery ? (UPower.displayDevice.state == UPowerDeviceState.Charging) : true
   readonly property string batIcon: {
     (batPercentage > 0.98) ? "100" : (batPercentage > 0.90) ? "090" : (batPercentage > 0.80) ? "080" : (batPercentage > 0.70) ? "070" : (batPercentage > 0.60) ? "060" : (batPercentage > 0.50) ? "050" : (batPercentage > 0.40) ? "040" : (batPercentage > 0.30) ? "030" : (batPercentage > 0.20) ? "020" : (batPercentage > 0.10) ? "010" : "000";
@@ -18,10 +20,10 @@ Item {
   VectorImage {
     id: rBWifi
     source: "../../assets/svgs/battery/battery-" + batIcon + (batCharging ? "-charging" : "") + ".svg"
-    width: 24
-    height: 24
-    Layout.preferredWidth: 24
-    Layout.preferredHeight: 24
+    width: root.iconSize
+    height: root.iconSize
+    Layout.preferredWidth: root.iconSize
+    Layout.preferredHeight: root.iconSize
     preferredRendererType: VectorImage.CurveRenderer
     anchors.centerIn: parent
   }

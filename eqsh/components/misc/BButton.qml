@@ -17,6 +17,7 @@ Button {
   palette.buttonText: "#fff"
   Layout.minimumWidth: 50
   Layout.preferredHeight: 25
+  Layout.maximumHeight: Config.bar.height * 1.05
   padding: 10
   background: Box {
     id: bgRect
