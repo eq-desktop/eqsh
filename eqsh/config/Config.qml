@@ -48,6 +48,7 @@ Singleton {
 		property color  color: "#ffffff"
 		property int    radius: 20
 		property int    height: 25
+		property int    margin: 2
 		property int    minWidth: 200
 		property int    maxWidth: 400
 		property bool   onlyVisual: false
@@ -61,13 +62,26 @@ Singleton {
 
 	component Bar: QtObject {
 		property bool   enable: true
-		property int    height: 35
+		property int    height: 30
 		property color  color: "#01000000"
 		property color  fullscreenColor: "#000"
 		property bool   hideOnLock: true
 		property int    hideDuration: 10
 		property string defaultAppName: "eqSh" // When no toplevel is focused it will show this text. Ideas: "eqSh" | "Hyprland" | "YOURUSERNAME"
-		property string dateFormat: "ddd dd MMM HH:mm"
+		// Example dateFormats:
+		// DEFAULT:
+		//     ddd, dd MMM HH:mm
+		// USA:
+		//     ddd, MMM d, h:mm a   → Tue, Sep 7, 3:45 PM
+		//     M/d/yy, h:mm a       → 9/7/25, 3:45 PM
+		// UK:
+		//     ddd d MMM HH:mm      → Tue 7 Sep 15:45
+		//     dd/MM/yyyy HH:mm     → 07/09/2025 15:45
+		// GERMANY:
+		//     ddd, dd.MM.yyyy HH:mm → Di, 07.09.2025 15:45
+		// ISO: 
+		//     yyyy-MM-dd HH:mm:ss → 2025-09-07 15:45:10
+		property string dateFormat: "ddd, dd MMM HH:mm"
 		property bool   autohide: false
 	}
 

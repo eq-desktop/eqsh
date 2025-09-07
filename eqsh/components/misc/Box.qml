@@ -7,7 +7,7 @@ Item {
 
     property color color: "#01ffffff"
     property int borderSize: 1
-    property string highlight: '#aaffffff'
+    property string highlight: '#55ffffff'
     property string weakHighlight: 'transparent'
 
     // Individual corner radii
@@ -100,8 +100,8 @@ Item {
             ctx.arcTo(w, 0, w, tr, tr);
             ctx.lineTo(w, 0);
             ctx.closePath();
-            ctx.strokeStyle = "black";
-            ctx.stroke();
+            ctx.fillStyle = "black";   // fill, not stroke
+            ctx.fill();
 
             // Bottom-left corner cut
             ctx.beginPath();
@@ -109,11 +109,8 @@ Item {
             ctx.arcTo(0, h, bl, h, bl);
             ctx.lineTo(0, h);
             ctx.closePath();
-            ctx.strokeStyle = "black";
-            ctx.stroke();
-
-            // Reset mode
-            ctx.globalCompositeOperation = "source-over";
+            ctx.fillStyle = "black";
+            ctx.fill();
 
             // === "Dim" gradients ===
             // Top-right dim

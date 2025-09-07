@@ -37,7 +37,7 @@ Scope {
       color: "transparent"
 
       margins {
-        top: inFullscreen ? -40 : (islandMode ? 5 : 0)
+        top: inFullscreen ? -40 : (islandMode ? (Config.notch.margin) : 0)
       }
 
       Connections {
@@ -88,8 +88,8 @@ Scope {
           animationSpeed: 200
           animationSpeed2: 150
 
-          highlight: root.expanded ? '#aaa' : "transparent"
-          weakHighlight: root.expanded ? '#000' : "transparent"
+          highlight: "transparent" //root.expanded ? '#aaa' : "transparent"
+          weakHighlight: "transparent" //root.expanded ? '#000' : "transparent"
 
           HyprlandFocusGrab {
             id: grab
