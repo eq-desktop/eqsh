@@ -96,6 +96,8 @@ Singleton {
 		property int    fadeDuration: 500
 		property string dateFormat: "dddd, MMMM dd"
 		property string timeFormat: "HH:mm"
+		property bool   autohideInput: true // Automatically hide the password input box when not typing
+		property real   hideOpacity: 0.2 // Opacity of the password input box when its hidden
 		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
 		property int    avatarSize: 100
 		property string userNote: "Welcome Back!" // A small note above the avatar

@@ -209,7 +209,7 @@ Rectangle {
 		}
 
 		ColumnLayout {
-
+			id: inputArea
 			anchors {
 				horizontalCenter: parent.horizontalCenter
 				bottom: parent.bottom
@@ -219,13 +219,12 @@ Rectangle {
 			width: parent.width
 
 			Text {
-				anchors.horizontalCenter: parent.horizontalCenter
+				Layout.alignment: Qt.AlignHCenter
 				text: Config.lockScreen.userNote
 				color: "#bbffffff"
 				font.pointSize: 12
 				font.weight: Font.Normal
-				anchors.bottomMargin: 20
-				anchors.bottom: avatarContainer.top
+				Layout.bottomMargin: 10
 			}
 
 			ClippingRectangle {
@@ -235,7 +234,7 @@ Rectangle {
 				radius: 50
 				clip: true
 
-				anchors.horizontalCenter: parent.horizontalCenter
+				Layout.alignment: Qt.AlignHCenter
 
 				Image {
 					anchors.fill: parent
@@ -245,14 +244,19 @@ Rectangle {
 				}
 			}
 
+			property bool freeSpace: Config.lockScreen.autohideInput && Config.lockScreen.hideOpacity == 0 ? (passwordBox.text == "" ? true : false) : false
 			RowLayout {
-				anchors.horizontalCenter: parent.horizontalCenter
+				Layout.alignment: Qt.AlignHCenter
 				Box {
 					id: passwordBoxContainer
 					width: 200
 					height: 35
 					highlight: "#ffffff"
 					color: "#22ffffff"
+					opacity: Config.lockScreen.autohideInput ? (passwordBox.text == "" ? Config.lockScreen.hideOpacity : 1) : 1
+					Behavior on opacity {
+						NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+					}
 					SequentialAnimation {
 						id: wiggleAnim
 						running: false
@@ -276,7 +280,7 @@ Rectangle {
 								text: passwordBox.text == "" ? root.context.showFailure ? "Incorrect Password" : "Enter Password" : ""
 								color: root.context.showFailure ? "#ffffff" : "#bbffffff"
 								anchors.leftMargin: 10
-								font.weight: Font.LightBold
+								font.weight: 500
 							}
 						}
 						color: "#fff";
@@ -311,14 +315,16 @@ Rectangle {
 				}
 			}
 
-			Text {
-				anchors.horizontalCenter: parent.horizontalCenter
+			Label {
+				Layout.alignment: Qt.AlignHCenter
 				text: Config.lockScreen.usageInfo
 				color: "#bbffffff"
 				font.pointSize: 10
 				font.weight: Font.Normal
-				anchors.topMargin: 10
-				anchors.top: passwordBoxContainer.bottom
+				Layout.topMargin: inputArea.freeSpace ? -50 : 10
+				Behavior on Layout.topMargin {
+					NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+				}
 			}
 		}
 	}
