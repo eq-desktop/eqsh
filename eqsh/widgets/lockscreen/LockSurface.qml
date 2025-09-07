@@ -35,6 +35,7 @@ Rectangle {
 		fadeOutAnim.start();
 		scaleAnim.start();
 		scaleAnim2.start();
+		scaleAnim3.start();
 	}
 
 
@@ -52,6 +53,14 @@ Rectangle {
 		property: "opacity"
 		to: 0
 		duration: Config.lockScreen.zoomDuration
+		easing.type: Easing.InOutQuad
+	}
+	PropertyAnimation {
+		id: scaleAnim3
+		target: backgroundImageBlur
+		property: "scale"
+		to: 1
+		duration: Config.lockScreen.fadeDuration / 1.5
 		easing.type: Easing.InOutQuad
 	}
 
@@ -75,6 +84,7 @@ Rectangle {
 		blur: Config.lockScreen.blur
 		blurMax: 64 * Config.lockScreen.blurStrength
 		blurMultiplier: 1
+		scale: 1
 		SequentialAnimation on blur {
 			loops: Animation.Infinite
 			running: Config.lockScreen.liquidBlur
@@ -86,6 +96,12 @@ Rectangle {
 			running: Config.lockScreen.liquidBlurMax
 			PropertyAnimation { to: 128 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
 			PropertyAnimation { to: 64 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
+		}
+		Component.onCompleted: {
+			backgroundImageBlur.scale = 1.1;
+		}
+		Behavior on scale {
+			NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad }
 		}
 	}
 
@@ -119,10 +135,18 @@ Rectangle {
 		id: contentItem
 		anchors.fill: parent
 		scale: Config.lockScreen.zoom
+		transform: Translate {
+			id: trans
+			y: -50
+			Behavior on y {
+				NumberAnimation { duration: Config.lockScreen.zoomDuration*2; easing.type: Easing.InOutQuad }
+			}
+		}
 		opacity: 0
 		Component.onCompleted: {
 			contentItem.scale = 1;
 			contentItem.opacity = 1;
+			trans.y = 0;
 		}
 		Behavior on scale {
 			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
