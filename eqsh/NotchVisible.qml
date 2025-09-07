@@ -14,7 +14,7 @@ Item {
 			top: parent.top
 			horizontalCenter: parent.horizontalCenter
 		}
-		implicitWidth: 160
+		implicitWidth: Config.notch.minWidth - 40
 		implicitHeight: Config.notch.height
 		topLeftRadius: Config.notch.islandMode ? 15 : 0
 		topRightRadius: Config.notch.islandMode ? 15 : 0

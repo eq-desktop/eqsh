@@ -267,10 +267,10 @@ Rectangle {
 		anchors {
 			top: parent.top
 			horizontalCenter: parent.horizontalCenter
-			topMargin: Config.notch.islandMode ? 5 : 0
+			topMargin: Config.notch.islandMode ? Config.notch.margin : 0
 		}
 
-		implicitWidth: 200
+		implicitWidth: Config.notch.minWidth
 		implicitHeight: Config.notch.height
 
 		visible: Config.notch.enable
