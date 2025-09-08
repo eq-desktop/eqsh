@@ -82,7 +82,7 @@ Singleton {
 		// ISO: 
 		//     yyyy-MM-dd HH:mm:ss → 2025-09-07 15:45:10
 		property string dateFormat: "ddd, dd MMM HH:mm"
-		property bool   autohide: true
+		property bool   autohide: false
 	}
 
 	component ScreenEdges: QtObject {
@@ -107,8 +107,10 @@ Singleton {
 		property bool   liquidBlur: false
 		property bool   liquidBlurMax: false
 		property int    liquidDuration: 7000
-		property real   zoom: 1.05
-		property int    zoomDuration: 300
+		property real   clockZoom: 1
+		property int    clockZoomDuration: 300
+		property real   zoom: 1.1
+		property int    zoomDuration: 1000
 		property bool   useCustomWallpaper: false
 		property string customWallpaperPath: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
 		property bool   enableShader: false
@@ -124,7 +126,7 @@ Singleton {
 	component Wallpaper: QtObject {
 		property bool   enabled: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: root.homeDirectory+"/eqSh/wallpaper/Sonoma.jpg"//Sequoia-Sunrise.png"
+		property string path: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"//Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert

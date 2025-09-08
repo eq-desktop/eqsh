@@ -98,10 +98,10 @@ Rectangle {
 			PropertyAnimation { to: 64 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
 		}
 		Component.onCompleted: {
-			backgroundImageBlur.scale = 1.1;
+			backgroundImageBlur.scale = Config.lockScreen.zoom;
 		}
 		Behavior on scale {
-			NumberAnimation { duration: 1000; easing.type: Easing.InOutQuad }
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
 		}
 	}
 
@@ -139,7 +139,7 @@ Rectangle {
 			id: trans
 			y: -50
 			Behavior on y {
-				NumberAnimation { duration: Config.lockScreen.zoomDuration*2; easing.type: Easing.InOutQuad }
+				NumberAnimation { duration: Config.lockScreen.clockZoomDuration*2; easing.type: Easing.InOutQuad }
 			}
 		}
 		opacity: 0
@@ -149,10 +149,10 @@ Rectangle {
 			trans.y = 0;
 		}
 		Behavior on scale {
-			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
+			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 		Behavior on opacity {
-			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
+			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 		Label {
 			id: clock
