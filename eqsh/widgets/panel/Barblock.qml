@@ -15,7 +15,7 @@ PanelWindow {
   id: panelWindow
   WlrLayershell.layer: WlrLayer.Overlay
   screen: screen
-  WlrLayershell.namespace: "eqsh-blur"
+  WlrLayershell.namespace: "eqsh:blur"
 
   property string applicationName: Config.bar.defaultAppName
 

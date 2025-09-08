@@ -24,6 +24,7 @@ Scope {
 
     PanelWindow {
       WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.namespace: "eqsh:lock"
       id: panelWindow
       property bool islandMode: Config.notch.islandMode
       required property var modelData
@@ -119,6 +120,13 @@ Scope {
               if (!activeFocus) {
                 root.expanded = false;
                 grab.active = false;
+              }
+            }
+            Keys.onPressed: (event) => {
+              if (event.key === Qt.Key_Escape) {
+                root.expanded = false;
+                grab.active = false;
+                event.accepted = true;
               }
             }
             onTextChanged: {

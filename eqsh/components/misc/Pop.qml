@@ -14,7 +14,7 @@ Scope {
     required property Component content
     PanelWindow {
         WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "eqsh-blur"
+        WlrLayershell.namespace: "eqsh:blur"
         id: panelWindow
         color: "transparent"
         visible: false
