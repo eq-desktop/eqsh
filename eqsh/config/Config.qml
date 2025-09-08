@@ -20,7 +20,7 @@ Singleton {
 
 	component General: QtObject {
 		property bool darkMode: true
-		property bool reduceMotion: true
+		property bool reduceMotion: false
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
 	}
 
@@ -95,6 +95,7 @@ Singleton {
 	component LockScreen: QtObject {
 		property bool   enable: true
 		property int    fadeDuration: 500
+		property bool   useFocusedScreen: true // If false, it will use the screen defined in `mainScreen`
 		property string mainScreen: "eDP-1" // if empty, it will use the interactive screen
 		property var    interactiveScreens: ["eDP-1", "DP-1"]
 		property string dateFormat: "dddd, MMMM dd"
