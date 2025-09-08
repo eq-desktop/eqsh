@@ -76,13 +76,12 @@ Scope {
           scale = 1;
         }
 
-        Box {
+        Rectangle {
           id: notchBg
           anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
           }
-          borderSize: 1
           implicitWidth: parent.width - 40
           implicitHeight: parent.height
           topLeftRadius: panelWindow.islandMode ? Config.notch.radius : 0
@@ -91,12 +90,6 @@ Scope {
           bottomRightRadius: Config.notch.radius
           clip: true
           color: Config.notch.backgroundColor
-
-          animationSpeed: 200
-          animationSpeed2: 150
-
-          highlight: "transparent" //root.expanded ? '#aaa' : "transparent"
-          weakHighlight: "transparent" //root.expanded ? '#000' : "transparent"
 
           HyprlandFocusGrab {
             id: grab
@@ -207,6 +200,7 @@ Scope {
           anchors {
             top: parent.top
             left: parent.left
+            leftMargin: 1
           }
           color: Config.notch.backgroundColor
         }
@@ -219,6 +213,7 @@ Scope {
           anchors {
             top: parent.top
             right: parent.right
+            rightMargin: 1
           }
           color: Config.notch.backgroundColor
         }
