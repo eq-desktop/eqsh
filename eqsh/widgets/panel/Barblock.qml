@@ -11,39 +11,24 @@ import qs.utils
 import qs.components.misc
 import QtQuick.Controls.Fusion
 
-Scope {
-  id: root
-  property string customAppName: ""
-  property bool   visible: true
-  property bool   shown: false
-  property bool   appInFullscreen: false
-  property bool   forceHide: Config.bar.autohide
-  property bool   inFullscreen: shown ? forceHide : appInFullscreen || forceHide
+PanelWindow {
+  id: panelWindow
+  WlrLayershell.layer: WlrLayer.Overlay
+  screen: screen
+  WlrLayershell.namespace: "eqsh-blur"
 
-  Variants {
-    model: Quickshell.screens
+  property string applicationName: Config.bar.defaultAppName
 
-    PanelWindow {
-      id: panelWindow
-      WlrLayershell.layer: WlrLayer.Overlay
-      required property var modelData
-      screen: modelData
-      WlrLayershell.namespace: "eqsh-blur"
-
-      property string applicationName: Config.bar.defaultAppName
-
-      anchors {
-        top: true
-        left: true
-        right: true
-      }
-
-      implicitHeight: Config.bar.height
-
-      color: "transparent"
-      mask: Region {}
-
-      visible: Config.bar.enable
-    }
+  anchors {
+    top: true
+    left: true
+    right: true
   }
+
+  implicitHeight: Config.bar.height
+
+  color: "transparent"
+  mask: Region {}
+
+  visible: Config.bar.enable
 }

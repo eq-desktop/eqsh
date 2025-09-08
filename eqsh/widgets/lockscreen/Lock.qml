@@ -28,11 +28,13 @@ Scope {
 						loader.active = false;
 				}
 				WlSessionLockSurface {
+					id: lockSurface
 					color: "transparent"
 					LockSurface {
 						id: locksur
 						anchors.fill: parent
 						context: lockContext
+						screen: lockSurface.screen
 						Connections {
 							target: lockContext
 							function onUnlocking() {

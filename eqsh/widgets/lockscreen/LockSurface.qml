@@ -15,6 +15,7 @@ import qs
 Rectangle {
 	id: root
 	required property LockContext context
+	required property var screen
 	readonly property ColorGroup colors: Window.active ? palette.active : palette.inactive
 	property string wallpaperImage: Config.lockScreen.useCustomWallpaper ? Config.lockScreen.customWallpaperPath : Config.wallpaper.path
 
@@ -141,6 +142,7 @@ Rectangle {
 			}
 		}
 		opacity: Config.general.reduceMotion ? 1 : 0
+		visible: Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name : Config.lockScreen.interactiveScreens.includes(screen.name)
 		Component.onCompleted: {
 			contentItem.scale = 1;
 			contentItem.opacity = 1;
@@ -175,9 +177,7 @@ Rectangle {
 				onTriggered: clock.date = new Date();
 			}
 
-			text: {
-				return Qt.formatDateTime(clock.date, Config.lockScreen.timeFormat);
-			}
+			text: {return Qt.formatDateTime(clock.date, Config.lockScreen.timeFormat)}
 		}
 
 		Label {

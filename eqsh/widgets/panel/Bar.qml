@@ -55,6 +55,7 @@ Scope {
       visible: Config.bar.enable
 
       Barblock {
+        screen: modelData
       }
 
       readonly property real barFS: Math.max(10, Math.min(20, Math.ceil(Config.bar.height / 1.5)))
