@@ -20,6 +20,7 @@ Singleton {
 
 	component General: QtObject {
 		property bool darkMode: true
+		property bool reduceMotion: true
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
 	}
 

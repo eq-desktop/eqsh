@@ -62,8 +62,8 @@ Scope {
       Item {
         id: barContent
         anchors.fill: parent
-        scale: 0.8
-        opacity: 0
+        scale: Config.general.reduceMotion ? 1 : 0.8
+        opacity: Config.general.reduceMotion ? 1 : 0
         Component.onCompleted: {
           scale = 1
           opacity = 1

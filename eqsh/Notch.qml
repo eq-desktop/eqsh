@@ -68,6 +68,13 @@ Scope {
 
       Item {
         anchors.fill: parent
+        scale: Config.general.reduceMotion ? 1 : 0
+        Behavior on scale {
+          NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }
+        }
+        Component.onCompleted: {
+          scale = 1;
+        }
 
         Box {
           id: notchBg

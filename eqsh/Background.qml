@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import QtQuick.Effects
 import QtQuick
 import qs.config
@@ -28,38 +29,54 @@ Scope {
       mask: Region {}
 
       color: Config.wallpaper.color
-      Image {
-        id: backgroundImage
-        source: Config.wallpaper.path
-        fillMode: Image.PreserveAspectCrop
-        opacity: 0
+      ClippingRectangle {
+        scale: Config.general.reduceMotion ? 1 : 0.9
         anchors.fill: parent
-
-        Behavior on opacity {
+        radius: Config.general.reduceMotion ? 0 : 20
+        color: "#000"
+        Behavior on scale {
           NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
         }
-
-        Component.onCompleted: {
-          opacity = 1;
+        Behavior on radius {
+          NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
         }
-        Loader {
-          active: Config.wallpaper.enableShader
-          sourceComponent: ShaderEffect {
-            id: shader
-            visible: Config.wallpaper.enableShader
-            anchors.fill: parent
-            property vector2d sourceResolution: Qt.vector2d(width, height)
-            property vector2d resolution: Qt.vector2d(width, height)
-            property real time: 0
-            property variant source: backgroundImage
-            FrameAnimation {
-              running: true
-              onTriggered: {
-                shader.time = this.elapsedTime;
+        Component.onCompleted: {
+          scale = 1;
+          radius = 0;
+        }
+        Image {
+          id: backgroundImage
+          source: Config.wallpaper.path
+          fillMode: Image.PreserveAspectCrop
+          opacity: 0
+          anchors.fill: parent
+
+          Behavior on opacity {
+            NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
+          }
+
+          Component.onCompleted: {
+            opacity = 1;
+          }
+          Loader {
+            active: Config.wallpaper.enableShader
+            sourceComponent: ShaderEffect {
+              id: shader
+              visible: Config.wallpaper.enableShader
+              anchors.fill: parent
+              property vector2d sourceResolution: Qt.vector2d(width, height)
+              property vector2d resolution: Qt.vector2d(width, height)
+              property real time: 0
+              property variant source: backgroundImage
+              FrameAnimation {
+                running: true
+                onTriggered: {
+                  shader.time = this.elapsedTime;
+                }
               }
+              vertexShader: Config.wallpaper.shaderVert
+              fragmentShader: Config.wallpaper.shaderFrag
             }
-            vertexShader: Config.wallpaper.shaderVert
-            fragmentShader: Config.wallpaper.shaderFrag
           }
         }
       }
