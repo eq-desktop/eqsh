@@ -18,6 +18,15 @@ Rectangle {
 	readonly property ColorGroup colors: Window.active ? palette.active : palette.inactive
 	property string wallpaperImage: Config.lockScreen.useCustomWallpaper ? Config.lockScreen.customWallpaperPath : Config.wallpaper.path
 
+	function unlock() {
+		if (fadeOutAnim.running)
+			return;
+		fadeOutAnim.start();
+		scaleAnim.start();
+		scaleAnim2.start();
+		scaleAnim3.start();
+	}
+
 	PropertyAnimation {
 		id: fadeOutAnim
 		target: locksur
@@ -28,22 +37,11 @@ Rectangle {
 			if (root.context) root.context.unlocked();
 		}
 	}
-
-	function unlock() {
-		if (fadeOutAnim.running)
-			return;
-		fadeOutAnim.start();
-		scaleAnim.start();
-		scaleAnim2.start();
-		scaleAnim3.start();
-	}
-
-
 	PropertyAnimation {
 		id: scaleAnim
 		target: contentItem
 		property: "scale"
-		to: Config.lockScreen.zoom
+		to: Config.general.reduceMotion ? 1 : Config.lockScreen.zoom
 		duration: Config.lockScreen.zoomDuration
 		easing.type: Easing.InOutQuad
 	}
@@ -98,7 +96,7 @@ Rectangle {
 			PropertyAnimation { to: 64 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
 		}
 		Component.onCompleted: {
-			backgroundImageBlur.scale = Config.lockScreen.zoom;
+			backgroundImageBlur.scale = Config.general.reduceMotion ? 1 : Config.lockScreen.zoom;
 		}
 		Behavior on scale {
 			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
@@ -134,15 +132,15 @@ Rectangle {
 	Item {
 		id: contentItem
 		anchors.fill: parent
-		scale: Config.lockScreen.zoom
+		scale: Config.general.reduceMotion ? 1 : Config.lockScreen.zoom
 		transform: Translate {
 			id: trans
-			y: -50
+			y: Config.general.reduceMotion ? 0 : -50
 			Behavior on y {
 				NumberAnimation { duration: Config.lockScreen.clockZoomDuration*2; easing.type: Easing.InOutQuad }
 			}
 		}
-		opacity: 0
+		opacity: Config.general.reduceMotion ? 1 : 0
 		Component.onCompleted: {
 			contentItem.scale = 1;
 			contentItem.opacity = 1;
@@ -345,7 +343,7 @@ Rectangle {
 				color: "#bbffffff"
 				font.pointSize: 10
 				font.weight: Font.Normal
-				Layout.topMargin: inputArea.freeSpace ? -50 : 10
+				Layout.topMargin: Config.general.reduceMotion ? 10 : (inputArea.freeSpace ? -50 : 10)
 				Behavior on Layout.topMargin {
 					NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
 				}
