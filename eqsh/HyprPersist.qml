@@ -3,9 +3,17 @@ import QtQuick
 import qs.config
 
 Item {
-    Process {
-        id: hyprctl
+    component Proc: Process { running: true }
+    Proc {
         command: ["hyprctl", "keyword", "layerrule", "abovelock "+Config.notch.interactiveLockscreen+", ^eqsh:lock\$"]
-        running: true
+    }
+    Proc {
+        command: ["hyprctl", "keyword", "layerrule", "blur, ^eqsh:blur\$"]
+    }
+    Proc {
+        command: ["hyprctl", "keyword", "layerrule", "ignorezero, ^eqsh:blur\$"]
+    }
+    Proc {
+        command: ["hyprctl", "keyword", "layerrule", "blurpopups, ^eqsh:blur\$"]
     }
 }
