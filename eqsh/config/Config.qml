@@ -95,6 +95,8 @@ Singleton {
 	component LockScreen: QtObject {
 		property bool   enable: true
 		property int    fadeDuration: 500
+		property string mainScreen: "eDP-1" // if empty, it will use the interactive screen
+		property var    interactiveScreens: ["eDP-1", "DP-1"]
 		property string dateFormat: "dddd, MMMM dd"
 		property string timeFormat: "HH:mm"
 		property bool   autohideInput: true // Automatically hide the password input box when not typing
