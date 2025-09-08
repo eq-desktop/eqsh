@@ -18,7 +18,7 @@ Scope {
 
 		PanelWindow {
 			id: root
-			WlrLayershell.namespace: "eqsh-blur"
+			WlrLayershell.namespace: "eqsh:blur"
 
 			property var modelData
 			screen: modelData

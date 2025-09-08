@@ -23,15 +23,15 @@ MouseArea {
             item.activate();
             break;
         case Qt.RightButton:
-            if (item.hasMenu) menu.open();
+            if (item.hasMenu) menu.showAt(root, width / 2, height);
             break;
         }
         event.accepted = true;
     }
 
-    QsMenuAnchor {
+    TrayMenu {
         id: menu
-        anchor.item: trayIcon
+        anchorItem: trayIcon
         menu: root.item.menu
     }
 
