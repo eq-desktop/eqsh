@@ -77,7 +77,7 @@ Scope {
 					NumberAnimation {
 						duration: 700
 						easing.type: Easing.OutBack
-						easing.overshoot: 1
+						easing.overshoot: 0.2
 						from: 500
 						property: "x"
 					}
