@@ -6,6 +6,7 @@ import QtQuick.Effects
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
 import Quickshell.Widgets
+import Quickshell.Hyprland
 import Quickshell
 import qs.components.misc
 import qs.config
@@ -142,7 +143,16 @@ Rectangle {
 			}
 		}
 		opacity: Config.general.reduceMotion ? 1 : 0
-		visible: Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name : Config.lockScreen.interactiveScreens.includes(screen.name)
+		readonly property bool showInteractive: Config.lockScreen.useFocusedScreen ? (Hyprland.focusedMonitor.name == screen.name) : Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name : Config.lockScreen.interactiveScreens.includes(screen.name)
+		onShowInteractiveChanged: {
+			if (showInteractive) {
+				contentItem.scale = 1;
+				contentItem.opacity = 1;
+			} else {
+				contentItem.scale = Config.general.reduceMotion ? 1 : Config.lockScreen.zoom;
+				contentItem.opacity = 0;
+			}
+		}
 		Component.onCompleted: {
 			contentItem.scale = 1;
 			contentItem.opacity = 1;

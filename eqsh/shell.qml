@@ -17,7 +17,6 @@ Scope {
   property string customAppName: ""
   ReloadPopup {}
   Background {}
-  ScreenCorners {}
   //Dock {}
   Bar {
     id: bar
@@ -97,6 +96,7 @@ Scope {
       root.customAppName = dialog.customAppName;
     }
   }
+  ScreenCorners {}
   // PanelWindow {
   //   implicitHeight: 500
   //   implicitWidth: 500
