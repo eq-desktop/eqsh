@@ -59,6 +59,7 @@ Singleton {
 		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
 		property color  signatureColor: "#fff"
 		property bool   autohide: false
+		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen
 	}
 
 	component Bar: QtObject {

@@ -360,25 +360,4 @@ Rectangle {
 			}
 		}
 	}
-	
-	Item {
-		anchors {
-			top: parent.top
-			horizontalCenter: parent.horizontalCenter
-			topMargin: Config.notch.islandMode ? Config.notch.margin : 0
-		}
-
-		implicitWidth: Config.notch.minWidth
-		implicitHeight: Config.notch.height
-
-		visible: Config.notch.enable
-
-		NotchVisible {}
-	}
-	Item {
-		anchors.fill: parent
-
-		visible: Config.screenEdges.enable
-		ScreenCornersVisible {}
-	}
 }

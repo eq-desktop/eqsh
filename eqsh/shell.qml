@@ -17,6 +17,7 @@ Scope {
   property string customAppName: ""
   ReloadPopup {}
   Background {}
+  HyprPersist {}
   //Dock {}
   Bar {
     id: bar
