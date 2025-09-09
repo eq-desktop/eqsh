@@ -8,7 +8,7 @@ import Quickshell.Wayland
 
 import qs.config
 import qs.services
-import qs.components.misc
+import qs.widgets.misc
 
 Scope {
 	signal finished();

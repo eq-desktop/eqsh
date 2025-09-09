@@ -3,7 +3,7 @@ import Quickshell.Widgets
 import QtQuick.VectorImage
 import QtQuick
 import QtQuick.Layouts
-import qs.components.misc
+import qs.widgets.misc
 import Quickshell.Services.SystemTray
 
 GlintButton {

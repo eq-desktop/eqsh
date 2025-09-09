@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
-import qs.components.misc
+import qs.widgets.misc
 import qs.config
 import QtQuick.Controls.Fusion
 

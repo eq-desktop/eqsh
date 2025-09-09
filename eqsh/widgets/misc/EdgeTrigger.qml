@@ -8,7 +8,7 @@ import Quickshell.Hyprland
 import qs.config
 import qs
 import qs.utils
-import qs.components.misc
+import qs.widgets.misc
 import QtQuick.Controls.Fusion
 
 Scope {

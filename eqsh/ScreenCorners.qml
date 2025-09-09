@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import qs.config
-import qs.components.misc
+import qs.widgets.misc
 
 Scope {
   Variants {

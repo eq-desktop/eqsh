@@ -4,7 +4,7 @@ import Quickshell.Hyprland
 import Quickshell
 import QtQuick
 import qs.config
-import qs.components.misc
+import qs.widgets.misc
 
 Scope {
   id: root
