@@ -15,13 +15,19 @@ Singleton {
 	readonly property Dialogs dialogs: Dialogs {}
 	readonly property General general: General {}
 	readonly property DesktopWidgets desktopWidgets: DesktopWidgets {}
+	readonly property Looks looks: Looks {}
+	readonly property Launchpad launchpad: Launchpad {}
 
 	property string homeDirectory: "/home/enviction"
 
 	component General: QtObject {
-		property bool darkMode: true
-		property bool reduceMotion: false
+		property bool   darkMode: true
+		property bool   reduceMotion: false
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
+	}
+
+	component Looks: QtObject {
+		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted
 	}
 
 	component Notifications: QtObject {
@@ -60,6 +66,12 @@ Singleton {
 		property color  signatureColor: "#fff"
 		property bool   autohide: false
 		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen
+	}
+
+	component Launchpad: QtObject {
+		property bool   enable: true
+		property int    fadeDuration: 500
+		property real   zoom: 1.05
 	}
 
 	component Bar: QtObject {

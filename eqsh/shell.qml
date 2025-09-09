@@ -8,6 +8,8 @@ import qs.components.lockscreen
 import qs.components.dock
 import qs.components.misc
 import qs.components.notifi
+import qs.components.launchpad
+import qs.components.dialog
 import qs.widgets.misc
 import qs.config
 import qs.utils
@@ -15,9 +17,9 @@ import qs.utils
 Scope {
   id: root
   property string customAppName: ""
+  HyprPersist {}
   ReloadPopup {}
   Background {}
-  HyprPersist {}
   //Dock {}
   Bar {
     id: bar
@@ -57,46 +59,50 @@ Scope {
         }
       }
     }
-    Notch {
-      id: notch
-      onCollapse: (monitor) => triggerNotch.toggle(monitor);
-      EdgeTrigger {
-        id: triggerNotch
-        position: "tlr"
-        height: 1
-        function toggle(monitor) {
-          if (triggerNotch.active && !notch.expanded) {
-            triggerNotch.active = false
-            triggerNotch.height = 1
-            notch.shown = false
-            triggerNotch.topMargin = 0
-            if (Config.notch.autohide) {
-              notch.forceHide = true
-            }
-            return;
-          }
-          triggerNotch.active = true
-          triggerNotch.height = monitor.height - (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
-          notch.shown = true
-          triggerNotch.topMargin = (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
-          if (Config.notch.autohide) {
-            notch.forceHide = false
-          }
-        }
-        onClicked: (monitor) => toggle(monitor);
-        onHovered: (monitor) => toggle(monitor);
-      }
-    }
   }
   NotificationList {}
-  ActivateLinux {}
-  Version {}
+  Loader {
+    active: Config.launchpad.enable
+    sourceComponent: LaunchPad {}
+  }
+  Notch {
+    id: notch
+    onCollapse: (monitor) => triggerNotch.toggle(monitor);
+    EdgeTrigger {
+      id: triggerNotch
+      position: "tlr"
+      height: 1
+      function toggle(monitor) {
+        if (triggerNotch.active && !notch.expanded) {
+          triggerNotch.active = false
+          triggerNotch.height = 1
+          notch.shown = false
+          triggerNotch.topMargin = 0
+          if (Config.notch.autohide) {
+            notch.forceHide = true
+          }
+          return;
+        }
+        triggerNotch.active = true
+        triggerNotch.height = monitor.height - (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
+        notch.shown = true
+        triggerNotch.topMargin = (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
+        if (Config.notch.autohide) {
+          notch.forceHide = false
+        }
+      }
+      onClicked: (monitor) => toggle(monitor);
+      onHovered: (monitor) => toggle(monitor);
+    }
+  }
   Dialog {
     id: dialog
     onCustomAppNameChanged: {
       root.customAppName = dialog.customAppName;
     }
   }
+  ActivateLinux {}
+  Version {}
   ScreenCorners {}
   // PanelWindow {
   //   implicitHeight: 500
