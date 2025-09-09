@@ -7,7 +7,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
 import qs.config
-import qs.components.misc
+import qs.widgets.misc
 
 
 Scope {

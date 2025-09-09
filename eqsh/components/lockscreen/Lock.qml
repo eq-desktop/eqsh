@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
-import qs.components.misc
+import qs.widgets.misc
 
 Scope {
 	id: root

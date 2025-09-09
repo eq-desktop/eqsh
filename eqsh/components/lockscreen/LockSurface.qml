@@ -8,9 +8,9 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell
-import qs.components.misc
+import qs.widgets.misc
 import qs.config
-import qs.widgets.panel
+import qs.components.panel
 import qs
 
 Rectangle {

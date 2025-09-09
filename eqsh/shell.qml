@@ -3,12 +3,12 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
-import qs.widgets.panel
-import qs.widgets.lockscreen
-import qs.widgets.dock
-import qs.widgets.misc
-import qs.widgets.notifi
+import qs.components.panel
+import qs.components.lockscreen
+import qs.components.dock
 import qs.components.misc
+import qs.components.notifi
+import qs.widgets.misc
 import qs.config
 import qs.utils
 

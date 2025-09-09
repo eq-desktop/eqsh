@@ -6,7 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 import QtQuick.Controls
 import QtQuick.VectorImage
-import qs.components.misc
+import qs.widgets.misc
 
 import qs.config
 import qs.services
