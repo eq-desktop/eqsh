@@ -7,8 +7,7 @@ Item {
 
     property color color: "#01ffffff"
     property int borderSize: 1
-    property string highlight: '#55ffffff'
-    property string weakHighlight: 'transparent'
+    property string highlight: '#ffffff'
 
     // Individual corner radii
     property int radius: 20
@@ -22,7 +21,6 @@ Item {
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
     Behavior on highlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
-    Behavior on weakHighlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
 
     onColorChanged: canvas.requestPaint();
     onTopLeftRadiusChanged: canvas.requestPaint();
@@ -30,7 +28,6 @@ Item {
     onBottomRightRadiusChanged: canvas.requestPaint();
     onBottomLeftRadiusChanged: canvas.requestPaint();
     onHighlightChanged: canvas.requestPaint();
-    onWeakHighlightChanged: canvas.requestPaint();
     onWidthChanged: canvas.requestPaint();
     onHeightChanged: canvas.requestPaint();
     
@@ -43,6 +40,7 @@ Item {
             const ctx = getContext("2d");
             const w = width - 2;
             const h = height - 2;
+            const weakHighlight = Qt.alpha(highlight, 0.01);
 
             const tl = Math.max(0, Math.min(topLeftRadius, Math.min(w, h) / 2));
             const tr = Math.max(0, Math.min(topRightRadius, Math.min(w, h) / 2));

@@ -24,13 +24,12 @@ Button {
     color: "transparent"
     radius: 20
     highlight: "transparent"
-    weakHighlight: "transparent"
   }
   MouseArea {
     anchors.fill: parent
     hoverEnabled: true
     onEntered: {
-      bgRect.color = "#22ffffff";
+      bgRect.color = "#33ffffff";
     }
     onExited: {
       bgRect.color = "transparent";

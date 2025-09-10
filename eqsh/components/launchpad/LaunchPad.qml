@@ -36,6 +36,13 @@ Scope {
 
       focusable: true
 
+      component FullMask: Region {
+        x: 0
+        y: 0
+        width: root.width
+        height: root.height
+      }
+
       mask: Region {}
 
       exclusiveZone: -1
@@ -53,7 +60,6 @@ Scope {
           launchpadLoader.shown = false;
           hideAnim.start();
         }
-        InnerShadow {}
         PropertyAnimation {
           id: showAnim
           target: launchpadLoader.item
@@ -63,7 +69,9 @@ Scope {
           easing.type: Easing.InOutQuad
           onStarted: {
             launchpadLoader.focus = true;
-            panelWindow.mask = Qt.createQmlObject("import Quickshell; Region {x: 0; y: 0; width: root.width; height: root.height}", showAnim);
+            const width = root.width
+            const height = root.height
+            panelWindow.mask = FullMask
             panelWindow.color = "#ff000000";
             launchpadLoader.scaleVal = 1
             launchpadLoader.blurVal = 1
@@ -120,8 +128,6 @@ Scope {
               id: searchBoxContainer
               width: 200
               height: 30
-              highlight: "#ffffff"
-              color: "#22ffffff"
               anchors.horizontalCenter: parent.horizontalCenter
               anchors.top: parent.top
               anchors.topMargin: 50
@@ -189,6 +195,10 @@ Scope {
                       delegate: LargeAppIcon {
                         size: 110
                         appInfo: modelData
+                        onClicked: {
+                          appInfo.execute();
+                          toggleLP();
+                        }
                       }
                     }
                   }
