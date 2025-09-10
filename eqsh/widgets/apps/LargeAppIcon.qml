@@ -8,6 +8,11 @@ Button {
     id: root
     property var appInfo
     property int size: 64
+    background: Rectangle {
+        color: "transparent"
+        width: size
+        height: size
+    }
     width: size
     height: size
     IconImage {
