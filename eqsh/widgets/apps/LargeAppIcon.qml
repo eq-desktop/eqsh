@@ -1,9 +1,10 @@
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Controls.Fusion
 import QtQuick.Effects
 
-Item {
+Button {
     id: root
     property var appInfo
     property int size: 64

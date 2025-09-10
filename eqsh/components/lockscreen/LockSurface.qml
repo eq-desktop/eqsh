@@ -283,8 +283,6 @@ Rectangle {
 					id: passwordBoxContainer
 					width: 200
 					height: 35
-					highlight: "#ffffff"
-					color: "#22ffffff"
 					opacity: Config.lockScreen.autohideInput ? (passwordBox.text == "" ? Config.lockScreen.hideOpacity : 1) : 1
 					Behavior on opacity {
 						NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
