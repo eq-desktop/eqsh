@@ -26,16 +26,15 @@ Scope {
 			anchors {
 				top: true
 				right: true
+				bottom: true
 			}
 
 			margins {
-				top: 40
+				top: Config.bar.height
 			}
 
 			aboveWindows: true
 			exclusionMode: ExclusionMode.Ignore
-
-			implicitHeight: 800
 			implicitWidth: 450
 
 			color: "transparent"
@@ -54,7 +53,7 @@ Scope {
 					values: [...Notifications.popupList].reverse()
 				}
 
-				implicitHeight: 800
+				implicitHeight: parent.height
 				implicitWidth: 400
 
 				anchors.top: parent.top
