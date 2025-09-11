@@ -13,7 +13,6 @@ import qs.widgets.misc
 import qs.widgets.apps
 import QtQuick.Controls.Fusion
 import QtQuick.VectorImage
-import Qt5Compat.GraphicalEffects
 
 Scope {
   id: root

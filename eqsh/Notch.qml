@@ -145,7 +145,6 @@ Scope {
               let command = root.notchInput;
               searchInput.text = "";
               if (command[0] == "=") {
-                console.log("Math");
               } else if (command[0] == "$") {
                 Quickshell.execDetached(["sh", "-c", command.slice(1)]);
               }

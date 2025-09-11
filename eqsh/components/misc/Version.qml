@@ -42,7 +42,7 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Beta 0.0.60"
+					text: "Beta 0.0.75"
 					color: "#50ffffff"
 					font.pointSize: 22
 				}

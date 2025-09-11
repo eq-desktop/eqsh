@@ -219,7 +219,7 @@ Scope {
     target: "systemDialogs"
 
     function newDialog(appName: string, icon_path: string, title: string, description: string, accept: string, decline: string, commandAccept: string, commandDecline: string, customStyle: string): void {
-      console.log("new System Dialog.");
+      console.info("new System Dialog.");
       if (customStyle != "") {
         // Split the customStyle string by semi-colons to get each "prop:value" pair
         var styles = customStyle.split(";");
