@@ -11,9 +11,10 @@ import qs.components.notifi
 import qs.components.launchpad
 import qs.components.osd
 import qs.components.dialog
+import qs.components.notch
 import qs.components.widgets
 import qs.widgets.misc
-import qs.config
+import qs.Config
 import qs.utils
 
 Scope {

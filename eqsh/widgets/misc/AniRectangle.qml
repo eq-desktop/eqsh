@@ -1,4 +1,4 @@
-import qs.config
+import qs.Config
 import QtQuick
 
 Box {

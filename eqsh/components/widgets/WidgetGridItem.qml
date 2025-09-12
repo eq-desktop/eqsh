@@ -11,7 +11,7 @@ import Quickshell.Io
 import Quickshell
 import qs.widgets.misc
 import qs.widgets.windows
-import qs.config
+import qs.Config
 import qs.components.panel
 import qs.widgets.providers
 import qs

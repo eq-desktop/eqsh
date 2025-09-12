@@ -1,6 +1,6 @@
 import Quickshell.Io
 import QtQuick
-import qs.config
+import qs.Config
 
 Item {
     component Proc: Process { running: true }

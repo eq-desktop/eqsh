@@ -6,7 +6,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
-import qs.config
+import qs.Config
 import qs.widgets.misc
 
 Scope {

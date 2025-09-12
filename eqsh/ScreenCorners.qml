@@ -1,7 +1,7 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import qs.config
+import qs.Config
 import qs.widgets.misc
 
 Scope {

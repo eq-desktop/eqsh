@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.widgets.misc
-import qs.config
+import qs.Config
 import QtQuick.Controls.Fusion
 
 Scope {

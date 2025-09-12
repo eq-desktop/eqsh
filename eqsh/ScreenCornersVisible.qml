@@ -1,6 +1,6 @@
 import Quickshell
 import QtQuick
-import qs.config
+import qs.Config
 import qs.widgets.misc
 
 Item {
