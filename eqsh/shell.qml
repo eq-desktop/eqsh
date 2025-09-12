@@ -9,7 +9,9 @@ import qs.components.dock
 import qs.components.misc
 import qs.components.notifi
 import qs.components.launchpad
+import qs.components.osd
 import qs.components.dialog
+import qs.components.widgets
 import qs.widgets.misc
 import qs.config
 import qs.utils
@@ -17,24 +19,40 @@ import qs.utils
 Scope {
   id: root
   property string customAppName: ""
+  property bool   locked: false
+  onLockedChanged: {
+    if (root.locked) {
+      notch.leftIconShow("builtin:locked", -1, 20, Config.notch.delayedLockAnimDuration)
+      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
+    } else {
+      notch.leftIconHide()
+      notch.temporaryResizeReset()
+    }
+  }
   HyprPersist {}
   ReloadPopup {}
   Background {}
+  Loader {
+    active: Config.lockScreen.enable
+    sourceComponent: Lock {
+      onUnlocking: {
+        if (!Config.notch.delayedLockAnim) {
+          root.locked = false
+        }
+      }
+      onUnlock: {
+        root.locked = false
+      }
+      onLock: {
+        root.locked = true
+      }
+    }
+  }
   //Dock {}
   Bar {
     id: bar
     customAppName: root.customAppName
-    Loader {
-      readonly property Component lock: Lock {
-        onLock: {
-          bar.visible = false
-        }
-        onUnlock: {
-          bar.visible = true
-        }
-      }
-      sourceComponent: Config.lockScreen.enable ? lock : null
-    }
+    visible: !locked
     EdgeTrigger {
       id: triggerBar
       position: "tlr"
@@ -65,6 +83,7 @@ Scope {
     active: Config.launchpad.enable
     sourceComponent: LaunchPad {}
   }
+  VolumeOSD {}
   Notch {
     id: notch
     onCollapse: (monitor) => triggerNotch.toggle(monitor);
@@ -101,12 +120,8 @@ Scope {
       root.customAppName = dialog.customAppName;
     }
   }
+  EditWidgets {}
   ActivateLinux {}
   Version {}
   ScreenCorners {}
-  // PanelWindow {
-  //   implicitHeight: 500
-  //   implicitWidth: 500
-  //   Test {}
-  // }
 }

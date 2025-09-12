@@ -1,8 +1,11 @@
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Io
 import Quickshell
 import QtQuick
+import QtQuick.Effects
+import QtQuick.VectorImage
 import qs.config
 import qs.widgets.misc
 
@@ -16,6 +19,131 @@ Scope {
   property string activeWindow: ""
   property string notchInput: ""
   property string notchMode: "shell"
+
+  property bool   leftIconVisible: false
+  property bool   leftIconAnimate: true
+  property string leftIconColorize: ""
+  property string leftIconPath: ""
+  property int    leftIconRotation: 0
+  property real   leftIconScale: 1
+  property bool   leftIconVisibleInfinite: false
+  property int    leftIconMargin: 5
+  property bool   rightIconVisible: false
+  property bool   rightIconAnimate: true
+  property string rightIconColorize: ""
+  property int    rightIconRotation: 0
+  property real   rightIconScale: 1
+  property string rightIconPath: ""
+  property bool   rightIconVisibleInfinite: false
+  property int    rightIconMargin: 5
+  property int    tempWidth: 0
+  property int    tempHeight: 0
+  property int    tempRounding: 0
+  property bool   tempResize: false
+  property bool   tempResizeInfinite: false
+  property bool   tempResizeForce: false
+
+  function checkPath(path) {
+    if (path.startsWith("builtin:")) {
+      return Qt.resolvedUrl(Quickshell.shellDir + "/assets/svgs/notch/" + path.substring(8) + ".svg")
+    } else {
+      return Qt.resolvedUrl(path)
+    }
+  }
+
+  // --- Scheduler ---
+  property var scheduledJobs: []   // list of { expiry, callback }
+  Timer {
+    id: scheduler
+    interval: 50
+    repeat: true
+    running: true
+    onTriggered: {
+      const now = Date.now()
+      for (let i = scheduledJobs.length - 1; i >= 0; --i) {
+        if (scheduledJobs[i].expiry <= now) {
+          scheduledJobs[i].callback()
+          scheduledJobs.splice(i, 1)
+        }
+      }
+    }
+  }
+  function schedule(callback, delay) {
+    if (delay <= 0) {
+      Qt.callLater(callback)
+    } else {
+      scheduledJobs.push({ expiry: Date.now() + delay, callback })
+    }
+  }
+
+  function leftIconShow(path, timeout, margin=5, start_delay=0, animate=true, color="", rotation=0, scale=1) {
+    root.leftIconVisible = false
+    root.leftIconAnimate = animate
+    root.leftIconColorize = color
+    root.leftIconRotation = rotation
+    root.leftIconScale = scale
+    root.leftIconPath = checkPath(path)
+    root.leftIconMargin = margin
+    leftIconVisibleInfinite = (timeout === -1)
+
+    // schedule show
+    schedule(() => {
+      root.leftIconVisible = true
+      if (!leftIconVisibleInfinite) {
+        schedule(() => leftIconHide(), timeout)
+      }
+    }, start_delay)
+  }
+  function leftIconHide() {
+    root.leftIconVisible = false
+    root.leftIconColorize = ""
+  }
+
+  function rightIconShow(path, timeout, margin=5, start_delay=0, animate=true, color="", rotation=0, scale=1) {
+    root.rightIconVisible = false
+    root.rightIconAnimate = animate
+    root.rightIconColorize = color
+    root.rightIconRotation = rotation
+    root.rightIconScale = scale
+    root.rightIconPath = checkPath(path)
+    root.rightIconMargin = margin
+    rightIconVisibleInfinite = (timeout === -1)
+
+    // schedule show
+    schedule(() => {
+      root.rightIconVisible = true
+      if (!rightIconVisibleInfinite) {
+        schedule(() => rightIconHide(), timeout)
+      }
+    }, start_delay)
+  }
+  function rightIconHide() {
+    root.rightIconVisible = false
+    root.rightIconColorize = ""
+  }
+
+  function temporaryResize(width=-1, height=-1, rounding=-1, timeout=5000, force=false, start_delay=0) {
+    tempResize = false
+    tempWidth = width
+    tempHeight = height
+    tempRounding = rounding == -1 ? Config.notch.radius : rounding
+    tempResizeForce = force
+    tempResizeInfinite = (timeout === -1)
+
+    schedule(() => {
+      tempResize = true
+      if (!tempResizeInfinite) {
+        schedule(() => temporaryResizeReset(), timeout)
+      }
+    }, start_delay)
+  }
+  function temporaryResizeReset() {
+    tempWidth = 0
+    tempHeight = 0
+    tempRounding = 0
+    tempResize = false
+    tempResizeForce = false
+  }
 
   signal expand(ShellScreen monitor)
   signal collapse(ShellScreen monitor)
@@ -55,6 +183,7 @@ Scope {
       property bool expanded: root.expanded
       property int minWidth: Config.notch.minWidth
       property int maxWidth: Config.notch.maxWidth
+      property bool tempResize: root.tempResize
 
       Behavior on margins.top {
         NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
@@ -85,16 +214,72 @@ Scope {
           }
           implicitWidth: parent.width - 40
           implicitHeight: parent.height
-          topLeftRadius: panelWindow.islandMode ? Config.notch.radius : 0
-          topRightRadius: panelWindow.islandMode ? Config.notch.radius : 0
-          bottomLeftRadius: Config.notch.radius
-          bottomRightRadius: Config.notch.radius
+          topLeftRadius: panelWindow.islandMode ? (root.tempResize ? root.tempRounding : Config.notch.radius) : 0
+          topRightRadius: panelWindow.islandMode ? (root.tempResize ? root.tempRounding : Config.notch.radius) : 0
+          bottomLeftRadius: (root.tempResize ? root.tempRounding : Config.notch.radius)
+          bottomRightRadius: (root.tempResize ? root.tempRounding : Config.notch.radius)
           clip: true
           color: Config.notch.backgroundColor
 
           HyprlandFocusGrab {
             id: grab
             windows: [ panelWindow ]
+          }
+
+          VectorImage {
+            id: leftNotchIcon
+            width: 15
+            height: 15
+            scale: root.expanded ? 0.5 : root.leftIconVisible ? leftIconScale : 0.5
+            opacity: root.expanded ? 0 : root.leftIconVisible ? 1 : 0
+            Behavior on scale {
+              NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            Behavior on opacity {
+              NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration/2; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            preferredRendererType: VectorImage.CurveRenderer
+            anchors {
+              left: parent.left
+              leftMargin: notchBg.height-20
+              verticalCenter: parent.verticalCenter
+            }
+            source: leftIconPath;
+            rotation: leftIconRotation
+            layer.enabled: leftIconColorize != "" ? true : false
+            layer.effect: MultiEffect {
+              anchors.fill: leftNotchIcon
+              colorization: 1
+              colorizationColor: leftIconColorize
+            }
+          }
+
+          VectorImage {
+            id: rightNotchIcon
+            width: 15
+            height: 15
+            scale: root.expanded ? 0.5 : root.rightIconVisible ? rightIconScale : 0.5
+            opacity: root.expanded ? 0 : root.rightIconVisible ? 1 : 0
+            Behavior on scale {
+              NumberAnimation { duration: rightIconAnimate == false ? 0 : Config.notch.rightIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            Behavior on opacity {
+              NumberAnimation { duration: rightIconAnimate == false ? 0 : Config.notch.rightIconAnimDuration/2; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            preferredRendererType: VectorImage.CurveRenderer
+            anchors {
+              right: parent.right
+              rightMargin: root.rightIconMargin
+              verticalCenter: parent.verticalCenter
+            }
+            source: rightIconPath;
+            rotation: rightIconRotation
+            layer.enabled: rightIconColorize != "" ? true : false
+            layer.effect: MultiEffect {
+              anchors.fill: rightNotchIcon
+              colorization: 1
+              colorizationColor: rightIconColorize
+            }
           }
 
           TextField {
@@ -226,6 +411,7 @@ Scope {
         }
       }
       onExpandedChanged: {
+        if (root.tempResizeForce) return;
         if (root.expanded) {
           root.expand(panelWindow.screen);
         } else {
@@ -234,6 +420,36 @@ Scope {
         implicitHeight = root.expanded ? Config.notch.height + 20 : Config.notch.height;
         implicitWidth = root.expanded ? minWidth + 50 : minWidth;
       }
+      onTempResizeChanged: {
+        if (root.tempResize) {
+          implicitHeight = root.tempHeight == -1 ? Config.notch.height : root.tempHeight;
+          implicitWidth = root.tempWidth == -1 ? minWidth : root.tempWidth;
+        } else {
+          implicitHeight = root.expanded ? Config.notch.height + 20 : Config.notch.height;
+          implicitWidth = root.expanded ? minWidth + 50 : minWidth;
+        }
+      }
+    }
+  }
+  IpcHandler {
+    target: "notch"
+    function temporaryResize(width: int, height: int, rounding: int, timeout: int, force: bool, start_delay: int) {
+      root.temporaryResize(width, height, rounding, timeout, force, start_delay);
+    }
+    function temporaryResizeReset() {
+      root.temporaryResizeReset();
+    }
+    function leftIconShow(path: string, timeout: int, margin: int, start_delay: int, animate: bool, color: string, rotation: int, scale: real) {
+      root.leftIconShow(path, timeout, margin, start_delay, animate, color, rotation, scale);
+    }
+    function leftIconHide() {
+      root.leftIconHide();
+    }
+    function rightIconShow(path: string, timeout: int, margin: int, start_delay: int, animate: bool, color: string, rotation: int, scale: real) {
+      root.rightIconShow(path, timeout, margin, start_delay, animate, color, rotation, scale);
+    }
+    function rightIconHide() {
+      root.rightIconHide();
     }
   }
 }
