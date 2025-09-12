@@ -89,6 +89,9 @@ Singleton {
 		property color  fullscreenColor: "#000"
 		property bool   hideOnLock: true
 		property int    hideDuration: 10
+		property string batteryFormat: "%p%"
+		property string batteryFormatChargin: "*%p%"
+  		property string batteryMode: "pill" // pill, percentage, number, number-pill, percentage-pill, bubble
 		property string defaultAppName: "eqSh" // When no toplevel is focused it will show this text. Ideas: "eqSh" | "Hyprland" | "YOURUSERNAME"
 		// Example dateFormats:
 		// DEFAULT:

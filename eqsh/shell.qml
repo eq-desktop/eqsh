@@ -23,7 +23,7 @@ Scope {
   property bool   locked: false
   onLockedChanged: {
     if (root.locked) {
-      notch.leftIconShow("builtin:locked", -1, 20, Config.notch.delayedLockAnimDuration)
+      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "#fff", 0, 1)
       notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
     } else {
       notch.leftIconHide()

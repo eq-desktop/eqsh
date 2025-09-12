@@ -52,7 +52,7 @@ Scope {
   }
 
   // --- Scheduler ---
-  property var scheduledJobs: []   // list of { expiry, callback }
+  property var scheduledJobs: []   // list of { expiry, callback, name }
   Timer {
     id: scheduler
     interval: 50
@@ -68,15 +68,21 @@ Scope {
       }
     }
   }
-  function schedule(callback, delay) {
+  function schedule(callback, delay, name) {
     if (delay <= 0) {
       Qt.callLater(callback)
     } else {
-      scheduledJobs.push({ expiry: Date.now() + delay, callback })
+      for (let i = 0; i < scheduledJobs.length; ++i) {
+        if (scheduledJobs[i].name === name) {
+          scheduledJobs[i] = { expiry: Date.now() + delay, callback, name }
+          return
+        }
+      }
+      scheduledJobs.push({ expiry: Date.now() + delay, callback, name })
     }
   }
 
-  function leftIconShow(path, timeout, margin=5, start_delay=0, animate=true, color="", rotation=0, scale=1) {
+  function leftIconShow(path, timeout, margin=-1, start_delay=0, animate=true, color="", rotation=0, scale=1) {
     root.leftIconVisible = false
     root.leftIconAnimate = animate
     root.leftIconColorize = color
@@ -92,7 +98,7 @@ Scope {
       if (!leftIconVisibleInfinite) {
         schedule(() => leftIconHide(), timeout)
       }
-    }, start_delay)
+    }, start_delay, "left")
   }
   function leftIconHide() {
     root.leftIconVisible = false
@@ -114,7 +120,7 @@ Scope {
       if (!rightIconVisibleInfinite) {
         schedule(() => rightIconHide(), timeout)
       }
-    }, start_delay)
+    }, start_delay, "right")
   }
   function rightIconHide() {
     root.rightIconVisible = false
@@ -133,7 +139,7 @@ Scope {
       if (!tempResizeInfinite) {
         schedule(() => temporaryResizeReset(), timeout)
       }
-    }, start_delay)
+    }, start_delay, "resize")
   }
   function temporaryResizeReset() {
     tempWidth = 0
@@ -239,8 +245,11 @@ Scope {
             preferredRendererType: VectorImage.CurveRenderer
             anchors {
               left: parent.left
-              leftMargin: notchBg.height-20
+              leftMargin: root.leftIconMargin != -1 ? root.leftIconMargin :  Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
               verticalCenter: parent.verticalCenter
+              Behavior on leftMargin {
+                NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+              }
             }
             source: leftIconPath;
             rotation: leftIconRotation
@@ -267,7 +276,7 @@ Scope {
             preferredRendererType: VectorImage.CurveRenderer
             anchors {
               right: parent.right
-              rightMargin: root.rightIconMargin
+              rightMargin: root.rightIconMargin != -1 ? root.rightIconMargin :  Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
               verticalCenter: parent.verticalCenter
             }
             source: rightIconPath;
