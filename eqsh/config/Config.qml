@@ -55,7 +55,7 @@ Singleton {
 		property bool   islandMode: true // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
-		property int    radius: 99
+		property int    radius: 30
 		property int    height: 25
 		property int    margin: 2
 		property int    minWidth: 200
