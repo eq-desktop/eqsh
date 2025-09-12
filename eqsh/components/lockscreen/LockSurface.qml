@@ -9,7 +9,7 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell
 import qs.widgets.misc
-import qs.config
+import qs.Config
 import qs.components.panel
 import qs
 

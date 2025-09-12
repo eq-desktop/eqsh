@@ -1,7 +1,7 @@
 import Quickshell
 import QtQuick
 import QtQuick.Effects
-import qs.config
+import qs.Config
 
 Image {
     id: root

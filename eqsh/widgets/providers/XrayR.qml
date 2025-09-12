@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Shapes
 import QtQuick.Effects
 import Quickshell
-import qs.config
+import qs.Config
 
 Item {
     id: root

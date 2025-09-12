@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.config
+import qs.Config
 import qs
 import qs.utils
 import qs.widgets.misc

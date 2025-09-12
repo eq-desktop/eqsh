@@ -6,7 +6,7 @@ import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Io
-import qs.config
+import qs.Config
 import qs
 import qs.utils
 import qs.widgets.misc

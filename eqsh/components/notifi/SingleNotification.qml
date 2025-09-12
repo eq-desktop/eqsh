@@ -8,7 +8,7 @@ import QtQuick.Controls
 import QtQuick.VectorImage
 import qs.widgets.misc
 
-import qs.config
+import qs.Config
 import qs.services
 import "root:/scripts/notification_utils.js" as NotificationUtils
 

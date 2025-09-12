@@ -6,7 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 import Quickshell.Wayland
 
-import qs.config
+import qs.Config
 import qs.services
 import qs.widgets.misc
 
