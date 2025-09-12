@@ -8,6 +8,7 @@ Scope {
 	id: root
 	signal lock()
 	signal unlock()
+	signal unlocking()
     LazyLoader {
 		id: loader
 		ShellRoot {
@@ -38,6 +39,7 @@ Scope {
 						Connections {
 							target: lockContext
 							function onUnlocking() {
+								root.unlocking();
 								locksur.unlock();
 							}
 						}
