@@ -96,7 +96,6 @@ Scope {
   }
   function leftIconHide() {
     root.leftIconVisible = false
-    root.leftIconColorize = ""
   }
 
   function rightIconShow(path, timeout, margin=5, start_delay=0, animate=true, color="", rotation=0, scale=1) {
@@ -119,7 +118,6 @@ Scope {
   }
   function rightIconHide() {
     root.rightIconVisible = false
-    root.rightIconColorize = ""
   }
 
   function temporaryResize(width=-1, height=-1, rounding=-1, timeout=5000, force=false, start_delay=0) {
