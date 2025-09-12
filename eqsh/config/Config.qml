@@ -5,18 +5,20 @@ import QtQuick
 
 Singleton {
     id: root
-	readonly property Notch       notch: Notch {}
-	readonly property Bar         bar: Bar {}
-	readonly property ScreenEdges screenEdges: ScreenEdges {}
-	readonly property LockScreen  lockScreen: LockScreen {}
-	readonly property Misc        misc: Misc {}
-	readonly property Wallpaper   wallpaper: Wallpaper {}
-	readonly property Notifications notifications: Notifications {}
-	readonly property Dialogs dialogs: Dialogs {}
-	readonly property General general: General {}
+	readonly property Notch          notch: Notch {}
+	readonly property Bar            bar: Bar {}
+	readonly property ScreenEdges    screenEdges: ScreenEdges {}
+	readonly property LockScreen     lockScreen: LockScreen {}
+	readonly property Misc           misc: Misc {}
+	readonly property Wallpaper      wallpaper: Wallpaper {}
+	readonly property Notifications  notifications: Notifications {}
+	readonly property Dialogs        dialogs: Dialogs {}
+	readonly property General        general: General {}
 	readonly property DesktopWidgets desktopWidgets: DesktopWidgets {}
-	readonly property Looks looks: Looks {}
-	readonly property Launchpad launchpad: Launchpad {}
+	readonly property Looks          looks: Looks {}
+	readonly property Launchpad      launchpad: Launchpad {}
+	readonly property Widgets        widgets: Widgets {}
+	readonly property Osd            osd: Osd {}
 
 	property string homeDirectory: "/home/enviction"
 
@@ -53,7 +55,7 @@ Singleton {
 		property bool   islandMode: true // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
-		property int    radius: 20
+		property int    radius: 99
 		property int    height: 25
 		property int    margin: 2
 		property int    minWidth: 200
@@ -65,7 +67,13 @@ Singleton {
 		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
 		property color  signatureColor: "#fff"
 		property bool   autohide: false
-		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen
+		property bool   delayedLockAnim: true // Might help with performance when using the lockscreen
+		/* == ADVANCED == */
+		property int    leftIconAnimDuration: 1000
+		property int    rightIconAnimDuration: 1000
+		property int    delayedLockAnimDuration: 1000
+		/* == HIGH SECURITY RISK == */
+		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen. This is a huge security risk
 	}
 
 	component Launchpad: QtObject {
@@ -103,6 +111,13 @@ Singleton {
 		property bool enable: true
 		property int radius: 15
 		property string color: "black"
+	}
+
+	component Osd: QtObject {
+		property bool   enable: true
+		property string color: "#01a0a0a0"
+		property string animation: "fade" // bubble | fade | scale
+		property int    duration: 500
 	}
 
 	component LockScreen: QtObject {
@@ -157,5 +172,11 @@ Singleton {
 		property string clockPosition: "tr" // supports: t=top l=left r=right b=bottom v=verticalCenter h=horizontalCenter
 		property int    clockMargins: 100
 		property string clockFormat: "hh.mm"
+	}
+
+	component Widgets: QtObject {
+		property bool   enabled: true
+		property int    cellsX: 16
+		property int    cellsY: 10
 	}
 }
