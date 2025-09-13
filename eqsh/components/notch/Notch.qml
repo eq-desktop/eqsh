@@ -8,6 +8,7 @@ import QtQuick.Effects
 import QtQuick.VectorImage
 import qs.Config
 import qs.widgets.misc
+import qs.widgets.providers
 
 Scope {
   id: root
@@ -253,11 +254,11 @@ Scope {
             }
             source: leftIconPath;
             rotation: leftIconRotation
-            layer.enabled: leftIconColorize != "" ? true : false
+            layer.enabled: true
             layer.effect: MultiEffect {
               anchors.fill: leftNotchIcon
               colorization: 1
-              colorizationColor: leftIconColorize
+              colorizationColor: leftIconColorize == "" ? AccentColor.color : leftIconColorize
             }
           }
 

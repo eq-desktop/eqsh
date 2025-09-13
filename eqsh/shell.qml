@@ -1,4 +1,5 @@
 //@ pragma UseQApplication
+//@ pragma Env QT_SCALE_FACTOR=1
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
@@ -14,6 +15,7 @@ import qs.components.dialog
 import qs.components.notch
 import qs.components.widgets
 import qs.widgets.misc
+import qs.widgets.providers
 import qs.Config
 import qs.utils
 
@@ -23,7 +25,7 @@ Scope {
   property bool   locked: false
   onLockedChanged: {
     if (root.locked) {
-      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "#fff", 0, 1)
+      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "", 0, 1)
       notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
     } else {
       notch.leftIconHide()

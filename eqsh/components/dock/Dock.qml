@@ -15,8 +15,8 @@ Scope {
   id: root
 
   // === Dock Einstellungen (anpassbar) ===
-  property real magnifyRadius: 120       // Wirkungsradius der Vergrößerung in px
-  property real maxScale: 2           // Maximale Skalierung (z.B. 2.2 = 220%)
+  property real magnifyRadius: 150       // Wirkungsradius der Vergrößerung in px
+  property real maxScale: 1.5           // Maximale Skalierung (z.B. 2.2 = 220%)
   property real lift: 2                // Wie weit das Icon beim Vergrößern nach oben gehoben wird
 
   component DockItem: Button {
@@ -53,9 +53,6 @@ Scope {
         y: liftY
       }
     ]
-
-    Behavior on targetScale { NumberAnimation { duration: 160; easing.type: Easing.OutQuad } }
-    Behavior on liftY       { NumberAnimation { duration: 160; easing.type: Easing.OutQuad } }
 
     onClicked: {
       if (text === "kitty") Hyprland.dispatch("exec kitty")
@@ -115,7 +112,6 @@ Scope {
           anchors.bottom: parent.bottom
           anchors.bottomMargin: 14
           spacing: 8
-          z: 5
 
           DockItem {}
           DockItem {}
