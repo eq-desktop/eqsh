@@ -125,6 +125,7 @@ Rectangle {
 	}
 
 	BackgroundImage {
+		id: backgroundImage
 		source: wallpaperImage
 		opacity: 0
 		anchors.fill: parent
