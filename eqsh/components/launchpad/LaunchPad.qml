@@ -11,6 +11,7 @@ import qs
 import qs.utils
 import qs.widgets.misc
 import qs.widgets.apps
+import qs.widgets.providers
 import QtQuick.Controls.Fusion
 import QtQuick.VectorImage
 
@@ -99,23 +100,10 @@ Scope {
           Behavior on opacity {
             NumberAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad}
           }
-          Image {
-            id: backgroundImage
-            source: Config.wallpaper.path
-            fillMode: Image.PreserveAspectCrop
-            anchors.fill: parent
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-              anchors.fill: parent
-              blurEnabled: true
-              blur: launchpadLoader.blurVal
-              blurMax: 64
-              autoPaddingEnabled: false
-              Behavior on blur {
-                NumberAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad}
-              }
-            }
+          BackgroundImage {
+            blurEnabled: true
+            blurMax: 64
+            blur: launchpadLoader.blurVal
           }
           Item {
             anchors.fill: parent

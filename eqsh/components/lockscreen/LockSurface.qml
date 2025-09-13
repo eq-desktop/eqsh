@@ -9,6 +9,7 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell
 import qs.widgets.misc
+import qs.widgets.providers
 import qs.Config
 import qs.components.panel
 import qs
@@ -123,10 +124,8 @@ Rectangle {
 		fragmentShader: "../../" + Config.lockScreen.shaderFrag
 	}
 
-	Image {
-		id: backgroundImage
+	BackgroundImage {
 		source: wallpaperImage
-		fillMode: Image.PreserveAspectCrop
 		opacity: 0
 		anchors.fill: parent
 	}
