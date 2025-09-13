@@ -25,6 +25,12 @@ Button {
     radius: 20
     highlight: "transparent"
   }
+  layer.enabled: true
+  layer.effect: MultiEffect {
+    shadowEnabled: true
+    shadowBlur: 1
+    shadowColor: "#000000"
+  }
   MouseArea {
     anchors.fill: parent
     hoverEnabled: true

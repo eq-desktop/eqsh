@@ -86,6 +86,7 @@ Singleton {
 		property bool   enable: true
 		property int    height: 30
 		property color  color: "#01000000"
+		property bool   useBlur: false
 		property color  fullscreenColor: "#000"
 		property bool   hideOnLock: true
 		property int    hideDuration: 10
@@ -161,7 +162,7 @@ Singleton {
 	component Wallpaper: QtObject {
 		property bool   enabled: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"//Sequoia-Sunrise.png"
+		property string path: root.homeDirectory+"/eqSh/wallpaper/Tahoe-city.jpeg"//Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert

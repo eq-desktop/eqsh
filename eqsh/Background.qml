@@ -34,7 +34,7 @@ Scope {
         scale: Config.general.reduceMotion ? 1 : 0.9
         anchors.fill: parent
         radius: Config.general.reduceMotion ? 0 : 20
-        color: "#000"
+        color: Config.wallpaper.color
         Behavior on scale {
           NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
         }

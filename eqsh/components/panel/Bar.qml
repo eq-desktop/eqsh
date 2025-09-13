@@ -28,7 +28,7 @@ Scope {
       WlrLayershell.layer: WlrLayer.Overlay
       required property var modelData
       screen: modelData
-      WlrLayershell.namespace: "eqsh:blur"
+      WlrLayershell.namespace: Config.bar.useBlur ? "eqsh:blur" : "eqsh"
 
       property string applicationName: Config.bar.defaultAppName
 
