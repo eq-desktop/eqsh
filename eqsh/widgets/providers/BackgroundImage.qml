@@ -14,12 +14,20 @@ Image {
     property int   blurMax: 64
     property int   duration: 500
 
+    property bool  fadeIn: true
+
+    opacity: fadeIn ? 0 : 1
     Behavior on opacity {
         NumberAnimation { duration: root.duration; easing.type: Easing.InOutQuad}
     }
 
     Behavior on scale {
         NumberAnimation { duration: root.duration; easing.type: Easing.InOutQuad}
+    }
+
+
+    Component.onCompleted: {
+    opacity = 1;
     }
 
     layer.enabled: true

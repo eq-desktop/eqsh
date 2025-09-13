@@ -6,6 +6,7 @@ import QtQuick
 import qs.Config
 import qs
 import qs.widgets.misc
+import qs.widgets.providers
 
 Scope {
   Variants {
@@ -44,20 +45,10 @@ Scope {
           scale = 1;
           radius = 0;
         }
-        Image {
-          id: backgroundImage
-          source: Config.wallpaper.path
-          fillMode: Image.PreserveAspectCrop
+        BackgroundImage {
           opacity: 0
-          anchors.fill: parent
-
-          Behavior on opacity {
-            NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
-          }
-
-          Component.onCompleted: {
-            opacity = 1;
-          }
+          duration: 700
+          fadeIn: true
           Loader {
             active: Config.wallpaper.enableShader
             sourceComponent: ShaderEffect {
