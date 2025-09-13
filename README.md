@@ -102,7 +102,7 @@ guix install quickshell
 ```bash
 mkdir ~/eqSh
 mkdir ~/.config/quickshell
-git clone https://github.com/e3nviction/eqSh ~/eqSh
+git clone https://github.com/eq-desktop/eqSh ~/eqSh
 mv ~/eqSh/eqsh ~/.config/quickshell/
 ```
 
@@ -121,8 +121,6 @@ Or make it permanent by adding this to `~/.config/hypr/hyprland.conf`:
 
 ```bash
 exec-once = qs -c eqsh
-layerrule = ignorezero, ^eqsh-blur$
-layerrule = blur, ^eqsh-blur$
 ```
 
 </details>
@@ -134,7 +132,8 @@ layerrule = blur, ^eqsh-blur$
 - [x] Top Panel  
 - [x] Notch (Dynamic Island + Spotlight-like Runner)  
 - [x] Notifications  
-- [x] Dialogs with IPC integration  
+- [x] Dialogs with IPC integration
+- [x] App Drawer / Launchpad 
 - [x] Lockscreen  
 - [x] Wallpaper Engine  
 - [x] System Tray  
@@ -147,7 +146,6 @@ layerrule = blur, ^eqsh-blur$
 
 * Dock with magnification
 * Global Menu
-* Apple-style App Drawer
 * Control Center
 * Desktop Icons & Widgets
 * Spotlight Extensions
@@ -160,7 +158,7 @@ layerrule = blur, ^eqsh-blur$
 
 ## 📖 Documentation
 
-👉 Full docs & guides: [Wiki](https://github.com/e3nviction/eqSh/wiki)
+👉 Full docs & guides: [Wiki](https://github.com/eq-desktop/eqSh/wiki)
 
 ---
 
