@@ -21,6 +21,7 @@ Item {
     property int cellsX: Config.widgets.cellsX || 16
     property int cellsY: Config.widgets.cellsY || 10
     property color backgroundColor: "#00000000"
+    property bool editable: false
     property list<var> widgets: []
 
     // Compute usable size (excluding bar)
@@ -42,6 +43,8 @@ Item {
         size:  modelData.size || "1x1"
         xPos:  modelData.xPos || 0
         yPos:  modelData.yPos || 0
+        options: modelData.options || {}
+        editable: root.editable
         onWidgetMoved: {
             root.widgetMoved(this);
         }
@@ -67,7 +70,8 @@ Item {
             name: item.name,
             size: item.size,
             xPos: item.newXPos,
-            yPos: item.newYPos
+            yPos: item.newYPos,
+            options: item.options
         };
         const fileContents = JSON.stringify({
             widgets: temp

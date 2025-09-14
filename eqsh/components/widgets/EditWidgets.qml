@@ -21,9 +21,11 @@ Scope {
 
     FullWindow {
         id: editwidgets
-        IpcHandler {
-            target: "fullwindow"
-            function toggle() {
+        animate: false
+        CustomShortcut {
+            name: "widgetEditor"
+            description: "Toggle the widget editor"
+            onPressed: {
                 editwidgets.toggle();
             }
         }
@@ -54,18 +56,9 @@ Scope {
         contentLayerTwo: WidgetGrid {
             id: grid
             anchors.fill: parent
+            editable: true
             onWidgetMoved: (item) => {
                 grid.save(item);
-            }
-            WidgetGridItem {
-                idVal: modelData.idVal
-                name:  modelData.name
-                size:  modelData.size
-                xPos:  modelData.xPos
-                yPos:  modelData.yPos
-                onWidgetMoved: {
-                    grid.widgetMoved(this);
-                }
             }
         }
     }

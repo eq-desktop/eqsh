@@ -180,6 +180,7 @@ Singleton {
 
 	component Widgets: QtObject {
 		property bool   enabled: true
+		property int    radius: 20
 		property int    cellsX: 16
 		property int    cellsY: 10
 	}

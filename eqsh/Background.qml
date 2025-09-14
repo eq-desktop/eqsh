@@ -4,6 +4,7 @@ import Quickshell.Widgets
 import QtQuick.Effects
 import QtQuick
 import qs.Config
+import qs.components.widgets
 import qs
 import qs.widgets.misc
 import qs.widgets.providers
@@ -70,25 +71,16 @@ Scope {
             }
           }
         }
-      }
-      Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        Text {
-          visible: Config.desktopWidgets.clockEnable
-          font.pixelSize: 64
-          font.bold: true
-          anchors {
-            right: Config.desktopWidgets.clockPosition.indexOf("r") != -1 ? parent.right : undefined
-            top: Config.desktopWidgets.clockPosition.indexOf("t") != -1 ? parent.top : undefined
-            bottom: Config.desktopWidgets.clockPosition.indexOf("b") != -1 ? parent.bottom : undefined
-            left: Config.desktopWidgets.clockPosition.indexOf("l") != -1 ? parent.left : undefined
-            verticalCenter: Config.desktopWidgets.clockPosition.indexOf("v") != -1 ? parent.verticalCenter : undefined
-            horizontalCenter: Config.desktopWidgets.clockPosition.indexOf("h") != -1 ? parent.horizontalCenter : undefined
-            margins: Config.desktopWidgets.clockMargins
+        WidgetGrid {
+          opacity: 0
+          anchors.fill: parent
+          editable: false
+          Behavior on opacity {
+            NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
           }
-          text: Time.getTime(Config.desktopWidgets.clockFormat)
-          color: Config.desktopWidgets.clockColor
+          Component.onCompleted: {
+            opacity = 1
+          }
         }
       }
     }
