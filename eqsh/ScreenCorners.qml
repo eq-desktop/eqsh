@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import qs.Config
-import qs.widgets.misc
+import qs.ui.Controls.Auxiliary
 
 Scope {
   Variants {

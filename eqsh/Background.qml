@@ -4,10 +4,10 @@ import Quickshell.Widgets
 import QtQuick.Effects
 import QtQuick
 import qs.Config
-import qs.components.widgets
+import qs.ui.components.widgets
 import qs
-import qs.widgets.misc
-import qs.widgets.providers
+import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.providers
 
 Scope {
   Variants {

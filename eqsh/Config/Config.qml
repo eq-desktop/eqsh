@@ -2,6 +2,7 @@ pragma Singleton
 
 import Quickshell
 import QtQuick
+import qs.Core.Foundation
 
 Singleton {
     id: root
@@ -20,7 +21,7 @@ Singleton {
 	readonly property Widgets        widgets: Widgets {}
 	readonly property Osd            osd: Osd {}
 
-	property string homeDirectory: "/home/enviction"
+	property string homeDirectory: SPPathResolver.home
 
 	component General: QtObject {
 		property bool   darkMode: true

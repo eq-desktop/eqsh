@@ -1,7 +1,7 @@
 import Quickshell
 import QtQuick
 import qs.Config
-import qs.widgets.misc
+import qs.ui.Controls.Auxiliary
 
 Item {
 	implicitWidth: parent.width
