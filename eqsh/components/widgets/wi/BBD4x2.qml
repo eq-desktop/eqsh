@@ -1,0 +1,87 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Effects
+import QtQuick.Layouts
+import QtQuick.VectorImage
+import qs
+import qs.Config
+import qs.widgets.providers
+import qs.widgets.com
+import Quickshell
+import Quickshell.Services.UPower
+
+Control {
+    id: bbd4x2
+    anchors.fill: parent
+    padding: 10
+
+    contentItem: Rectangle {
+        id: root
+        radius: Config.widgets.radius
+        color: "#1a1a1a"
+
+        // Example device batteries (replace with provider data)
+        property var devices: [
+            { type: UPower.displayDevice.isLaptopBattery ? "laptop" : "desktop", name: "Micky's Macbook Air 2019", level: UPower.displayDevice.percentage },
+            { type: "", name: "", level: 0 },
+            { type: "", name: "", level: 0 },
+            { type: "", name: "", level: 0 }
+        ]
+
+        RowLayout {
+            id: batteryRow
+            anchors.centerIn: parent
+            spacing: 20
+
+            Repeater {
+                model: root.devices
+
+                ColumnLayout {
+                    spacing: 6
+                    Layout.alignment: Qt.AlignHCenter
+
+                    // Simple battery circle
+                    CFCircularProgress {
+                        id: battery
+                        implicitSize: 60
+                        lineWidth: 4
+                        colPrimary: AccentColor.color
+                        gapAngle: 0
+                        value: modelData.level
+
+                        Loader {
+                            id: batteryIcon
+                            active: modelData.name != ""
+                            anchors.centerIn: parent
+                            VectorImage {
+                                id: bIcon
+                                source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/assets/svgs/devices/" + modelData.type + ".svg")
+                                width: 20
+                                height: 20
+                                Layout.preferredWidth: 20
+                                Layout.preferredHeight: 20
+                                preferredRendererType: VectorImage.CurveRenderer
+                                anchors.centerIn: parent
+                                layer.enabled: true
+                                layer.effect: MultiEffect {
+                                    colorization: 1
+                                    colorizationColor: AccentColor.color
+                                }
+                            }
+                        }
+                    }
+
+                    // Label
+                    Text {
+                        text: Math.round(modelData.level * 100) + "%"
+                        opacity: (modelData.name == "") ? 0 : 1
+                        color: "#fff"
+                        font.pixelSize: 12
+                        horizontalAlignment: Text.AlignHCenter
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+                }
+            }
+        }
+    }
+}

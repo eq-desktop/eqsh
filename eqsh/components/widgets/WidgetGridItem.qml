@@ -15,6 +15,7 @@ import qs.Config
 import qs.components.panel
 import qs.widgets.providers
 import qs
+import qs.components.widgets.wi
 
 Item {
     id: root
@@ -23,10 +24,12 @@ Item {
     property string name: "Widget"
     property string size: "1x1"
     property var gridContainer
+    property bool editable: false
     property int xPos: 0
     property int yPos: 0
     property int newXPos: 0
     property int newYPos: 0
+    property var options: {}
     property int gridWidth: gridSizeX * cellsX
     property int gridHeight: gridSizeY * cellsY
     readonly property int sizeF: parseInt(size.split("x")[0]) || 1
@@ -52,8 +55,8 @@ Item {
         id: draggableRect
         width: sizeW
         height: sizeH
-        color: "#4488ff"
-        radius: 8
+        color: root.editable ? "#40ffffff" : "transparent"
+        radius: Config.widgets.radius
         x: gridSizeX * xPos
         y: gridSizeY * yPos
 
@@ -65,15 +68,21 @@ Item {
             NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }
         }
 
-        Text {
-            anchors.centerIn: parent
-            text: root.name == "basic-clock-digital-2x2" ? "Clock" : sizeF + "x" + sizeS
-            font.pixelSize: 12
+        Loader {
+            id: loader
+            anchors.fill: parent
+            property Component bCD2x2: BCD2x2 {}
+            property Component bBD4x2: BBD4x2 {}
+            sourceComponent: {
+                root.name == "basic-clock-digital-2x2" ? bCD2x2 :
+                root.name == "battery-bar-display-4x2" ? bBD4x2 : undefined
+            }
         }
 
+        
         MouseArea {
             anchors.fill: parent
-            drag.target: parent
+            drag.target: root.editable ? parent : undefined
 
             property int gridXPos: 0
             property int gridYPos: 0

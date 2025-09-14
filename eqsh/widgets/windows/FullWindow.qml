@@ -31,7 +31,8 @@ Scope {
   property bool      zoomLayerTwo: true
   property Component contentLayerOne
   property Component contentLayerTwo
-  property real scaleVal: 1.1
+  property bool animate: true
+  property real scaleVal: animate ? 1.1 : 1
   property int  duration: 500
 
 
@@ -109,7 +110,7 @@ Scope {
           easing.type: Easing.InOutQuad
           onStarted: {
             panelWindow.color = "#00000000";
-            root.scaleVal = 1.1
+            root.scaleVal = root.animate ? 1.1 : 1
             fullWindow.blurVal = 0
           }
           onFinished: {
@@ -123,10 +124,10 @@ Scope {
           Behavior on opacity {
             NumberAnimation { duration: 500; easing.type: Easing.InOutQuad}
           }
-          //BackgroundImage {
-          //  anchors.fill: parent
-          //  duration: 500
-          //}
+          BackgroundImage {
+            anchors.fill: parent
+            duration: 500
+          }
           Loader {
             anchors.fill: parent
             scale: zoomLayerOne ? root.scaleVal : 1
