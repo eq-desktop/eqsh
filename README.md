@@ -6,7 +6,7 @@
 ---
 
 <p align="center">
-	<img src="./assets/logo.svg" alt="eqSh Logo" width="160"/>
+	<img src="./Media/logo.svg" alt="eqSh Logo" width="160"/>
 </p>
 
 <table align="center">
@@ -19,7 +19,7 @@
 </table>
 
 
-![eqSh Banner](./assets/banner.png)  
+![eqSh Banner](./Media/banner.png)  
 
 ---
 

@@ -4,20 +4,20 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
-import qs.components.panel
-import qs.components.lockscreen
-import qs.components.dock
-import qs.components.misc
-import qs.components.notifi
-import qs.components.launchpad
-import qs.components.osd
-import qs.components.dialog
-import qs.components.notch
-import qs.components.widgets
-import qs.widgets.misc
-import qs.widgets.providers
+import qs.ui.components.panel
+import qs.ui.components.lockscreen
+import qs.ui.components.dock
+import qs.ui.components.misc
+import qs.ui.components.notifi
+import qs.ui.components.launchpad
+import qs.ui.components.osd
+import qs.ui.components.dialog
+import qs.ui.components.notch
+import qs.ui.components.widgets
+import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.providers
 import qs.Config
-import qs.utils
+import qs.Core.Foundation
 
 Scope {
   id: root
@@ -52,7 +52,7 @@ Scope {
     }
   }
   //Dock {}
-  Bar {
+  StatusBar {
     id: bar
     customAppName: root.customAppName
     visible: !locked
