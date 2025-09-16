@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import qs.Config
 import qs.ui.Controls.providers
 
 Control {
@@ -11,7 +12,7 @@ Control {
     contentItem: Rectangle {
         id: root
         radius: 12
-        color: "#0a0a0a"
+        color: Config.general.darkMode ? "#0a0a0a" : "#eee"
 
         property date today: new Date()
         property int year: today.getFullYear()
@@ -53,7 +54,7 @@ Control {
                     horizontalAlignment: Text.AlignLeft
                     font.bold: true
                     font.pixelSize: 10
-                    color: AccentColor.color
+                    color: Config.general.darkMode ? AccentColor.color : Qt.darker(AccentColor.color, 1.1)
                     text: Qt.formatDate(new Date(root.year, root.month, 1), "MMMM")
                 }
             }
@@ -67,7 +68,7 @@ Control {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: 14
-                        color: "#bbb"
+                        color: Config.general.darkMode ? "#bbb" : "#555"
                         text: modelData
                     }
                 }
@@ -91,7 +92,7 @@ Control {
                     Label {
                         anchors.centerIn: parent
                         text: modelData.day > 0 ? modelData.day : ""
-                        color: modelData.isToday ? "#fff" : "#ddd"
+                        color: modelData.isToday ? (Config.general.darkMode ? "#fff" : "#222") : (Config.general.darkMode ? "#ddd" : "#333")
                         font.pixelSize: 10
                         font.bold: modelData.isToday
                     }

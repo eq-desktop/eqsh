@@ -18,7 +18,7 @@ Control {
     contentItem: Rectangle {
         id: root
         radius: Config.widgets.radius
-        color: "#222"
+        color: Config.general.darkMode ? "#222" : "#eee"
 
         // Example device batteries (replace with provider data)
         property var devices: [
@@ -46,6 +46,7 @@ Control {
                         implicitSize: 60
                         lineWidth: 4
                         colPrimary: AccentColor.color
+                        colSecondary: Config.general.darkMode ? "#222" : "#ddd"
                         gapAngle: 0
                         value: modelData.level
 
@@ -75,7 +76,7 @@ Control {
                     Text {
                         text: Math.round(modelData.level * 100) + "%"
                         opacity: (modelData.name == "") ? 0 : 1
-                        color: "#fff"
+                        color: Config.general.darkMode ? "#fff" : "#222"
                         font.pixelSize: 12
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
