@@ -42,6 +42,9 @@ Scope {
 		property string acceptButtonColor: Config.dialogs.acceptButtonColor
 		property string acceptButtonTextColor: Config.dialogs.acceptButtonTextColor
   }
+  onCustomAppNameChanged: {
+    Runtime.customAppName = customAppName;
+  }
   PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     id: panelWindow

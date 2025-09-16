@@ -2,7 +2,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
+import qs.Config
+import qs.ui.Controls.providers
 import qs.ui.Controls.Primitives
+import Quickshell.Wayland
 import qs.ui.Controls.Auxiliary
 
 PopupWindow {
@@ -15,7 +18,6 @@ PopupWindow {
   property bool isHovered: rootMouseArea.containsMouse
   property ShellScreen screen
 
-
   readonly property int menuWidth: 180
 
   implicitWidth: menuWidth
@@ -24,10 +26,10 @@ PopupWindow {
   implicitHeight: Math.min(screen ? screen.height * 0.9 : Screen.height * 0.9,
                            flickable.contentHeight + (10))
   visible: false
-  color: "transparent"
+  color: "#01000000"
   anchor.item: anchorItem
   anchor.rect.x: anchorX
-  anchor.rect.y: anchorY - (isSubMenu ? 0 : 4)
+  anchor.rect.y: Config.bar.height - (isSubMenu ? 0 : 4)
 
   function showAt(item, x, y) {
     if (!item) {
@@ -134,7 +136,7 @@ PopupWindow {
 
           Rectangle {
             anchors.fill: parent
-            color: mouseArea.containsMouse ? "#2369ff" : "transparent"
+            color: mouseArea.containsMouse ? AccentColor.color : "transparent"
             radius: 10
             visible: !(modelData?.isSeparator ?? false)
 

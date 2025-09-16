@@ -1,41 +1,72 @@
 import Quickshell
 import QtQuick
 import qs.Core.Foundation
+import Quickshell.Io
 
 Item {
     id: root
-	readonly property Notch          notch: Notch {}
-	readonly property Bar            bar: Bar {}
-	readonly property ScreenEdges    screenEdges: ScreenEdges {}
-	readonly property LockScreen     lockScreen: LockScreen {}
-	readonly property Misc           misc: Misc {}
-	readonly property Wallpaper      wallpaper: Wallpaper {}
-	readonly property Notifications  notifications: Notifications {}
-	readonly property Dialogs        dialogs: Dialogs {}
-	readonly property General        general: General {}
-	readonly property Looks          looks: Looks {}
-	readonly property Launchpad      launchpad: Launchpad {}
-	readonly property Widgets        widgets: Widgets {}
-	readonly property Osd            osd: Osd {}
-
+	property Notch          notch: adapter.notch
+	property Bar            bar: adapter.bar
+	property ScreenEdges    screenEdges: adapter.screenEdges
+	property LockScreen     lockScreen: adapter.lockScreen
+	property Misc           misc: adapter.misc
+	property Wallpaper      wallpaper: adapter.wallpaper
+	property Notifications  notifications: adapter.notifications
+	property Dialogs        dialogs: adapter.dialogs
+	property General        general: adapter.general
+	property Looks          looks: adapter.looks
+	property Launchpad      launchpad: adapter.launchpad
+	property Widgets        widgets: adapter.widgets
+	property Osd            osd: adapter.osd
+	property Account        account: adapter.account
 	property string homeDirectory: SPPathResolver.home
-	readonly property string version: "Pre-Release 0.0.85-alpha"
 
-	component General: QtObject {
-		property bool   darkMode: true
-		property bool   reduceMotion: false
-		property string activationKey: "060-XXX-YYY-ZZZ-000"
+	FileView {
+        path: Qt.resolvedUrl(Quickshell.shellDir + "/Runtime/config.json")
+        watchChanges: true
+        onFileChanged: reload()
+		onAdapterUpdated: writeAdapter()
+		JsonAdapter {
+			id: adapter
+			property Notch          notch: Notch {}
+			property Bar            bar: Bar {}
+			property ScreenEdges    screenEdges: ScreenEdges {}
+			property LockScreen     lockScreen: LockScreen {}
+			property Misc           misc: Misc {}
+			property Wallpaper      wallpaper: Wallpaper {}
+			property Notifications  notifications: Notifications {}
+			property Dialogs        dialogs: Dialogs {}
+			property General        general: General {}
+			property Looks          looks: Looks {}
+			property Launchpad      launchpad: Launchpad {}
+			property Widgets        widgets: Widgets {}
+			property Osd            osd: Osd {}
+			property Account        account: Account {}
+		}
 	}
 
-	component Looks: QtObject {
+	readonly property string version: "Pre-Release 0.0.85-alpha"
+
+	component Account: JsonObject {
+		property string activationKey: "060-XXX-YYY-ZZZ-000"
+		property string name: "First Lastname"
+		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
+	}
+
+	component General: JsonObject {
+		property bool   darkMode: true
+		property bool   reduceMotion: false
+	}
+
+	component Looks: JsonObject {
 		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted
 	}
 
-	component Notifications: QtObject {
+	component Notifications: JsonObject {
 		property color  backgroundColor: "#ff111111"
 	}
 
-	component Dialogs: QtObject {
+	component Dialogs: JsonObject {
 		property bool   enable: true
 		property int    width: 250
 		property int    height: 250
@@ -49,7 +80,7 @@ Item {
 		property string acceptButtonTextColor: "#fff"
 	}
 
-	component Notch: QtObject {
+	component Notch: JsonObject {
 		property bool   enable: true
 		property bool   islandMode: true // Dynamic Island
 		property color  backgroundColor: "#000"
@@ -75,13 +106,14 @@ Item {
 		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen. This is a huge security risk
 	}
 
-	component Launchpad: QtObject {
+	component Launchpad: JsonObject {
 		property bool   enable: true
 		property int    fadeDuration: 500
 		property real   zoom: 1.05
 	}
 
-	component Bar: QtObject {
+	component Bar: JsonObject {
+		property bool   monochromeTray: true
 		property bool   enable: true
 		property int    height: 30
 		property color  color: "#01000000"
@@ -110,66 +142,65 @@ Item {
 		property bool   autohide: false
 	}
 
-	component ScreenEdges: QtObject {
+	component ScreenEdges: JsonObject {
 		property bool enable: true
 		property int radius: 15
 		property string color: "black"
 	}
 
-	component Osd: QtObject {
+	component Osd: JsonObject {
 		property bool   enable: true
-		property string color: "#01a0a0a0"
-		property string animation: "fade" // bubble | fade | scale
-		property int    duration: 500
+		property string color: "#01000000"
+		property int    animation: 1 // bubble=3 | fade=2 | scale=1
+		property int    duration: 200
 	}
 
-	component LockScreen: QtObject {
+	component LockScreen: JsonObject {
+		property bool         enable: true
+		property int          fadeDuration: 500
+		property bool         useFocusedScreen: true // If false, it will use the screen defined in `mainScreen`
+		property string       mainScreen: "eDP-1" // if empty, it will use the interactive screen
+		property list<string> interactiveScreens: ["eDP-1", "DP-1"]
+		property string       dateFormat: "dddd, MMMM dd"
+		property string       timeFormat: "HH:mm"
+		property bool         autohideInput: true // Automatically hide the password input box when not typing
+		property real         hideOpacity: 0 // Opacity of the password input box when its hidden
+		property int          avatarSize: 100
+		property string       userNote: "Welcome Back!" // A small note above the avatar
+		property string       usageInfo: "Use Touch ID or Password to unlock" // A small note below the textfield
+		property real         blur: 0
+		property real         blurStrength: 1
+		property bool         liquidBlur: false
+		property bool         liquidBlurMax: false
+		property int          liquidDuration: 7000
+		property real         clockZoom: 1
+		property int          clockZoomDuration: 300
+		property real         zoom: 1.1
+		property int          zoomDuration: 1000
+		property bool         useCustomWallpaper: false
+		property string       customWallpaperPath: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
+		property bool         enableShader: false
+		property string       shaderName: "Raining" // Not compatible with Blur or X-Ray
+		property string       shaderFrag: Quickshell.shellDir + "/Media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
+		property string       shaderVert: Quickshell.shellDir + "/Media/shaders/Raining.vert.qsb"
+	}
+
+	component Misc: JsonObject {
+		property bool showVersion: false
+	}
+
+	component Wallpaper: JsonObject {
 		property bool   enable: true
-		property int    fadeDuration: 500
-		property bool   useFocusedScreen: true // If false, it will use the screen defined in `mainScreen`
-		property string mainScreen: "eDP-1" // if empty, it will use the interactive screen
-		property var    interactiveScreens: ["eDP-1", "DP-1"]
-		property string dateFormat: "dddd, MMMM dd"
-		property string timeFormat: "HH:mm"
-		property bool   autohideInput: true // Automatically hide the password input box when not typing
-		property real   hideOpacity: 0.2 // Opacity of the password input box when its hidden
-		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
-		property int    avatarSize: 100
-		property string userNote: "Welcome Back!" // A small note above the avatar
-		property string usageInfo: "Use Touch ID or Password to unlock" // A small note below the textfield
-		property real   blur: 0
-		property real   blurStrength: 1
-		property bool   liquidBlur: false
-		property bool   liquidBlurMax: false
-		property int    liquidDuration: 7000
-		property real   clockZoom: 1
-		property int    clockZoomDuration: 300
-		property real   zoom: 1.1
-		property int    zoomDuration: 1000
-		property bool   useCustomWallpaper: false
-		property string customWallpaperPath: root.homeDirectory+"/eqSh/wallpaper/Sequoia-Sunrise.png"
-		property bool   enableShader: false
-		property string shaderName: "Raining" // Not compatible with Blur or X-Ray
-		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
-		property string shaderVert: "shaders/Raining.vert.qsb"
-	}
-
-	component Misc: QtObject {
-		property bool showVersion: true
-	}
-
-	component Wallpaper: QtObject {
-		property bool   enabled: true
 		property color  color: "#000000" // Only applies if path is empty
 		property string path: root.homeDirectory+"/eqSh/wallpaper/Tahoe-city.jpeg"//Sequoia-Sunrise.png"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
-		property string shaderFrag: "shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
-		property string shaderVert: "shaders/Raining.vert.qsb"
+		property string shaderFrag: Quickshell.shellDir + "/Media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
+		property string shaderVert: Quickshell.shellDir + "/Media/shaders/Raining.vert.qsb"
 	}
 
-	component Widgets: QtObject {
-		property bool   enabled: true
+	component Widgets: JsonObject {
+		property bool   enable: true
 		property int    radius: 20
 		property int    cellsX: 16
 		property int    cellsY: 10

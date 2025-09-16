@@ -14,12 +14,12 @@ import QtQuick.Controls.Fusion
 Scope {
   id: root
 
-  // === Dock Einstellungen (anpassbar) ===
-  property real magnifyRadius: 150       // Wirkungsradius der Vergrößerung in px
-  property real maxScale: 1.5           // Maximale Skalierung (z.B. 2.2 = 220%)
-  property real lift: 2                // Wie weit das Icon beim Vergrößern nach oben gehoben wird
+  property real magnifyRadius: 106
+  property real maxScale: 1.5
+  property real lift: 20
 
   component DockItem: Button {
+    id: app
     width: 56
     height: 56
     implicitHeight: 56
@@ -31,15 +31,26 @@ Scope {
       radius: 12
     }
 
-    // Distanz zum Maus-X im Dock
     readonly property real centreXInDock: parent.x + x + width/2
     readonly property real distance: Math.abs(centreXInDock - dock.mouseX)
-    text: dock.mouseX
+    property string appName: ""
+    text: appName
     readonly property real ratio: (dock.mouseInside ? Math.max(0, 1 - (distance / root.magnifyRadius)) : 0)
 
-    // Zielwerte automatisch gebunden
     property real targetScale: 1 + (root.maxScale - 1) * ratio
-    property real liftY: -(targetScale - 1) * root.lift
+    property real liftY: -ratio * root.lift
+
+    Behavior on targetScale {
+      NumberAnimation {
+        duration: 50
+      }
+    }
+
+    Behavior on liftY {
+      NumberAnimation {
+        duration: 50
+      }
+    }
 
     transform: [
       Scale {
@@ -55,8 +66,7 @@ Scope {
     ]
 
     onClicked: {
-      if (text === "kitty") Hyprland.dispatch("exec kitty")
-      if (text === "nautilus") Hyprland.dispatch("exec nautilus")
+      if (app.appName === "kitty") Hyprland.dispatch("exec kitty")
     }
   }
 
@@ -80,7 +90,7 @@ Scope {
         bottom: 5
       }
 
-      implicitHeight: 90
+      implicitHeight: 120
       implicitWidth: dock.implicitWidth
       exclusiveZone: -1
       color: "transparent"
@@ -92,6 +102,7 @@ Scope {
         anchors.fill: parent
 
         Rectangle {
+          id: dockBackground
           anchors.horizontalCenter: parent.horizontalCenter
           anchors.bottom: parent.bottom
           color: "#222222cc"
@@ -99,7 +110,6 @@ Scope {
           implicitHeight: 72
           radius: 20
           anchors.bottomMargin: 6
-          z: 0
         }
 
         // Public state für Maus
@@ -113,7 +123,7 @@ Scope {
           anchors.bottomMargin: 14
           spacing: 8
 
-          DockItem {}
+          DockItem { text: "kitty" }
           DockItem {}
           DockItem {}
           DockItem {}
@@ -132,6 +142,10 @@ Scope {
         onExited: {
           dock.mouseInside = false
           dock.mouseX = mouseX
+        }
+        propagateComposedEvents: true
+        onClicked: (mouse)=> {
+          mouse.accepted = false
         }
       }
     }
