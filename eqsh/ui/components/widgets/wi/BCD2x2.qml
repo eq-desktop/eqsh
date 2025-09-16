@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import qs
 import qs.Config
+import Quickshell.Widgets
 import qs.ui.Controls.providers
 
 Control {
@@ -9,10 +10,19 @@ Control {
     anchors.fill: parent
     padding: 10
 
-    contentItem: Rectangle {
+    contentItem: ClippingRectangle {
         id: root
         radius: Config.widgets.radius
-        color: "#000"
+        Rectangle {
+            id: bg
+            anchors.fill: parent
+            scale: 2
+            rotation: -20
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Qt.darker(AccentColor.color, 10) }
+                GradientStop { position: 1.0; color: Qt.darker(AccentColor.color, 6) }
+            }
+        }
 
         property int currentSecond: new Date().getSeconds()
 

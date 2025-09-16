@@ -100,13 +100,13 @@ Scope {
           horizontalCenter: parent.horizontalCenter
         }
         property Component png: Image {
-          source: iconPath
+          source: Qt.resolvedUrl(iconPath)
           width: 70
           height: 70
           mipmap: true
         }
         property Component svg: VectorImage {
-          source: iconPath
+          source: Qt.resolvedUrl(iconPath)
           width: 100
           height: 100
           preferredRendererType: VectorImage.CurveRenderer

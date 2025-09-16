@@ -42,7 +42,7 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Beta 0.0.75"
+					text: Config.version
 					color: "#50ffffff"
 					font.pointSize: 22
 				}

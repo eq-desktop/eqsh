@@ -123,7 +123,7 @@ Scope {
       root.customAppName = dialog.customAppName;
     }
   }
-  EditWidgets {}
+  Loader { active: Config.widgets.enabled; sourceComponent: EditWidgets {}}
   ActivateLinux {}
   Version {}
   ScreenCorners {}
