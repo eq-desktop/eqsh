@@ -49,13 +49,13 @@ Scope {
             radius: 24
             implicitWidth: 180
             implicitHeight: 180
-            scale: Config.osd.animation == "scale" ? 0 : 1
-            opacity: Config.osd.animation == "fade" ? 0 : 1
+            scale: Config.osd.animation == 1 ? 0 : 1
+            opacity: Config.osd.animation == 2 ? 0 : 1
             color: Config.osd.color
             anchors {
                 id: osdAnchor
                 bottom: parent.bottom
-                bottomMargin: Config.osd.animation == "bubble" ? -180 : 20
+                bottomMargin: Config.osd.animation == 3 ? -180 : 20
             }
 
             layer.enabled: true
@@ -63,20 +63,20 @@ Scope {
 
             PropertyAnimation {
                 id: showAnim
-                target: Config.osd.animation == "bubble" ? osdAnchor : box
-                property: Config.osd.animation == "bubble" ? "bottomMargin" : Config.osd.animation == "scale" ? "scale" : "opacity"
-                duration: Config.osd.duration
-                to: Config.osd.animation == "bubble" ? 20 : 1
+                target: Config.osd.animation == 3 ? osdAnchor : box
+                property: Config.osd.animation == 3 ? "bottomMargin" : Config.osd.animation == 1 ? "scale" : "opacity"
+                duration: 2 == Config.osd.animation ? 0 :  Config.osd.duration
+                to: Config.osd.animation == 3 ? 20 : 1
                 easing.type: Easing.OutBack
                 easing.overshoot: 1
             }
 
             PropertyAnimation {
                 id: hideAnim
-                target: Config.osd.animation == "bubble" ? osdAnchor : box
-                property: Config.osd.animation == "bubble" ? "bottomMargin" : Config.osd.animation == "scale" ? "scale" : "opacity"
+                target: Config.osd.animation == 3 ? osdAnchor : box
+                property: Config.osd.animation == 3 ? "bottomMargin" : Config.osd.animation == 1 ? "scale" : "opacity"
                 duration: Config.osd.duration
-                to: Config.osd.animation == "bubble" ? -180 : 0
+                to: Config.osd.animation == 3 ? -180 : 0
                 easing.type: Easing.OutBack
                 easing.overshoot: 1
             }

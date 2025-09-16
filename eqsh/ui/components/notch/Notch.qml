@@ -7,6 +7,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
 import qs.Config
+import qs
 import qs.ui.Controls.Auxiliary
 import qs.ui.Controls.providers
 
@@ -43,6 +44,17 @@ Scope {
   property bool   tempResize: false
   property bool   tempResizeInfinite: false
   property bool   tempResizeForce: false
+
+  property bool   locked: Runtime.locked
+  onLockedChanged: {
+      if (locked) {
+      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "", 0, 1)
+      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
+      } else {
+      notch.leftIconHide()
+      notch.temporaryResizeReset()
+      }
+  }
 
   function checkPath(path) {
     if (path.startsWith("builtin:")) {

@@ -1,9 +1,11 @@
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
+import qs.Config
 import Qt.labs.folderlistmodel
 
 MouseArea {
@@ -90,5 +92,10 @@ MouseArea {
         implicitSize: 24
         source: setupIcon(root.item.icon)
         anchors.fill: parent
+        layer.enabled: Config.bar.monochromeTray
+        layer.effect: MultiEffect {
+            colorization: 1
+            colorizationColor: "#fff"
+        }
     }
 }

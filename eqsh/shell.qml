@@ -14,6 +14,7 @@ import qs.ui.components.osd
 import qs.ui.components.dialog
 import qs.ui.components.notch
 import qs.ui.components.widgets
+import qs.ui.components.settings
 import qs.ui.Controls.Auxiliary
 import qs.ui.Controls.providers
 import qs.Config
@@ -21,41 +22,23 @@ import qs.Core.Foundation
 
 Scope {
   id: root
-  property string customAppName: ""
-  property bool   locked: false
-  onLockedChanged: {
-    if (root.locked) {
-      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "", 0, 1)
-      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
-    } else {
-      notch.leftIconHide()
-      notch.temporaryResizeReset()
-    }
-  }
+  Settings {}
   HyprPersist {}
   ReloadPopup {}
-  Background {}
+  Loader { active: Config.wallpaper.enable; sourceComponent: Background {}}
   Loader {
     active: Config.lockScreen.enable
     sourceComponent: Lock {
-      onUnlocking: {
-        if (!Config.notch.delayedLockAnim) {
-          root.locked = false
-        }
-      }
-      onUnlock: {
-        root.locked = false
-      }
-      onLock: {
-        root.locked = true
-      }
+      onUnlocking: if (!Config.notch.delayedLockAnim) Runtime.locked = false
+      onUnlock: Runtime.locked = false
+      onLock: Runtime.locked = true
     }
   }
   //Dock {}
   StatusBar {
     id: bar
-    customAppName: root.customAppName
-    visible: !locked
+    customAppName: Runtime.customAppName
+    visible: !Runtime.locked
     EdgeTrigger {
       id: triggerBar
       position: "tlr"
@@ -82,11 +65,8 @@ Scope {
     }
   }
   NotificationList {}
-  Loader {
-    active: Config.launchpad.enable
-    sourceComponent: LaunchPad {}
-  }
-  VolumeOSD {}
+  Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
+  Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
   Notch {
     id: notch
     onCollapse: (monitor) => triggerNotch.toggle(monitor);
@@ -117,13 +97,8 @@ Scope {
       onHovered: (monitor) => toggle(monitor);
     }
   }
-  Dialog {
-    id: dialog
-    onCustomAppNameChanged: {
-      root.customAppName = dialog.customAppName;
-    }
-  }
-  Loader { active: Config.widgets.enabled; sourceComponent: EditWidgets {}}
+  Loader { active: Config.dialogs.enable; sourceComponent: Dialog {}}
+  Loader { active: Config.widgets.enable; sourceComponent: EditWidgets {}}
   ActivateLinux {}
   Version {}
   ScreenCorners {}

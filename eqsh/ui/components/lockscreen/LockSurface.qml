@@ -120,8 +120,8 @@ Rectangle {
 				shader.time = this.elapsedTime;
 			}
 		}
-		vertexShader: "../../" + Config.lockScreen.shaderVert
-		fragmentShader: "../../" + Config.lockScreen.shaderFrag
+		vertexShader: Qt.resolvedUrl(Config.lockScreen.shaderVert)
+		fragmentShader: Qt.resolvedUrl(Config.lockScreen.shaderFrag)
 	}
 
 	BackgroundImage {
@@ -143,7 +143,11 @@ Rectangle {
 			}
 		}
 		opacity: Config.general.reduceMotion ? 1 : 0
-		readonly property bool showInteractive: Config.lockScreen.useFocusedScreen ? (Hyprland.focusedMonitor.name == screen.name) : Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name : Config.lockScreen.interactiveScreens.includes(screen.name)
+		readonly property bool showInteractive: {
+			Config.lockScreen.useFocusedScreen ? (Hyprland.focusedMonitor.name == screen?.name) :
+			Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name :
+			Config.lockScreen.interactiveScreens.includes(screen.name)
+		}
 		onShowInteractiveChanged: {
 			if (showInteractive) {
 				contentItem.scale = 1;
@@ -270,7 +274,7 @@ Rectangle {
 
 				Image {
 					anchors.fill: parent
-					source: Config.lockScreen.avatarPath
+					source: Config.account.avatarPath
 					fillMode: Image.PreserveAspectCrop
 					opacity: 0.95
 				}

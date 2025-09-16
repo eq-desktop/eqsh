@@ -15,9 +15,14 @@ Scope {
         objects: [ Pipewire.defaultAudioSink ]
     }
 
+    property bool muted: Pipewire.defaultAudioSink?.audio.muted || false
+
     Connections {
         target: Pipewire.defaultAudioSink?.audio
         function onVolumeChanged() {
+            popup.show()
+        }
+        function onMutedChanged() {
             popup.show()
         }
     }
@@ -35,7 +40,7 @@ Scope {
                     Layout.alignment: Qt.AlignHCenter
                     implicitWidth: 60
                     implicitHeight: 60
-                    source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/volume/audio-volume-3.svg");
+                    source: root.muted ? Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/volume/audio-volume-0.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/volume/audio-volume-3.svg");
                 }
 
                 Rectangle {

@@ -139,6 +139,7 @@ exec-once = qs -c eqsh
 - [x] System Tray  
 - [x] Battery & WiFi Indicators  
 - [x] Clock  
+- [x] Full JSON user settings & Settings App
 
 ---
 
@@ -152,7 +153,6 @@ exec-once = qs -c eqsh
 * Custom dropdown menus
 * Advanced IPC-powered popup system
 * Layered wallpapers & lockscreen
-* Full JSON user settings & Settings App
 
 ---
 

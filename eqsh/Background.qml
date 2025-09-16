@@ -66,12 +66,12 @@ Scope {
                   shader.time = this.elapsedTime;
                 }
               }
-              vertexShader: Config.wallpaper.shaderVert
-              fragmentShader: Config.wallpaper.shaderFrag
+              vertexShader: Qt.resolvedUrl(Config.wallpaper.shaderVert)
+              fragmentShader: Qt.resolvedUrl(Config.wallpaper.shaderFrag)
             }
           }
         }
-        Loader { active: Config.widgets.enabled; anchors.fill: parent; sourceComponent: WidgetGrid {
+        Loader { active: Config.widgets.enable; anchors.fill: parent; sourceComponent: WidgetGrid {
           opacity: 0
           anchors.fill: parent
           editable: false

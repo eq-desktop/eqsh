@@ -12,6 +12,8 @@ Loader {
     property int   blurMax: 64
     property int   duration: 500
 
+
+    property string source: Config.wallpaper.path
     property bool  fadeIn: false
 
     opacity: fadeIn ? 0 : 1
@@ -34,7 +36,7 @@ Loader {
         color: Config.wallpaper.color
     }
     property Component image: Image {
-        source: Config.wallpaper.path
+        source: root.source
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
 

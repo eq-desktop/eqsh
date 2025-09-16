@@ -65,11 +65,6 @@ Control {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.bottomMargin: 3
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                colorization: 1
-                colorizationColor: Config.general.darkMode ? "#fff" : "#222"
-            }
         }
 
         // Description

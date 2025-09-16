@@ -6,7 +6,7 @@ import qs.Config
 
 ShellRoot {
 	id: root
-	property bool visible: Config.general.activationKey == ""
+	property bool visible: Config.account.activationKey == ""
 	Variants {
 		model: Quickshell.screens
 
@@ -42,13 +42,13 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Activate eqOS"
+					text: "Activate Equora"
 					color: "#50ffffff"
 					font.pointSize: 22
 				}
 
 				Text {
-					text: "Go to Settings to activate eqOS"
+					text: "Go to Settings to activate your Account."
 					color: "#50ffffff"
 					font.pointSize: 14
 				}
