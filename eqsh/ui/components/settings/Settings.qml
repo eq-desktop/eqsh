@@ -11,8 +11,16 @@ import Quickshell.Widgets
 
 FloatingWindow {
     id: settingsApp
-    visible: true
+    visible: false
     title: "eqSh Settings"
+
+    IpcHandler {
+        id: ipcHandler
+        target: "settings"
+        function toggle() {
+            settingsApp.visible = !settingsApp.visible;
+        }
+    }
 
     color: Config.general.darkMode ? "#1a1a1a" : "#fefefe"
 
@@ -104,10 +112,11 @@ FloatingWindow {
                     width: 170
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: searchBar.bottom
-                    anchors.topMargin: 5
-                    height: parent.height - 55
+                    anchors.topMargin: 20
+                    height: parent.height - 75
                     model: [
                         "_Account",
+                        "",
                         "General",
                         "Appearance",
                         "Menu Bar",
@@ -123,24 +132,25 @@ FloatingWindow {
                     component SidebarItem: Button {
                         text: ""
                         height: 35
+                        anchors.topMargin: 20
                         background: Rectangle {
                             anchors.fill: parent
-                            color: contentView.currentIndex == index ? AccentColor.color : "transparent"
+                            color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
                             radius: 10
                             ClippingRectangle {
                                 id: imageContainer
-                                width: 24
-                                height: 24
+                                width: modelData == "_Account" ? 34 : 24
+                                height: modelData == "_Account" ? 34 : 24
                                 radius: modelData == "_Account" ? 50 : 0
                                 color: "transparent"
                                 clip: true
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: 5
+                                anchors.leftMargin: modelData == "_Account" ? 0 : 5
 
                                 Image {
                                     anchors.fill: parent
-                                    source: modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/settings/" + modelData.toLowerCase() + ".svg")
+                                    source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/settings/" + modelData.toLowerCase() + ".svg")
                                     fillMode: Image.PreserveAspectCrop
                                 }
                             }
@@ -167,12 +177,12 @@ FloatingWindow {
                             }
                         }
                         onClicked: {
+                            if (modelData == "") return
                             contentView.currentIndex = index
                         }
                     }
                     delegate: SidebarItem {
                         width: parent.width
-                        onClicked: contentView.currentIndex = index
                     }
                 } 
             }
@@ -212,33 +222,79 @@ FloatingWindow {
                 id: contentView
                 anchors.top: pageTitle.bottom
                 anchors.topMargin: 10
+                width: parent.width - 5
+                height: parent.height - 75
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 currentIndex: 0
 
                 // Account
                 ScrollView {
-                    ColumnLayout {
+                    Rectangle {
                         anchors.fill: parent
-                        UILabel { text: "Name" }
+                        color: "transparent"
+                    }  
+                    ColumnLayout {
+                        anchors.centerIn: parent
+                        spacing: 20
+                        width: parent.width
+
+                        // Profile Picture
+                        ClippingRectangle {
+                            id: imageContainer
+                            width: 120
+                            height: 120
+                            radius: 99
+                            color: "transparent"
+                            clip: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            Image {
+                                anchors.fill: parent
+                                source: Config.account.avatarPath
+                                fillMode: Image.PreserveAspectCrop
+                            }
+                        }
                         UITextField {
+                            background: Rectangle { color: "transparent" }
                             text: Config.account.name
                             onEditingFinished: Config.account.name = text
+                            Layout.alignment: Qt.AlignHCenter
+                            horizontalAlignment: Text.AlignHCenter
                         }
-                        UILabel { text: "Profile Picture Path" }
-                        UITextField {
-                            text: Config.account.avatarPath
-                            onEditingFinished: Config.account.avatarPath = text
+
+                        // Editable Profile Picture Path
+                        ColumnLayout {
+                            Layout.alignment: Qt.AlignHCenter
+                            spacing: 4
+
+                            UILabel { text: "Profile Picture Path" }
+                            UITextField {
+                                text: Config.account.avatarPath
+                                onEditingFinished: Config.account.avatarPath = text
+                                Layout.preferredWidth: 300
+                            }
                         }
-                        UILabel { text: "Activation Key" }
-                        UITextField {
-                            Layout.fillWidth: true
-                            text: Config.account.activationKey
-                            onEditingFinished: Config.account.activationKey = text
-                            placeholderText: "Activation Key"
+
+                        // Activation Key
+                        ColumnLayout {
+                            Layout.alignment: Qt.AlignHCenter
+                            spacing: 4
+
+                            UILabel { text: "Activation Key" }
+                            UITextField {
+                                Layout.preferredWidth: 300
+                                text: Config.account.activationKey
+                                onEditingFinished: Config.account.activationKey = text
+                                placeholderText: "Activation Key"
+                            }
                         }
                     }
                 }
+
+
+                // Space
+                ScrollView {}
 
                 // General
                 ScrollView {
