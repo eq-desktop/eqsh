@@ -4,6 +4,7 @@ import Quickshell.Widgets
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.VectorImage
+import QtQuick.Effects
 import qs
 import qs.Config
 import qs.ui.Controls.providers
@@ -22,8 +23,8 @@ Control {
             scale: 2
             rotation: -20
             gradient: Gradient {
-                GradientStop { position: 0.0; color: Qt.darker(AccentColor.color, 5) }
-                GradientStop { position: 1.0; color: AccentColor.color }
+                GradientStop { position: 0.0; color: Config.general.darkMode ? Qt.darker(AccentColor.color, 5) : Qt.lighter(AccentColor.color, 2) }
+                GradientStop { position: 1.0; color: Config.general.darkMode ? AccentColor.color : AccentColor.color }
             }
         }
 
@@ -36,7 +37,7 @@ Control {
         Text {
             id: locationT
             text: root.location
-            color: "#fff"
+            color: Config.general.darkMode ? "#fff" : "#222"
             font.pixelSize: 14
             topPadding: 10
             leftPadding: 10
@@ -46,7 +47,7 @@ Control {
 
         Text {
             text: root.temperature + "°C"
-            color: "#fff"
+            color: Config.general.darkMode ? "#fff" : "#222"
             font.pixelSize: 28
             font.weight: 300
             leftPadding: 10
@@ -64,13 +65,18 @@ Control {
             anchors.left: parent.left
             anchors.leftMargin: 10
             anchors.bottomMargin: 3
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                colorization: 1
+                colorizationColor: Config.general.darkMode ? "#fff" : "#222"
+            }
         }
 
         // Description
         Text {
             id: hlT
             text: root.hlVal
-            color: "#fff"
+            color: Config.general.darkMode ? "#fff" : "#222"
             font.pixelSize: 12
             leftPadding: 10
             bottomPadding: 10
@@ -81,7 +87,7 @@ Control {
         Text {
             id: descriptionT
             text: root.description
-            color: "#fff"
+            color: Config.general.darkMode ? "#fff" : "#222"
             font.pixelSize: 12
             leftPadding: 10
             anchors.bottom: hlT.top

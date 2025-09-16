@@ -12,7 +12,7 @@ Control {
     contentItem: Rectangle {
         id: root
         radius: Config.widgets.radius
-        color: "#0a0a0a"
+        color: Config.general.darkMode ? "#0a0a0a" : "#eee"
 
         property int currentSecond: new Date().getSeconds()
 
@@ -31,7 +31,7 @@ Control {
         Text {
             id: day
             anchors.fill: parent
-            color: AccentColor.textColor
+            color: Config.general.darkMode ? AccentColor.textColor : AccentColor.color
             font.pixelSize: 30
             text: Qt.formatDateTime(new Date(), "dd")
             anchors.top: daylong.bottom
@@ -42,7 +42,7 @@ Control {
 
         Text {
             id: events
-            color: "#aaa"
+            color: Config.general.darkMode ? "#aaa" : "#555"
             font.pixelSize: 12
             text: "No events today"
             anchors.bottom: parent.bottom
