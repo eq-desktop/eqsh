@@ -71,7 +71,7 @@ Scope {
             }
           }
         }
-        WidgetGrid {
+        Loader { active: Config.widgets.enabled; anchors.fill: parent; sourceComponent: WidgetGrid {
           opacity: 0
           anchors.fill: parent
           editable: false
@@ -81,7 +81,7 @@ Scope {
           Component.onCompleted: {
             opacity = 1
           }
-        }
+        }}
       }
     }
   }

@@ -18,7 +18,7 @@ Control {
     contentItem: Rectangle {
         id: root
         radius: Config.widgets.radius
-        color: "#1a1a1a"
+        color: "#222"
 
         // Example device batteries (replace with provider data)
         property var devices: [
