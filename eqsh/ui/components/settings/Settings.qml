@@ -519,6 +519,12 @@ FloatingWindow {
                             checked: Config.widgets.enable
                             onToggled: Config.widgets.enable = checked
                         }
+                        UILabel { text: "Location" }
+                        UITextField {
+                            Layout.fillWidth: true
+                            text: Config.widgets.location
+                            onEditingFinished: Config.widgets.location = text
+                        }
                     }
                 }
 
