@@ -60,6 +60,7 @@ Item {
 
 	component Looks: JsonObject {
 		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted
+		property int   glassMode: 3 // 0=slight, 1=strong, 2=fun, 3=strongest
 	}
 
 	component Notifications: JsonObject {
@@ -207,5 +208,8 @@ Item {
 		property string location: "Berlin"
 		property bool   useLocationInUI: true
 		property string tempUnit: "C"
+	}
+
+	component ControlCenter: JsonObject {
 	}
 }

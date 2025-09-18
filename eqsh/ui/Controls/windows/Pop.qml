@@ -11,7 +11,7 @@ Scope {
     property alias margins: panelWindow.margins
     property bool opened: false
     property bool hiding: false
-    property int animationDuration: 200
+    property int animationDuration: 100
     required property Component content
     PanelWindow {
         WlrLayershell.layer: WlrLayer.Overlay
