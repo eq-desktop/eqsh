@@ -1,5 +1,7 @@
 import QtQuick
 import QtQuick.Controls
+import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.providers
 import QtQuick.Effects
 import Qt5Compat.GraphicalEffects
 
@@ -8,7 +10,10 @@ Item {
 
     property color color: "#bb000000"
     property int borderSize: 1
-    property string highlight: '#fff'
+    property real shadowOpacity: 0.5
+    property color highlight: '#fff'
+    property bool enableShadow: highlight != "transparent"
+    property color negHighlight: Colors.complementary(highlight)
 
     // Individual corner radii
     property int radius: 20
@@ -18,35 +23,55 @@ Item {
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
     Behavior on highlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
-
-    InnerShadow {
-        id: boxContainerEffect2
-        anchors.fill: boxContainerEffect1
-        radius: 1
-        samples: 16
-        spread: 0
-        color: highlight
-        horizontalOffset: -1
-        verticalOffset: -1
-        source: boxContainerEffect1
-    }
-    InnerShadow {
-        id: boxContainerEffect1
-        anchors.fill: boxContainer
-        radius: 1
-        samples: 16
-        spread: 0
-        color: highlight
-        horizontalOffset: 1
-        verticalOffset: 1
-        source: boxContainer
-    }
-
-    Rectangle {
+    
+    Box {
         id: boxContainer
         anchors.fill: parent
         color: box.color
         radius: box.radius
-        opacity: 0
+        opacity: box.enableShadow ? 0 : 1
+    }
+
+    // Capture it as a texture
+    ShaderEffectSource {
+        id: rectSource
+        sourceItem: boxContainer
+        live: true
+        hideSource: box.enableShadow
+        visible: box.enableShadow
+    }
+
+    // First inner shadow
+    InnerShadow {
+        anchors.fill: parent
+        source: rectSource
+        radius: 6
+        samples: 16
+        horizontalOffset: 0
+        verticalOffset: -3
+        color: highlight // "#ff0000"
+        opacity: box.shadowOpacity
+        visible: box.enableShadow
+    }
+
+    // Second inner shadow
+    InnerShadow {
+        anchors.fill: parent
+        source: rectSource
+        radius: 4
+        samples: 16
+        horizontalOffset: 0
+        verticalOffset: 3
+        color: negHighlight// "#0000ff"
+        opacity: box.shadowOpacity/2
+        visible: box.enableShadow
+    }
+
+    Box {
+        id: boxContainer2
+        anchors.fill: parent
+        color: "transparent"
+        radius: box.radius
+        opacity: box.enableShadow ? 1 : 0
     }
 }
