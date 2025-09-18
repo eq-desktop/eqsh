@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -28,10 +29,36 @@ Control {
             }
         }
 
-        property string location: "Düren"
-        property int temperature: 21
-        property string description: "Partly Cloudy"
-        property string hlVal: "H: 23°C, L: 15°C"
+        Timer {
+            id: notifTimer
+            interval: 10000 // 2 minutes
+            running: true
+            repeat: true
+            onTriggered: {
+                weatherProc.running = true
+            }
+        }
+
+        Process {
+            id: weatherProc
+            command: ["sh", "-c", `curl -s wttr.in/${Config.widgets.location}?format=j1 | jq '{location: .nearest_area[0].areaName[0].value, temperature: .current_condition[0].temp_${Config.widgets.tempUnit}, feelsLikeTemp: .current_condition[0].FeelsLike${Config.widgets.tempUnit}, description: .current_condition[0].weatherDesc[0].value, highTemp: .weather[0].maxtemp${Config.widgets.tempUnit}, lowTemp: .weather[0].mintemp${Config.widgets.tempUnit}}'`]
+            running: true
+            stdout: StdioCollector {
+                onStreamFinished: {
+                    const text = this.text;
+                    const json = JSON.parse(text);
+                    root.location = Config.widgets.useLocationInUI ? Config.widgets.location : json.location;
+                    root.temperature = json.temperature;
+                    root.description = json.description;
+                    root.hlVal = "H: " + json.highTemp + "°" + Config.widgets.tempUnit + ", L: " + json.lowTemp + "°" + Config.widgets.tempUnit;
+                }
+            }
+        }
+
+        property string location: "--"
+        property int temperature: 0
+        property string description: ""
+        property string hlVal: "H: --, L: --"
         property url icon: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/weather/cloud-sun.svg")
 
         Text {
@@ -46,7 +73,7 @@ Control {
         }
 
         Text {
-            text: root.temperature + "°C"
+            text: root.temperature + "°" + Config.widgets.tempUnit
             color: Config.general.darkMode ? "#fff" : "#222"
             font.pixelSize: 28
             font.weight: 300
