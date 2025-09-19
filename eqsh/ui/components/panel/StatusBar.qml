@@ -32,6 +32,12 @@ Scope {
 
       property string applicationName: Config.bar.defaultAppName
 
+      component UIBButton: BButton {
+        onHover: {
+          this.jumpUp();
+        }
+      }
+
       anchors {
         top: true
         left: true
@@ -83,7 +89,7 @@ Scope {
             leftMargin: 0
           }
 
-          BButton {VectorImage {
+          UIBButton {VectorImage {
             id: lBAppMenu
             source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/icon.svg")
             width: barFS
@@ -92,33 +98,33 @@ Scope {
             anchors.centerIn: parent
           }}
 
-          BButton {
+          UIBButton {
             text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName)
             font.weight: 600
           }
 
-          BButton {
+          UIBButton {
             text: "File"
           }
 
-          BButton {
+          UIBButton {
             text: "Edit"
           }
 
-          BButton {
+          UIBButton {
             text: "View"
           }
 
-          BButton {
+          UIBButton {
             text: "Go"
           }
 
-          BButton {
+          UIBButton {
             text: "Window"
             
           }
 
-          BButton {
+          UIBButton {
             text: "Help"
             
           }
@@ -134,11 +140,11 @@ Scope {
 
           SystemTray {}
 
-          BButton{Battery {iconSize: barIS} }
+          UIBButton{Battery {iconSize: barIS} }
 
-          BButton {Wifi {iconSize: barIS}}
+          UIBButton {Wifi {iconSize: barIS}}
 
-          BButton {VectorImage {
+          UIBButton {VectorImage {
             id: rBBluetooth
             source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/bluetooth-clear.svg")
             width: barIS * 1.2
@@ -147,7 +153,7 @@ Scope {
             anchors.centerIn: parent
           } }
 
-          BButton {VectorImage {
+          UIBButton {VectorImage {
             id: rBSearch
             source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/search.svg")
             width: barIS * 0.7
@@ -158,7 +164,7 @@ Scope {
             anchors.centerIn: parent
           } }
 
-          BButton {
+          UIBButton {
             VectorImage {
               id: rBControlCenter
               source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/control-center.svg")
@@ -176,7 +182,7 @@ Scope {
             
           }
 
-          BButton{
+          UIBButton{
             text: Time.time
           }
         }

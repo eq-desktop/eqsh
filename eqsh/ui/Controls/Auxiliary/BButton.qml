@@ -14,9 +14,12 @@ import QtQuick.Controls.Fusion
 Button {
   id: root
   signal click()
+  signal hover()
+  signal exited()
   palette.buttonText: "#fff"
   Layout.minimumWidth: 50
   Layout.preferredHeight: 25
+  scale: 1
   Layout.maximumHeight: Config.bar.height * 1.05
   padding: 10
   background: Box {
@@ -24,6 +27,16 @@ Button {
     color: "transparent"
     radius: 20
     highlight: "transparent"
+  }
+  SequentialAnimation {
+    id: jumpAnim
+    running: false
+    loops: 1
+    PropertyAnimation { target: root; property: "scale"; to: 1.2; duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+    PropertyAnimation { target: root; property: "scale"; to: 1  ; duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }
+  }
+  function jumpUp() {
+    jumpAnim.running = true
   }
   layer.enabled: true
   layer.effect: MultiEffect {
@@ -35,10 +48,12 @@ Button {
     anchors.fill: parent
     hoverEnabled: true
     onEntered: {
-      bgRect.color = "#33ffffff";
+      bgRect.color = "#88ffffff";
+      root.hover()
     }
     onExited: {
       bgRect.color = "transparent";
+      root.exited()
     }
     onClicked: {
       root.click()
