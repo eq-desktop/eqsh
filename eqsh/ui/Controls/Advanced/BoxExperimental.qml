@@ -29,6 +29,7 @@ Item {
         anchors.fill: parent
         color: box.color
         radius: box.radius
+        highlight: Qt.lighter(box.highlight, 1.7)
         opacity: box.enableShadow ? 0 : 1
     }
 
@@ -72,6 +73,7 @@ Item {
         anchors.fill: parent
         color: "transparent"
         radius: box.radius
+        highlight: Qt.lighter(box.highlight, 1.7)
         opacity: box.enableShadow ? 1 : 0
     }
 }

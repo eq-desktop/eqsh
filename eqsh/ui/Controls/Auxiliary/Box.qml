@@ -7,7 +7,7 @@ Item {
 
     property color color: "#20000000"
     property int borderSize: 1
-    property string highlight: '#80ffffff'
+    property color highlight: '#80ffffff'
 
     // Individual corner radii
     property int radius: 20
