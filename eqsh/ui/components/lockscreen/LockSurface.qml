@@ -9,6 +9,7 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.Advanced
 import qs.ui.Controls.providers
 import qs.Config
 import qs.ui.components.panel
@@ -283,10 +284,11 @@ Rectangle {
 			property bool freeSpace: Config.lockScreen.autohideInput && Config.lockScreen.hideOpacity == 0 ? (passwordBox.text == "" ? true : false) : false
 			RowLayout {
 				Layout.alignment: Qt.AlignHCenter
-				Box {
+				BoxExperimental {
 					id: passwordBoxContainer
 					width: 200
 					height: 35
+					highlight: AccentColor.color
 					opacity: Config.lockScreen.autohideInput ? (passwordBox.text == "" ? Config.lockScreen.hideOpacity : 1) : 1
 					Behavior on opacity {
 						NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }

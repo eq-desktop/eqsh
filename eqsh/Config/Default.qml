@@ -117,6 +117,7 @@ Item {
 		property bool   monochromeTray: true
 		property bool   enable: true
 		property int    height: 30
+		property int    buttonColor: Qt.darker(AccentColor.color, 2)
 		property color  color: "#01000000"
 		property bool   useBlur: false
 		property color  fullscreenColor: "#000"
@@ -151,7 +152,7 @@ Item {
 
 	component Osd: JsonObject {
 		property bool   enable: true
-		property string color: "#01000000"
+		property string color: "#bb000000"
 		property int    animation: 1 // bubble=3 | fade=2 | scale=1
 		property int    duration: 200
 	}
