@@ -4,15 +4,9 @@ import QtQuick.Layouts
 import qs.Config
 import qs.ui.Controls.providers
 
-Control {
-    id: calendarWidget
-    anchors.fill: parent
-    padding: 10
-
-    contentItem: Rectangle {
+BaseWidget {
+    content: Item {
         id: root
-        radius: 12
-        color: Config.general.darkMode ? "#0a0a0a" : "#eee"
 
         property date today: new Date()
         property int year: today.getFullYear()

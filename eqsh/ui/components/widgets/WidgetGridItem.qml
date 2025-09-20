@@ -76,11 +76,13 @@ Item {
             property Component cLD2x2: CLD2x2 {}
             property Component bWD2x2: BWD2x2 {}
             property Component dED2x2: DED2x2 {}
+            property Component dCD2x2: DCD2x2 {}
             sourceComponent: {
                 root.name == "basic-clock-digital-2x2" ? bCD2x2 :
                 root.name == "battery-bar-display-4x2" ? bBD4x2 :
                 root.name == "calender-display-2x2" ? cLD2x2 :
                 root.name == "basic-weather-display-2x2" ? bWD2x2 : 
+                root.name == "day-calendar-display-2x2" ? dCD2x2 : 
                 root.name == "day-event-display-2x2" ? dED2x2 : undefined
             }
         }
