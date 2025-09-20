@@ -83,26 +83,18 @@ Rectangle {
 		source: backgroundImage
 		blurEnabled: true
 		autoPaddingEnabled: false
-		blur: Config.lockScreen.blur
+		blur: 0
 		blurMax: 64 * Config.lockScreen.blurStrength
 		blurMultiplier: 1
 		scale: 1
-		SequentialAnimation on blur {
-			loops: Animation.Infinite
-			running: Config.lockScreen.liquidBlur
-			PropertyAnimation { to: 1; duration: (Config.lockScreen.liquidDuration / 2) }
-			PropertyAnimation { to: 0.4; duration: (Config.lockScreen.liquidDuration / 2) }
-		}
-		SequentialAnimation on blurMax {
-			loops: Animation.Infinite
-			running: Config.lockScreen.liquidBlurMax
-			PropertyAnimation { to: 128 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
-			PropertyAnimation { to: 64 * Config.lockScreen.blurStrength; duration: (Config.lockScreen.liquidDuration / 2) }
-		}
 		Component.onCompleted: {
 			backgroundImageBlur.scale = Config.general.reduceMotion ? 1 : Config.lockScreen.zoom;
+			backgroundImageBlur.blur = Config.lockScreen.blur;
 		}
 		Behavior on scale {
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
+		}
+		Behavior on blur {
 			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
 		}
 	}
