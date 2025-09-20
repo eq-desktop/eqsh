@@ -51,7 +51,7 @@ Scope {
       Loader {
         id: launchpadLoader
         active: true
-        focus: true
+        focus: false
         property real scaleVal: Config.launchpad.zoom
         property real blurVal
         property bool shown: false
@@ -65,6 +65,7 @@ Scope {
           target: launchpadLoader.item
           property: "opacity"
           to: 1
+          running: false
           duration: Config.launchpad.fadeDuration
           easing.type: Easing.InOutQuad
           onStarted: {
@@ -82,6 +83,7 @@ Scope {
           target: launchpadLoader.item
           property: "opacity"
           to: 0
+          running: false
           duration: Config.launchpad.fadeDuration
           easing.type: Easing.InOutQuad
           onStarted: {
