@@ -184,7 +184,7 @@ Scope {
       color: "transparent"
 
       margins {
-        top: inFullscreen ? -40 : (islandMode ? (Config.notch.margin) : 0)
+        top: inFullscreen ? -(Config.notch.height + Config.notch.margin) : 0
       }
 
       Connections {
@@ -210,10 +210,6 @@ Scope {
         height: notchBg.height
       }
 
-      Behavior on margins.top {
-        NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
-      }
-
       Behavior on implicitHeight {
         NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
       }
@@ -235,7 +231,11 @@ Scope {
           id: notchBg
           anchors {
             top: parent.top
+            topMargin: Config.notch.margin
             horizontalCenter: parent.horizontalCenter
+            Behavior on topMargin {
+              NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
+            }
           }
           implicitWidth: parent.width - 40
           implicitHeight: parent.height - 40
@@ -249,7 +249,8 @@ Scope {
           layer.effect: MultiEffect {
             anchors.fill: notchBg
             shadowEnabled: true
-            shadowColor: "#000000"
+            shadowColor: root.expanded || root.tempResize ? "#ffffff" : "#000000"
+            shadowOpacity: 0.2
             shadowBlur: 1
           }
 
