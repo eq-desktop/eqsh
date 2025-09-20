@@ -10,15 +10,9 @@ import qs.ui.Controls.Primitives
 import Quickshell
 import Quickshell.Services.UPower
 
-Control {
-    id: bbd4x2
-    anchors.fill: parent
-    padding: 10
-
-    contentItem: Rectangle {
+BaseWidget {
+    content: Item {
         id: root
-        radius: Config.widgets.radius
-        color: Config.general.darkMode ? "#222" : "#eee"
 
         // Example device batteries (replace with provider data)
         property var devices: [
@@ -46,7 +40,7 @@ Control {
                         implicitSize: 60
                         lineWidth: 4
                         colPrimary: AccentColor.color
-                        colSecondary: Config.general.darkMode ? "#222" : "#ddd"
+                        colSecondary: Config.general.darkMode ? "#444" : "#ddd"
                         gapAngle: 0
                         value: modelData.level
 

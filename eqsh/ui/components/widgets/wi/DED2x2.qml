@@ -4,22 +4,15 @@ import qs
 import qs.Config
 import qs.ui.Controls.providers
 
-Control {
-    id: bcd2x2
-    anchors.fill: parent
-    padding: 10
-
-    contentItem: Rectangle {
+BaseWidget {
+    content: Item {
         id: root
-        radius: Config.widgets.radius
-        color: Config.general.darkMode ? "#0a0a0a" : "#eee"
-
         property int currentSecond: new Date().getSeconds()
 
         Text {
             id: daylong
             anchors.fill: parent
-            color: AccentColor.color
+            color: AccentColor.textColor
             font.pixelSize: 16
             text: Time.getTime("dddd")
             anchors.top: parent.top
@@ -31,7 +24,8 @@ Control {
         Text {
             id: day
             anchors.fill: parent
-            color: Config.general.darkMode ? AccentColor.textColor : AccentColor.color
+            color: Config.general.darkMode ? "#fff" : "#222"
+            font.family: Fonts.sFProRounded.family
             font.pixelSize: 30
             text: Qt.formatDateTime(new Date(), "dd")
             anchors.top: daylong.bottom

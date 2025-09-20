@@ -5,25 +5,9 @@ import qs.Config
 import Quickshell.Widgets
 import qs.ui.Controls.providers
 
-Control {
-    id: bcd2x2
-    anchors.fill: parent
-    padding: 10
-
-    contentItem: ClippingRectangle {
+BaseWidget {
+    content: Item {
         id: root
-        radius: Config.widgets.radius
-        Rectangle {
-            id: bg
-            anchors.fill: parent
-            scale: 2
-            rotation: -20
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: Config.general.darkMode ? Qt.darker(AccentColor.color, 10) : Qt.lighter(AccentColor.color, 2) }
-                GradientStop { position: 1.0; color: Config.general.darkMode ? Qt.darker(AccentColor.color, 6) : Qt.lighter(AccentColor.color, 1.5) }
-            }
-        }
-
         property int currentSecond: new Date().getSeconds()
 
         Timer {
@@ -70,7 +54,8 @@ Control {
         Text {
             id: text
             anchors.fill: parent
-            color: Config.general.darkMode ? AccentColor.textColor : AccentColor.color
+            color: Config.general.darkMode ? "#fff" : "#222"
+            font.family: Fonts.sFProRounded.family
             font.pixelSize: Math.min(width, height) / 4
             font.weight: Font.Bold
             text: Qt.formatTime(new Date(), "hh:mm")
