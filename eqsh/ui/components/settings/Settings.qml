@@ -13,6 +13,7 @@ FloatingWindow {
     id: settingsApp
     visible: false
     title: "eqSh Settings"
+    minimumSize: "675x540"
     
 
     IpcHandler {
@@ -59,133 +60,144 @@ FloatingWindow {
             Layout.fillHeight: true
             height: parent.height
             width: 200
-            Rectangle {
-                id: sidebarBackground
+            scale: 0.99
+            Behavior on scale {
+                NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 4 }
+            }
+            MouseArea {
                 anchors.fill: parent
-                anchors.margins: 5
-                clip: true
-                radius: 15
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: Config.general.darkMode ? Qt.darker(AccentColor.color, 6.7) : Qt.lighter(AccentColor.color, 1.7) }
-                    GradientStop { position: 1.0; color: Config.general.darkMode ? Qt.darker(AccentColor.color, 8.5) : Qt.lighter(AccentColor.color, 1.5) }
+                hoverEnabled: true
+                onEntered: {
+                    sidebarView.scale = 1
                 }
-                border {
-                    width: 1
-                    color: Config.general.darkMode ? Qt.darker(AccentColor.color, 3.7) : Qt.lighter(AccentColor.color, 1.7)
+                onExited: {
+                    sidebarView.scale = 0.99
                 }
-
-                Item {
-                    id: searchBar
-                    height: 30
-                    width: 170
-                    z: 2
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    anchors.topMargin: 20
-                    UITextField {
-                        id: searchField
-                        width: 170
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: Config.general.darkMode ? "#ee1a1a1a" : "#eefefefe"
-                            radius: 10
-                            border {
-                                width: 1
-                                color: "#55aaaaaa"
-                            }
-                            Text {
-                                anchors.fill: parent
-                                text: searchField.text == "" ? "Search" : ""
-                                color: "#aaa"
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignLeft
-                                anchors.leftMargin: 10
-                            }
-                        }
+                Rectangle {
+                    id: sidebarBackground
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    clip: true
+                    radius: 15
+                    color: Config.general.darkMode ? "#111" : "#fff"
+                    border {
+                        width: 1
+                        color: "#55333333"
                     }
-                }
 
-                // Sidebar
-                ListView {
-                    id: sidebar
-                    width: 170
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: searchBar.bottom
-                    anchors.topMargin: 20
-                    height: parent.height - 75
-                    model: [
-                        "_Account",
-                        "",
-                        "General",
-                        "Appearance",
-                        "Menu Bar",
-                        "Wallpaper",
-                        "Notifications",
-                        "Dialogs",
-                        "Notch",
-                        "Launchpad",
-                        "Lockscreen",
-                        "Widgets",
-                        "Osd"
-                    ]
-                    component SidebarItem: Button {
-                        text: ""
-                        height: 35
+                    Item {
+                        id: searchBar
+                        height: 30
+                        width: 170
+                        z: 2
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
                         anchors.topMargin: 20
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
-                            radius: 10
-                            ClippingRectangle {
-                                id: imageContainer
-                                width: modelData == "_Account" ? 34 : 24
-                                height: modelData == "_Account" ? 34 : 24
-                                radius: modelData == "_Account" ? 50 : 0
-                                color: "transparent"
-                                clip: true
-                                anchors.left: parent.left
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: modelData == "_Account" ? 0 : 5
-
-                                Image {
+                        UITextField {
+                            id: searchField
+                            width: 170
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: Config.general.darkMode ? "#ee1a1a1a" : "#eefefefe"
+                                radius: 10
+                                border {
+                                    width: 1
+                                    color: "#55aaaaaa"
+                                }
+                                Text {
                                     anchors.fill: parent
-                                    source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/settings/" + modelData.toLowerCase() + ".svg")
-                                    fillMode: Image.PreserveAspectCrop
+                                    text: searchField.text == "" ? "Search" : ""
+                                    color: "#aaa"
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    anchors.leftMargin: 10
                                 }
                             }
-                            Text {
-                                anchors.fill: parent
-                                text: modelData == "_Account" ? Config.account.name : modelData
-                                color: Config.general.darkMode ? "#fff" : "#000"
-                                font.pixelSize: 14
-                                font.weight: modelData == "_Account" ? 500 : Font.Normal
-                                verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
-                                horizontalAlignment: Text.AlignLeft
-                                anchors.leftMargin: 40
-                            }
-                            Text {
-                                anchors.fill: parent
-                                visible: modelData == "_Account"
-                                text: "Equora Account"
-                                color: Config.general.darkMode ? "#ddd" :"#000"
-                                font.pixelSize: 12
-                                font.weight: 400
-                                verticalAlignment: Text.AlignBottom
-                                horizontalAlignment: Text.AlignLeft
-                                anchors.leftMargin: 40
-                            }
-                        }
-                        onClicked: {
-                            if (modelData == "") return
-                            contentView.currentIndex = index
                         }
                     }
-                    delegate: SidebarItem {
-                        width: parent.width
-                    }
-                } 
+
+                    // Sidebar
+                    ListView {
+                        id: sidebar
+                        width: 170
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: searchBar.bottom
+                        anchors.topMargin: 20
+                        height: parent.height - 75
+                        model: [
+                            "_Account",
+                            "",
+                            "General",
+                            "Appearance",
+                            "Menu Bar",
+                            "Wallpaper",
+                            "Notifications",
+                            "Dialogs",
+                            "Notch",
+                            "Launchpad",
+                            "Lockscreen",
+                            "Widgets",
+                            "Osd"
+                        ]
+                        component SidebarItem: Button {
+                            text: ""
+                            height: 35
+                            anchors.topMargin: 20
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
+                                radius: 10
+                                ClippingRectangle {
+                                    id: imageContainer
+                                    width: modelData == "_Account" ? 34 : 24
+                                    height: modelData == "_Account" ? 34 : 24
+                                    radius: modelData == "_Account" ? 50 : 0
+                                    color: "transparent"
+                                    clip: true
+                                    anchors.left: parent.left
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.leftMargin: modelData == "_Account" ? 0 : 5
+
+                                    Image {
+                                        anchors.fill: parent
+                                        source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/settings/" + modelData.toLowerCase() + ".svg")
+                                        fillMode: Image.PreserveAspectCrop
+                                    }
+                                }
+                                Text {
+                                    anchors.fill: parent
+                                    text: modelData == "_Account" ? Config.account.name : modelData
+                                    color: Config.general.darkMode ? "#fff" : "#000"
+                                    font.pixelSize: 14
+                                    font.weight: modelData == "_Account" ? 500 : Font.Normal
+                                    verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignLeft
+                                    anchors.leftMargin: 40
+                                }
+                                Text {
+                                    anchors.fill: parent
+                                    visible: modelData == "_Account"
+                                    text: "Equora Account"
+                                    color: Config.general.darkMode ? "#ddd" :"#000"
+                                    font.pixelSize: 12
+                                    font.weight: 400
+                                    verticalAlignment: Text.AlignBottom
+                                    horizontalAlignment: Text.AlignLeft
+                                    anchors.leftMargin: 40
+                                }
+                            }
+                            onClicked: {
+                                if (modelData == "") return
+                                contentView.currentIndex = index
+                            }
+                        }
+                        delegate: SidebarItem {
+                            width: parent.width
+                        }
+                    } 
+                }   
             }
         }
 
@@ -535,6 +547,12 @@ FloatingWindow {
                             Layout.fillWidth: true
                             text: Config.lockScreen.timeFormat
                             onEditingFinished: Config.lockScreen.timeFormat = text
+                        }
+                        UILabel { text: "Blur Lockscreen" }
+                        ComboBox {
+                            model: ["No", "Yes"]
+                            currentIndex: Config.lockScreen.blur ? 1 : 0
+                            onCurrentIndexChanged: Config.lockScreen.blur = currentIndex == 1
                         }
                         UILabel { text: "Avatar Size" }
                         SpinBox {
