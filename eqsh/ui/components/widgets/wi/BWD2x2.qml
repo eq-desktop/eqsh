@@ -59,7 +59,7 @@ BaseWidget {
         Text {
             id: locationT
             text: root.location
-            color: "#fff"
+            color: AccentColor.color
             font.pixelSize: 14
             topPadding: 10
             leftPadding: 10

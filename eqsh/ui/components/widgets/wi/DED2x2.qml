@@ -12,7 +12,7 @@ BaseWidget {
         Text {
             id: daylong
             anchors.fill: parent
-            color: AccentColor.textColor
+            color: AccentColor.color
             font.pixelSize: 16
             text: Time.getTime("dddd")
             anchors.top: parent.top
