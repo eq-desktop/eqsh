@@ -14,7 +14,7 @@ Item {
 	property Notifications  notifications: adapter.notifications
 	property Dialogs        dialogs: adapter.dialogs
 	property General        general: adapter.general
-	property Looks          looks: adapter.looks
+	property Appearance     appearance: adapter.appearance
 	property Launchpad      launchpad: adapter.launchpad
 	property Widgets        widgets: adapter.widgets
 	property Osd            osd: adapter.osd
@@ -37,7 +37,7 @@ Item {
 			property Notifications  notifications: Notifications {}
 			property Dialogs        dialogs: Dialogs {}
 			property General        general: General {}
-			property Looks          looks: Looks {}
+			property Appearance     appearance: Appearance {}
 			property Launchpad      launchpad: Launchpad {}
 			property Widgets        widgets: Widgets {}
 			property Osd            osd: Osd {}
@@ -58,9 +58,11 @@ Item {
 		property bool   reduceMotion: false
 	}
 
-	component Looks: JsonObject {
+	component Appearance: JsonObject {
 		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted
 		property int   glassMode: 3 // 0=slight, 1=strong, 2=fun, 3=strongest
+		property bool  dynamicAccentColor: true
+		property color accentColor: "#2369ff"
 	}
 
 	component Notifications: JsonObject {
@@ -117,7 +119,9 @@ Item {
 		property bool   monochromeTray: true
 		property bool   enable: true
 		property int    height: 30
-		property int    buttonColor: Qt.darker(AccentColor.color, 2)
+		property bool   animateButton: false
+		property int    buttonColorMode: 1 // 0=color | 1=accentcolor | 2=transparent
+		property string buttonColor: "#22ff0000" // Only applies if buttonColorMode is 0
 		property color  color: "#01000000"
 		property bool   useBlur: false
 		property color  fullscreenColor: "#000"
@@ -142,6 +146,8 @@ Item {
 		//     yyyy-MM-dd HH:mm:ss → 2025-09-07 15:45:10
 		property string dateFormat: "ddd, dd MMM HH:mm"
 		property bool   autohide: false
+		property bool   autohideGlobalMenu: false
+		property int    autohideGlobalMenuMode: 1 // 0=drag | 1=hover
 	}
 
 	component ScreenEdges: JsonObject {

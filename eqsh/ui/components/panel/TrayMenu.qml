@@ -5,8 +5,8 @@ import Quickshell
 import qs.Config
 import qs.ui.Controls.providers
 import qs.ui.Controls.Primitives
+import qs.ui.Controls.Advanced
 import Quickshell.Wayland
-import qs.ui.Controls.Auxiliary
 
 PopupWindow {
   id: root
@@ -24,9 +24,9 @@ PopupWindow {
 
   // Use the content height of the Flickable for implicit height
   implicitHeight: Math.min(screen ? screen.height * 0.9 : Screen.height * 0.9,
-                           flickable.contentHeight + (10))
+                           flickable.contentHeight + (20))
   visible: false
-  color: "#01000000"
+  color: "transparent"
   anchor.item: anchorItem
   anchor.rect.x: anchorX
   anchor.rect.y: Config.bar.height - (isSubMenu ? 0 : 4)
@@ -87,10 +87,9 @@ PopupWindow {
     menu: root.menu
   }
 
-  Box {
+  BoxExperimental {
     anchors.fill: parent
-    color: "transparent"
-    radius: 10
+    radius: 20
   }
 
   Flickable {
@@ -137,7 +136,7 @@ PopupWindow {
           Rectangle {
             anchors.fill: parent
             color: mouseArea.containsMouse ? AccentColor.color : "transparent"
-            radius: 10
+            radius: 15
             visible: !(modelData?.isSeparator ?? false)
 
             RowLayout {
