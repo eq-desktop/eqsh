@@ -32,14 +32,14 @@ Scope {
             id: boxbutton
             radius: 40
             property bool enabled: false
-            color: {Config.looks.glassMode == 0 ?
-                boxbutton.enabled ? "#fff" : "#77000000" : Config.looks.glassMode == 1 ?
-                boxbutton.enabled ? "#fff" : "#bb000000" : Config.looks.glassMode == 2 ?
-                boxbutton.enabled ? "#fff" : "#bb000000" : Config.looks.glassMode == 3 ?
+            color: {Config.appearance.glassMode == 0 ?
+                boxbutton.enabled ? "#fff" : "#77000000" : Config.appearance.glassMode == 1 ?
+                boxbutton.enabled ? "#fff" : "#bb000000" : Config.appearance.glassMode == 2 ?
+                boxbutton.enabled ? "#fff" : "#bb000000" : Config.appearance.glassMode == 3 ?
                 boxbutton.enabled ? "#fff" : "#bb000000" : "#fff"
             }
-            shadowOpacity: Config.looks.glassMode == 3 ? 0.8 : 0.5
-            highlight: {Config.looks.glassMode == 2 ?
+            shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
+            highlight: {Config.appearance.glassMode == 2 ?
                 (boxbutton.enabled ? "transparent" : "#f00") : boxbutton.enabled ?
                 "transparent" : AccentColor.color
             }
@@ -151,7 +151,7 @@ Scope {
                         left: wifiWidget.left
                         topMargin: 10
                     }
-                    enabled: Bluetooth.defaultAdapter?.enabled
+                    enabled: Bluetooth.defaultAdapter?.enabled || false
                     VectorImage {
                         id: rBBluetooth
                         source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/bluetooth-clear.svg")

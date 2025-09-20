@@ -13,6 +13,7 @@ FloatingWindow {
     id: settingsApp
     visible: false
     title: "eqSh Settings"
+    
 
     IpcHandler {
         id: ipcHandler
@@ -313,15 +314,30 @@ FloatingWindow {
                     }
                 }
 
-                // Looks
+                // Appearance
                 ScrollView {
                     ColumnLayout {
                         anchors.fill: parent
                         UILabel { text: "Icon Color Type" }
                         ComboBox {
                             model: ["Original", "Monochrome", "Tinted"]
-                            currentIndex: Config.looks.iconColorType - 1
-                            onCurrentIndexChanged: Config.looks.iconColorType = currentIndex + 1
+                            currentIndex: Config.appearance.iconColorType - 1
+                            onCurrentIndexChanged: Config.appearance.iconColorType = currentIndex + 1
+                        }
+                        UICheckBox {
+                            textVal: "Use Dynamic Accent Color"
+                            checked: Config.appearance.dynamicAccentColor
+                            onToggled: Config.appearance.dynamicAccentColor = checked
+                        }
+                        UILabel { text: "Accent Color" }
+                        Button {
+                            text: "Set Color"
+                            onClicked: colorDialog2.open()
+                        }
+                        ColorDialog {
+                            id: colorDialog2
+                            selectedColor: Config.appearance.accentColor
+                            onAccepted: Config.appearance.accentColor = selectedColor
                         }
                     }
                 }
@@ -371,6 +387,42 @@ FloatingWindow {
                             onEditingFinished: Config.wallpaper.path = text
                             placeholderText: "Wallpaper path"
                         }
+                        ComboBox {
+                            id: colorCombo
+                            Layout.fillWidth: true
+
+                            model: AccentColor.colors
+
+                            // Display text as the color name
+                            textRole: "name"
+
+                            // Use a custom delegate so each option is shown with its color
+                            delegate: ItemDelegate {
+                                contentItem: RowLayout {
+                                    spacing: 8
+                                    Label {
+                                        text: modelData
+                                        color: "#fff"
+                                        verticalAlignment: Text.AlignVCenter
+                                        background: Rectangle {
+                                            anchors.fill: parent
+                                            color: modelData
+                                        }
+                                    }
+                                }
+                            }
+
+                            // keep ComboBox selection in sync with AccentColor.color
+                            Component.onCompleted: {
+                                let index = AccentColor.colors.findIndex(c => c === AccentColor.color)
+                                if (index >= 0) currentIndex = index
+                            }
+
+                            onActivated: (index) => {
+                                Config.appearance.accentColor = AccentColor.colors[index]
+                            }
+                        }
+
                     }
                 }
 

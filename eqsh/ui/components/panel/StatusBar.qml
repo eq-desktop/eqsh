@@ -51,7 +51,7 @@ Scope {
       exclusiveZone: -1
 
       Behavior on margins.top {
-        NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 3 }
+        NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
       }
 
       implicitHeight: Config.bar.height
@@ -98,35 +98,106 @@ Scope {
             anchors.centerIn: parent
           }}
 
-          UIBButton {
-            text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName)
-            font.weight: 600
-          }
+          Rectangle {
+            id: globalMenu
+            height: Config.bar.height
+            width: globalMenuLayout.implicitWidth
+            color: "transparent"
+            property real dragOffset: -Config.bar.height
+            property bool shown: false
+            Timer {
+              id: globalMenuTimer
+              interval: 1000
+              onTriggered: {
+                if (!dragArea.containsMouse) {
+                  globalMenu.shown = false
+                }
+              }
+            }
+            MouseArea {
+              id: dragArea
+              anchors.fill: parent
+              hoverEnabled: true
+              property real startY: 0
+              preventStealing: true
+              propagateComposedEvents: true
 
-          UIBButton {
-            text: "File"
-          }
+              onEntered: {
+                globalMenuTimer.stop()
+                if (Config.bar.autohideGlobalMenu && Config.bar.autohideGlobalMenuMode == 1) {
+                  globalMenu.shown = true
+                  globalMenuTimer.start()
+                }
+              }
+              onExited: {
+                globalMenuTimer.start()
+              }
+              onClicked: (mouse)=> {
+                mouse.accepted = false
+              }
 
-          UIBButton {
-            text: "Edit"
-          }
+              onPressed: (mouse) => {startY = mouse.y}
+              onReleased: (mouse) => {
+                if (Config.bar.autohideGlobalMenu && Config.bar.autohideGlobalMenuMode == 0) {
+                  let endY = mouse.y
+                  let halfPoint = parent.height / 2
+                  if (endY - startY > halfPoint) {
+                    globalMenu.shown = true
+                    globalMenuTimer.start()
+                  }
+                }
+              }
+              RowLayout {
+                id: globalMenuLayout
+                spacing: -6
+                anchors {
+                  fill: parent
+                  verticalCenter: parent.verticalCenter
+                  topMargin: !Config.bar.autohideGlobalMenu ? 0 : globalMenu.shown ? 0 : -Config.bar.height * 2
+                  Behavior on topMargin {
+                    NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
+                  }
+                }
+                UIBButton {
+                  text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName)
+                  font.weight: 600
+                }
 
-          UIBButton {
-            text: "View"
-          }
+                UIBButton {
+                  text: "File"
+                  id: globalMenuFileButton
+                  DropDownMenu {
+                    id: globalMenuFile
+                    x: 0
+                    y: Config.bar.height
+                  }
+                  onClick: {
+                    globalMenuFile.open()
+                  }
+                }
 
-          UIBButton {
-            text: "Go"
-          }
+                UIBButton {
+                  text: "Edit"
+                }
 
-          UIBButton {
-            text: "Window"
-            
-          }
+                UIBButton {
+                  text: "View"
+                }
 
-          UIBButton {
-            text: "Help"
-            
+                UIBButton {
+                  text: "Go"
+                }
+
+                UIBButton {
+                  text: "Window"
+                  
+                }
+
+                UIBButton {
+                  text: "Help"
+                }
+              }
+            }
           }
         }
 

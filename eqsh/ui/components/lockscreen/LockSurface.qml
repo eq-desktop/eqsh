@@ -180,7 +180,8 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: AccentColor.textColorT
+			color: "#eeffffff"
+			font.family: Fonts.sFProRounded.family
 			font.pointSize: 80
 			font.weight: Font.Bold
 
@@ -206,7 +207,8 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: AccentColor.textColor
+			color: "#eeeeeeee"
+			font.family: Fonts.sFProRounded.family
 			font.pointSize: 18
 			font.weight: Font.Bold
 
@@ -258,10 +260,15 @@ Rectangle {
 			Text {
 				Layout.alignment: Qt.AlignHCenter
 				text: Config.lockScreen.userNote
-				color: AccentColor.textColor
+				color: "#fff"
 				font.pointSize: 12
 				font.weight: Font.Normal
 				Layout.bottomMargin: 10
+				layer.enabled: true
+				layer.effect: MultiEffect {
+					shadowEnabled: true
+					shadowColor: "#000000"
+				}
 			}
 
 			ClippingRectangle {
@@ -354,7 +361,7 @@ Rectangle {
 			Label {
 				Layout.alignment: Qt.AlignHCenter
 				text: Config.lockScreen.usageInfo
-				color: AccentColor.textColorT
+				color: "#fff"
 				font.pointSize: 10
 				font.weight: Font.Normal
 				Layout.topMargin: Config.general.reduceMotion ? 10 : (inputArea.freeSpace ? -50 : 10)

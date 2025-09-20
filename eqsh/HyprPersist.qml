@@ -11,9 +11,9 @@ Item {
         command: ["hyprctl", "keyword", "layerrule", "blur, ^eqsh:blur\$"]
     }
     Proc {
-        command: ["hyprctl", "keyword", "layerrule", "ignorezero, ^eqsh:blur\$"]
+        command: ["hyprctl", "keyword", "layerrule", "ignorezero, ^.*$"]
     }
     Proc {
-        command: ["hyprctl", "keyword", "layerrule", "blurpopups, ^eqsh:blur\$"]
+        command: ["hyprctl", "keyword", "layerrule", "blurpopups, ^.*$"]
     }
 }

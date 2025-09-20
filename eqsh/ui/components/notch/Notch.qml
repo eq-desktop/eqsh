@@ -1,6 +1,7 @@
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Widgets
 import Quickshell.Io
 import Quickshell
 import QtQuick
@@ -47,13 +48,13 @@ Scope {
 
   property bool   locked: Runtime.locked
   onLockedChanged: {
-      if (locked) {
+    if (locked) {
       notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "", 0, 1)
       notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
-      } else {
+    } else {
       notch.leftIconHide()
       notch.temporaryResizeReset()
-      }
+    }
   }
 
   function checkPath(path) {
@@ -177,7 +178,7 @@ Scope {
 
       anchors.top: true
       implicitWidth: Config.notch.minWidth
-      implicitHeight: Config.notch.height
+      implicitHeight: Config.notch.height+40
       exclusiveZone: -1
       visible: Config.notch.enable
       color: "transparent"
@@ -201,6 +202,13 @@ Scope {
       property int minWidth: Config.notch.minWidth
       property int maxWidth: Config.notch.maxWidth
       property bool tempResize: root.tempResize
+
+      mask: Region {
+        x: notchBg.x
+        y: notchBg.y
+        width: notchBg.width
+        height: notchBg.height
+      }
 
       Behavior on margins.top {
         NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
@@ -230,13 +238,20 @@ Scope {
             horizontalCenter: parent.horizontalCenter
           }
           implicitWidth: parent.width - 40
-          implicitHeight: parent.height
+          implicitHeight: parent.height - 40
           topLeftRadius: panelWindow.islandMode ? (root.tempResize ? root.tempRounding : Config.notch.radius) : 0
           topRightRadius: panelWindow.islandMode ? (root.tempResize ? root.tempRounding : Config.notch.radius) : 0
           bottomLeftRadius: (root.tempResize ? root.tempRounding : Config.notch.radius)
           bottomRightRadius: (root.tempResize ? root.tempRounding : Config.notch.radius)
           clip: true
           color: Config.notch.backgroundColor
+          layer.enabled: true
+          layer.effect: MultiEffect {
+            anchors.fill: notchBg
+            shadowEnabled: true
+            shadowColor: "#000000"
+            shadowBlur: 1
+          }
 
           HyprlandFocusGrab {
             id: grab
@@ -340,10 +355,10 @@ Scope {
               panelWindow.implicitWidth = root.expanded ? newWidth : panelWindow.minWidth;
               if (searchInput.text[0] == "=") {
                 root.notchMode = "calc"
-                panelWindow.implicitHeight = Config.notch.height + 60;
+                panelWindow.implicitHeight = Config.notch.height + 100;
               } else {
                 root.notchMode = "shell"
-                panelWindow.implicitHeight = Config.notch.height + 20
+                panelWindow.implicitHeight = Config.notch.height + 60
               }
             }
             onAccepted: {
@@ -437,15 +452,15 @@ Scope {
         } else {
           root.collapse(panelWindow.screen);
         }
-        implicitHeight = root.expanded ? Config.notch.height + 20 : Config.notch.height;
+        implicitHeight = (root.expanded ? Config.notch.height + 20 : Config.notch.height)+40;
         implicitWidth = root.expanded ? minWidth + 50 : minWidth;
       }
       onTempResizeChanged: {
         if (root.tempResize) {
-          implicitHeight = root.tempHeight == -1 ? Config.notch.height : root.tempHeight;
+          implicitHeight = (root.tempHeight == -1 ? Config.notch.height : root.tempHeight)+40;
           implicitWidth = root.tempWidth == -1 ? minWidth : root.tempWidth;
         } else {
-          implicitHeight = root.expanded ? Config.notch.height + 20 : Config.notch.height;
+          implicitHeight = (root.expanded ? Config.notch.height + 20 : Config.notch.height)+40;
           implicitWidth = root.expanded ? minWidth + 50 : minWidth;
         }
       }

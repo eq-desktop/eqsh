@@ -9,6 +9,7 @@ import qs.Config
 import qs
 import qs.Core.Foundation
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.providers
 import QtQuick.Controls.Fusion
 
 Button {
@@ -19,6 +20,7 @@ Button {
   palette.buttonText: "#fff"
   Layout.minimumWidth: 50
   Layout.preferredHeight: 25
+  property color hoverColor: Config.bar.buttonColorMode == 1 ? Qt.darker(AccentColor.color, 2) : Config.bar.buttonColorMode == 2 ? "transparent" : Config.bar.buttonColor
   scale: 1
   Layout.maximumHeight: Config.bar.height * 1.05
   padding: 10
@@ -36,7 +38,7 @@ Button {
     PropertyAnimation { target: root; property: "scale"; to: 1  ; duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }
   }
   function jumpUp() {
-    jumpAnim.running = true
+    if (Config.bar.animateButton) jumpAnim.running = true
   }
   layer.enabled: true
   layer.effect: MultiEffect {
@@ -48,7 +50,7 @@ Button {
     anchors.fill: parent
     hoverEnabled: true
     onEntered: {
-      bgRect.color = "#88ffffff";
+      bgRect.color = root.hoverColor;
       root.hover()
     }
     onExited: {
