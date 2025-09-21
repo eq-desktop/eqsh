@@ -61,7 +61,7 @@ Scope {
 
       mask: Region {}
 
-      exclusiveZone: ExclusionMode.Ignore
+      exclusiveZone: -1
       color: "#00000000"
       Behavior on color { ColorAnimation { duration: 500; easing.type: Easing.InOutQuad} }
       function toggle() {

@@ -45,7 +45,7 @@ Scope {
 
       mask: Region {}
 
-      exclusiveZone: ExclusionMode.Ignore
+      exclusiveZone: -1
       color: "#00000000"
       Behavior on color { ColorAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad} }
       Loader {

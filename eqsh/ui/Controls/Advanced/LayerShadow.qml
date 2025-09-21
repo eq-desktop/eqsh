@@ -19,7 +19,7 @@ Scope {
         PanelWindow {
             id: panelWindow
             WlrLayershell.layer: root.layer
-            exclusiveZone: ExclusionMode.Ignore
+            exclusiveZone: -1
             required property var modelData
             property int swidth: root.width == -1 ? modelData.width : root.width
             property int sheight: root.height == -1 ? modelData.height : root.height
