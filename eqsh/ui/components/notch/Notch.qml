@@ -23,6 +23,10 @@ Scope {
   property string notchInput: ""
   property string notchMode: "shell"
 
+  property string customNotchCode: ""
+  property bool   customNotchVisible: false
+  property bool   customNotchVisibleInfinite: false
+
   property bool   leftIconVisible: false
   property bool   leftIconAnimate: true
   property string leftIconColorize: ""
@@ -47,12 +51,20 @@ Scope {
   property bool   tempResizeForce: false
 
   property bool   locked: Runtime.locked
+
+  FileView {
+    id: fileViewer
+    path: Quickshell.shellDir + "/ui/components/notch/instances/Lock.qml"
+    blockLoading: true
+  }
   onLockedChanged: {
     if (locked) {
-      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, AccentColor.color, 0, 1)
+      notch.notchInstance(fileViewer.text(), -1, Config.notch.delayedLockAnimDuration)
+      //notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, AccentColor.color, 0, 1)
       notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, 200, false, Config.notch.delayedLockAnimDuration)
     } else {
       notch.leftIconHide()
+      notch.customNotchHide()
       notch.temporaryResizeReset()
     }
   }
@@ -94,6 +106,23 @@ Scope {
       }
       scheduledJobs.push({ expiry: Date.now() + delay, callback, name })
     }
+  }
+
+  function notchInstance(code, timeout, start_delay=0) {
+    root.customNotchVisible = false
+    root.customNotchCode = code
+    customNotchVisibleInfinite = (timeout === -1)
+    schedule(() => {
+      root.customNotchVisible = true
+      if (!customNotchVisibleInfinite) {
+        schedule(() => customNotchHide(), timeout, "notch-instance")
+      }
+    }, start_delay, "notch-instance")
+  }
+
+  function customNotchHide() {
+    root.customNotchVisible = false
+    root.customNotchCode = ""
   }
 
   function leftIconShow(path, timeout, margin=-1, start_delay=0, animate=true, color="", rotation=0, scale=1) {
@@ -246,6 +275,16 @@ Scope {
           HyprlandFocusGrab {
             id: grab
             windows: [ panelWindow ]
+          }
+          property var notchCustomCodeObj: null
+          property var notchCustomCodeVis: root.customNotchVisible
+          onNotchCustomCodeVisChanged: {
+            if (notchCustomCodeVis) {
+              notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
+            } else {
+              if (!notchCustomCodeObj) return;
+              notchCustomCodeObj.destroy()
+            }
           }
 
           VectorImage {
@@ -540,6 +579,18 @@ Scope {
     }
     function rightIconHide() {
       root.rightIconHide();
+    }
+    function instance(code: string, timeout: int, start_delay: int) {
+      root.notchInstance(code, timeout, start_delay);
+    }
+    function instanceHide() {
+      root.customNotchHide();
+    }
+    function expand() {
+      root.expanded = true;
+    }
+    function collapse() {
+      root.expanded = false;
     }
   }
 }

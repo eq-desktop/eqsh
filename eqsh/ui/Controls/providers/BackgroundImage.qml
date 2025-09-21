@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import QtMultimedia
 import QtQuick.Effects
 import qs.Config
 
@@ -36,6 +37,7 @@ Loader {
         color: Config.wallpaper.color
     }
     property Component image: Image {
+        //autoPlay: true
         source: root.source
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
