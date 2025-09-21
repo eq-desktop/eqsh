@@ -99,22 +99,25 @@ Rectangle {
 		}
 	}
 
-	ShaderEffect {
-		id: shader
-		visible: Config.lockScreen.enableShader
-		anchors.fill: parent
-		property vector2d sourceResolution: Qt.vector2d(width, height)
-		property vector2d resolution: Qt.vector2d(width, height)
-		property real time: 0
-		property variant source: backgroundImage
-		FrameAnimation {
-			running: true
-			onTriggered: {
-				shader.time = this.elapsedTime;
+	Loader {
+		active: Config.lockScreen.enableShader
+		sourceComponent: ShaderEffect {
+			id: shader
+			visible: Config.lockScreen.enableShader
+			anchors.fill: parent
+			property vector2d sourceResolution: Qt.vector2d(width, height)
+			property vector2d resolution: Qt.vector2d(width, height)
+			property real time: 0
+			property variant source: backgroundImage
+			FrameAnimation {
+				running: true
+				onTriggered: {
+					shader.time = this.elapsedTime;
+				}
 			}
+			vertexShader: Qt.resolvedUrl(Config.lockScreen.shaderVert)
+			fragmentShader: Qt.resolvedUrl(Config.lockScreen.shaderFrag)
 		}
-		vertexShader: Qt.resolvedUrl(Config.lockScreen.shaderVert)
-		fragmentShader: Qt.resolvedUrl(Config.lockScreen.shaderFrag)
 	}
 
 	BackgroundImage {

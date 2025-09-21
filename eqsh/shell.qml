@@ -16,6 +16,7 @@ import qs.ui.components.notch
 import qs.ui.components.widgets
 import qs.ui.components.settings
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.Advanced
 import qs.ui.Controls.providers
 import qs.Config
 import qs.Core.Foundation

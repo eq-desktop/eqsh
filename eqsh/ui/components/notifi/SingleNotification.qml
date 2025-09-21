@@ -7,13 +7,15 @@ import Quickshell.Widgets
 import QtQuick.Controls
 import QtQuick.VectorImage
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.Advanced
+import qs.ui.Controls.providers
 
 import qs.Config
 import qs.Core.System
 import "root:/Agents/notification_utils.js" as NotificationUtils
 
 
-AniRectangle {
+BoxExperimental {
 	id: singleNotif
 	property bool expanded
 	property bool popup: false
@@ -25,11 +27,10 @@ AniRectangle {
 	}
 
 	radius: 27
-	color: Config.notifications.backgroundColor
 	implicitHeight:	notifSize
 	implicitWidth: 400
 
-	highlight: modelData.urgency == "critical" ? "#ff555555" : "#22555555"
+	highlight: modelData.urgency == "critical" ? "#ff0000" : AccentColor.color
 
 	anchors.topMargin: 20
 
@@ -44,8 +45,78 @@ AniRectangle {
 	MouseArea {
 		anchors.fill: parent
 		cursorShape: Qt.PointingHandCursor
+		hoverEnabled: true
 
+		onEntered: {
+			closeButton.scale = 1
+		}
+
+		onExited: {
+			closeButton.scale = 0
+		}
 		onClicked: singleNotif.popup ? NotificationDaemon.timeoutNotification(modelData.id) : NotificationDaemon.discardNotification(modelData.id)
+
+		ClippingRectangle {
+			id: closeButton
+			anchors.top: parent.top
+			anchors.left: parent.left
+			width: 24
+			height: 24
+			radius: 12
+			scale: 0
+			opacity: scale
+			Behavior on scale {
+				NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+			}
+			Behavior on width {
+				NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+			}
+			border {
+				color: "#50ffffff"
+				width: 1
+			}
+			color: "#111"
+			Item {
+				anchors.fill: parent
+				id: closeButtonIcon
+				VectorImage {
+					id: closeIcon
+					source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/x.svg")
+					anchors.left: parent.left
+					anchors.leftMargin: 5
+					anchors.verticalCenter: parent.verticalCenter
+					width: 12
+					height: 12
+				}
+				Label {
+					id: closeButtonText
+					anchors.left: closeIcon.right
+					anchors.leftMargin: 5
+					anchors.verticalCenter: parent.verticalCenter
+					text: "Remove"
+					color: "#fff"
+					font.pixelSize: 12
+					opacity: 0
+					Behavior on opacity {
+						NumberAnimation { duration: 100; }
+					}
+				}
+			}
+			MouseArea {
+				anchors.fill: parent
+				cursorShape: Qt.PointingHandCursor
+				hoverEnabled: true
+				onEntered: {
+					closeButton.width = closeIcon.implicitWidth + closeButtonText.implicitWidth + 10
+					closeButtonText.opacity = 1
+				}
+				onExited: {
+					closeButton.width = 24
+					closeButtonText.opacity = 0
+				}
+				onClicked: NotificationDaemon.discardNotification(modelData.id)
+			}
+		}
 	}
 
 	RowLayout {
