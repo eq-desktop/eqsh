@@ -183,6 +183,8 @@ Item {
 		property int          liquidDuration: 7000
 		property real         clockZoom: 1
 		property int          clockZoomDuration: 300
+		property string       dimColor: "#000000"
+		property real         dimOpacity: 0.2
 		property real         zoom: 1.1
 		property int          zoomDuration: 1000
 		property bool         useCustomWallpaper: false

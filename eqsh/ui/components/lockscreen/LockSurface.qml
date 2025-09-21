@@ -127,6 +127,13 @@ Rectangle {
 		anchors.fill: parent
 	}
 
+	Rectangle {
+		id: backgroundImageDim
+		anchors.fill: parent
+		color: Config.lockScreen.dimColor
+		opacity: Config.lockScreen.dimOpacity
+	}
+
 	Item {
 		id: contentItem
 		anchors.fill: parent
