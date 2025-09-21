@@ -49,8 +49,8 @@ Scope {
   property bool   locked: Runtime.locked
   onLockedChanged: {
     if (locked) {
-      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, "", 0, 1)
-      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, -1, false, Config.notch.delayedLockAnimDuration)
+      notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, AccentColor.color, 0, 1)
+      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, 200, false, Config.notch.delayedLockAnimDuration)
     } else {
       notch.leftIconHide()
       notch.temporaryResizeReset()
@@ -110,7 +110,7 @@ Scope {
     schedule(() => {
       root.leftIconVisible = true
       if (!leftIconVisibleInfinite) {
-        schedule(() => leftIconHide(), timeout)
+        schedule(() => leftIconHide(), timeout, "left")
       }
     }, start_delay, "left")
   }
@@ -132,7 +132,7 @@ Scope {
     schedule(() => {
       root.rightIconVisible = true
       if (!rightIconVisibleInfinite) {
-        schedule(() => rightIconHide(), timeout)
+        schedule(() => rightIconHide(), timeout, "right")
       }
     }, start_delay, "right")
   }
@@ -151,7 +151,7 @@ Scope {
     schedule(() => {
       tempResize = true
       if (!tempResizeInfinite) {
-        schedule(() => temporaryResizeReset(), timeout)
+        schedule(() => temporaryResizeReset(), timeout, "resize")
       }
     }, start_delay, "resize")
   }
@@ -254,6 +254,7 @@ Scope {
             height: 15
             scale: root.expanded ? 0.5 : root.leftIconVisible ? leftIconScale : 0.5
             opacity: root.expanded ? 0 : root.leftIconVisible ? 1 : 0
+            visible: root.leftIconPath.endsWith(".svg")
             Behavior on scale {
               NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
             }
@@ -269,13 +270,46 @@ Scope {
                 NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
               }
             }
-            source: leftIconPath;
+            source: leftIconPath.endsWith(".svg") ? leftIconPath : "";
             rotation: leftIconRotation
-            layer.enabled: true
+            layer.enabled: leftIconColorize != "" ? true : false
             layer.effect: MultiEffect {
               anchors.fill: leftNotchIcon
               colorization: 1
-              colorizationColor: leftIconColorize == "" ? AccentColor.color : leftIconColorize
+              colorizationColor: leftIconColorize
+            }
+          }
+
+          AnimatedImage {
+            id: leftNotchIconImg
+            width: 15
+            height: 15
+            scale: root.expanded ? 0.5 : root.leftIconVisible ? leftIconScale : 0.5
+            opacity: root.expanded ? 0 : root.leftIconVisible ? 1 : 0
+            visible: !root.leftIconPath.endsWith(".svg")
+            currentFrame: 0
+            playing: root.leftIconVisible && root.leftIconPath.endsWith(".gif")
+            Behavior on scale {
+              NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            Behavior on opacity {
+              NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration/2; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            anchors {
+              left: parent.left
+              leftMargin: root.leftIconMargin != -1 ? root.leftIconMargin :  Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
+              verticalCenter: parent.verticalCenter
+              Behavior on leftMargin {
+                NumberAnimation { duration: leftIconAnimate == false ? 0 : Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+              }
+            }
+            source: !leftIconPath.endsWith(".svg") ? leftIconPath : "";
+            rotation: leftIconRotation
+            layer.enabled: leftIconColorize == "" ? false : true
+            layer.effect: MultiEffect {
+              anchors.fill: leftNotchIconImg
+              colorization: 1
+              colorizationColor: leftIconColorize
             }
           }
 
@@ -285,6 +319,7 @@ Scope {
             height: 15
             scale: root.expanded ? 0.5 : root.rightIconVisible ? rightIconScale : 0.5
             opacity: root.expanded ? 0 : root.rightIconVisible ? 1 : 0
+            visible: root.rightIconPath.endsWith(".svg")
             Behavior on scale {
               NumberAnimation { duration: rightIconAnimate == false ? 0 : Config.notch.rightIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
             }
@@ -297,11 +332,41 @@ Scope {
               rightMargin: root.rightIconMargin != -1 ? root.rightIconMargin :  Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
               verticalCenter: parent.verticalCenter
             }
-            source: rightIconPath;
+            source: rightIconPath.endsWith(".svg") ? rightIconPath : "";
             rotation: rightIconRotation
             layer.enabled: rightIconColorize != "" ? true : false
             layer.effect: MultiEffect {
               anchors.fill: rightNotchIcon
+              colorization: 1
+              colorizationColor: rightIconColorize
+            }
+          }
+
+          AnimatedImage {
+            id: rightNotchIconImg
+            width: 15
+            height: 15
+            scale: root.expanded ? 0.5 : root.rightIconVisible ? rightIconScale : 0.5
+            opacity: root.expanded ? 0 : root.rightIconVisible ? 1 : 0
+            visible: !root.rightIconPath.endsWith(".svg")
+            currentFrame: 0
+            playing: root.rightIconVisible && root.rightIconPath.endsWith(".gif")
+            Behavior on scale {
+              NumberAnimation { duration: rightIconAnimate == false ? 0 : Config.notch.rightIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            Behavior on opacity {
+              NumberAnimation { duration: rightIconAnimate == false ? 0 : Config.notch.rightIconAnimDuration/2; easing.type: Easing.OutBack; easing.overshoot: 1 }
+            }
+            anchors {
+              right: parent.right
+              rightMargin: root.rightIconMargin != -1 ? root.rightIconMargin :  Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
+              verticalCenter: parent.verticalCenter
+            }
+            source: !rightIconPath.endsWith(".svg") ? rightIconPath : "";
+            rotation: rightIconRotation
+            layer.enabled: rightIconColorize != "" ? true : false
+            layer.effect: MultiEffect {
+              anchors.fill: rightNotchIconImg
               colorization: 1
               colorizationColor: rightIconColorize
             }
