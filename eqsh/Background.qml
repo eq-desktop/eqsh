@@ -26,7 +26,7 @@ Scope {
         right: true
       }
 
-	    exclusiveZone: -1
+	    exclusiveZone: ExclusionMode.Ignore
 
       mask: Region {}
 

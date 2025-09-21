@@ -23,7 +23,7 @@ Scope {
         right: true
         bottom: true
       }
-      exclusiveZone: -1
+      exclusiveZone: ExclusionMode.Ignore
 
       visible: Config.screenEdges.enable
 

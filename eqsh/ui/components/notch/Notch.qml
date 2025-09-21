@@ -179,7 +179,7 @@ Scope {
       anchors.top: true
       implicitWidth: Config.notch.minWidth
       implicitHeight: Config.notch.height+40
-      exclusiveZone: -1
+      exclusiveZone: ExclusionMode.Ignore
       visible: Config.notch.enable
       color: "transparent"
 
