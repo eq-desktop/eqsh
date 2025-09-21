@@ -18,7 +18,8 @@ Scope {
     property bool muted: Pipewire.defaultAudioSink?.audio.muted || false
 
     Connections {
-        target: Pipewire.defaultAudioSink?.audio
+        target: Pipewire.defaultAudioSink?.audio || null
+        ignoreUnknownSignals: true
         function onVolumeChanged() {
             popup.show()
         }
