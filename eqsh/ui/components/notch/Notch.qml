@@ -15,7 +15,7 @@ import qs.ui.Controls.providers
 Scope {
   id: root
   property bool shown: false
-  property bool appInFullscreen: false
+  property bool appInFullscreen: HyprlandExt.appInFullscreen
   property bool forceHide: Config.notch.autohide
   property bool inFullscreen: shown ? forceHide : appInFullscreen || forceHide
   property bool expanded: false
@@ -185,17 +185,6 @@ Scope {
 
       margins {
         top: inFullscreen ? -(Config.notch.height + Config.notch.margin) : 0
-      }
-
-      Connections {
-        target: Hyprland
-        function onRawEvent(event) {
-          switch (event.name) {
-            case "fullscreen": {
-              root.appInFullscreen = event.data == 1;
-            }
-          }
-        }
       }
 
       property bool expanded: root.expanded
