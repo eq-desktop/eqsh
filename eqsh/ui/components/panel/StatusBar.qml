@@ -9,6 +9,7 @@ import qs.Config
 import qs
 import qs.Core.Foundation
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.providers
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -16,7 +17,7 @@ Scope {
   property string customAppName: ""
   property bool   visible: true
   property bool   shown: false
-  property bool   appInFullscreen: false
+  property bool   appInFullscreen: HyprlandExt.appInFullscreen
   property bool   forceHide: Config.bar.autohide
   property bool   inFullscreen: shown ? forceHide : appInFullscreen || forceHide
 
@@ -30,7 +31,7 @@ Scope {
       screen: modelData
       WlrLayershell.namespace: Config.bar.useBlur ? "eqsh:blur" : "eqsh"
 
-      property string applicationName: Config.bar.defaultAppName
+      property string applicationName: HyprlandExt.applicationName != "" ? HyprlandExt.applicationName : Config.bar.defaultAppName
 
       component UIBButton: BButton {
         onHover: {
@@ -255,23 +256,6 @@ Scope {
 
           UIBButton{
             text: Time.time
-          }
-        }
-        Connections {
-          target: Hyprland
-          function onRawEvent(event) {
-            let eventName = event.name;
-            switch (eventName) {
-              case "activewindow":
-              case "closewindow": {
-                applicationName = SPAppName.getAppName(event.data.split(",")[0]);
-                break;
-              }
-              case "fullscreen": {
-                root.appInFullscreen = event.data == "1";
-                break;
-              }
-            }
           }
         }
       }
