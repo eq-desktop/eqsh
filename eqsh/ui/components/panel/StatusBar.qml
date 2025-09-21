@@ -48,7 +48,7 @@ Scope {
         top: Config.bar.hideOnLock ? (root.visible ? (root.inFullscreen ? -Config.bar.height : 0) : -Config.bar.height) : (root.inFullscreen ? -Config.bar.height : 0)
       }
 
-      exclusiveZone: -1
+      exclusiveZone: ExclusionMode.Ignore
 
       Behavior on margins.top {
         NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }

@@ -19,7 +19,7 @@ Scope {
         id: panelWindow
         color: "transparent"
         visible: root.opened
-        exclusiveZone: -1
+        exclusiveZone: ExclusionMode.Ignore
         anchors {
             top: true
             right: true

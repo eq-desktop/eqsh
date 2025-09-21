@@ -50,7 +50,7 @@ Scope {
     id: panelWindow
     implicitWidth: root.dialogs.width + 50
     implicitHeight: root.dialogs.height + 50
-    exclusiveZone: -1
+    exclusiveZone: ExclusionMode.Ignore
     visible: root.visible
     color: "transparent"
 		WlrLayershell.namespace: "eqsh-noblur"

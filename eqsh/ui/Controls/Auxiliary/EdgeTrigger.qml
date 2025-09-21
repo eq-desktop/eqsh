@@ -42,7 +42,7 @@ Scope {
         return root.position.indexOf(position) != -1;
       }
 
-      exclusiveZone: -1
+      exclusiveZone: ExclusionMode.Ignore
 
       anchors {
         top: hasPosition("t")
