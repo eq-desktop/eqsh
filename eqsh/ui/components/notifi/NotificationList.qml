@@ -5,14 +5,18 @@ import Quickshell.Services.Notifications
 import QtQuick.Layouts
 import Quickshell.Widgets
 import Quickshell.Wayland
+import Quickshell.Io
 
 import qs.Config
 import qs.Core.System
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.Advanced
 
 Scope {
+	id: scope
 	signal finished();
 
+	property bool showAll: false
 	Variants {
 		model: Quickshell.screens;
 
@@ -39,7 +43,25 @@ Scope {
 
 			color: "transparent"
 
-			property int notificationCount: NotificationDaemon.popupList.length
+			property int notificationCount: scope.showAll ? NotificationDaemon.list.length : NotificationDaemon.popupList.length
+
+			LayerShadow {
+				id: layerShadow
+				anchors: [
+					true,
+					false,
+					true,
+					true
+				]
+				margins: [0, 0, -100, 0]
+				rounding: 100
+				width: 650
+				height: maskId.implicitHeight
+				blurPower: 64
+				color: "#50000000"
+				layer: WlrLayer.Top
+				visible: scope.showAll
+			}
 
 			visible: true
 
@@ -50,7 +72,7 @@ Scope {
 			ListView {
 				id: maskId
 				model: ScriptModel {
-					values: [...NotificationDaemon.popupList].reverse()
+					values: scope.showAll ? [...NotificationDaemon.list].reverse() : [...NotificationDaemon.popupList].reverse()
 				}
 
 				implicitHeight: parent.height
@@ -115,6 +137,33 @@ Scope {
 					}
 				}
 			}
+		}
+	}
+	IpcHandler {
+		target: "notificationCenter"
+		function toggle() {
+			scope.showAll = !scope.showAll;
+		}
+	}
+	CustomShortcut {
+		name: "notification-center"
+		description: "Toggle Notification Center"
+		onPressed: {
+			scope.showAll = !scope.showAll;
+		}
+	}
+	CustomShortcut {
+		name: "notification-center-open"
+		description: "Open Notification Center"
+		onPressed: {
+			scope.showAll = true;
+		}
+	}
+	CustomShortcut {
+		name: "notification-center-close"
+		description: "Close Notification Center"
+		onPressed: {
+			scope.showAll = false;
 		}
 	}
 }
