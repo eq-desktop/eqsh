@@ -92,7 +92,7 @@ Scope {
 
       implicitHeight: 120
       implicitWidth: dock.implicitWidth
-      exclusiveZone: ExclusionMode.Ignore
+      exclusiveZone: -1
       color: "transparent"
       visible: true
 
