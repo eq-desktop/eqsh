@@ -47,7 +47,7 @@ Scope {
       onHovered: (monitor) => {
         if (triggerBar.active) {
           triggerBar.active = false
-          triggerBar.height = 1
+          triggerBar.height = 2
           bar.shown = false
           triggerBar.topMargin = 0
           if (Config.bar.autohide) {

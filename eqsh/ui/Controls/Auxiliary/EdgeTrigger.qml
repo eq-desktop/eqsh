@@ -61,11 +61,23 @@ Scope {
       implicitHeight: root.height
       implicitWidth: root.width
 
+      Timer {
+        id: timer
+        running: false
+        interval: root.active ? 0 : 700
+        onTriggered: {
+          root.hovered(modelData)
+        }
+      }
+
       MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: root.hovered(modelData);
-        onExited: root.exited(modelData);
+        onEntered: timer.start();
+        onExited: {
+          root.exited(modelData);
+          timer.stop();
+        }
         onClicked: root.clicked(modelData);
       }
     }
