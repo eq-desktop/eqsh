@@ -7,6 +7,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
 import qs.Config
+import qs
 import qs.ui.Controls.Auxiliary
 
 
