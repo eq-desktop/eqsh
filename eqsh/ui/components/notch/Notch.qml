@@ -249,7 +249,7 @@ Scope {
           id: notchBg
           anchors {
             top: parent.top
-            topMargin: Config.notch.margin
+            topMargin: Config.notch.islandMode ? Config.notch.margin : -1
             horizontalCenter: parent.horizontalCenter
             Behavior on topMargin {
               NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
