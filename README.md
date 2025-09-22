@@ -106,6 +106,12 @@ git clone https://github.com/eq-desktop/eqSh ~/eqSh
 mv ~/eqSh/eqsh ~/.config/quickshell/
 ```
 
+For wallpapers do:
+
+```bash
+git clone https://github.com/eq-desktop/wallpapers.git ~/eqSh/wallpapers
+```
+
 </details>
 
 <details>
