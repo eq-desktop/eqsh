@@ -33,7 +33,7 @@ Rectangle {
                 NumberAnimation { duration: Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
             }
         }
-        source: "/home/enviction/eqSh/eqsh/Media/icons/notch/locked.svg"
+        source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/notch/locked.svg")
         rotation: 0
         layer.enabled: true
         layer.effect: MultiEffect {
