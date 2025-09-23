@@ -5,13 +5,14 @@ import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Effects
 import Quickshell
+import qs
 import qs.ui.Controls.providers
 import Quickshell.Io
 import Quickshell.Widgets
 
 FloatingWindow {
     id: settingsApp
-    visible: false
+    visible: Runtime.settingsOpen
     title: "eqSh Settings"
     minimumSize: "675x540"
     
@@ -20,7 +21,8 @@ FloatingWindow {
         id: ipcHandler
         target: "settings"
         function toggle() {
-            settingsApp.visible = !settingsApp.visible;
+            Runtime.settingsOpen = !Runtime.settingsOpen;
+            console.info(Runtime.settingsOpen)
         }
     }
 

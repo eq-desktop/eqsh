@@ -7,6 +7,7 @@ import Quickshell.Io
 Singleton {
     property string customAppName: ""
     property bool   locked: false
+    property bool   settingsOpen: false
     Process {
         command: ["ls", Quickshell.shellDir + "/Runtime/config.json"]
         running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/config.json"]); }

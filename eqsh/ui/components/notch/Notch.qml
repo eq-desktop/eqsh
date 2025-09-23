@@ -465,6 +465,8 @@ Scope {
               if (command[0] == "=") {
               } else if (command[0] == "$") {
                 Quickshell.execDetached(["sh", "-c", command.slice(1)]);
+              } else if (command == "settings") {
+                Runtime.settingsOpen = true;
               }
               root.expanded = false;
               grab.active = false;
