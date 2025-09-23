@@ -59,7 +59,7 @@ Scope {
                 }
                 radius: root.rounding
                 implicitWidth: root.anchors[1] && root.anchors[2] ? panelWindow.swidth - root.blurPower*2 : panelWindow.swidth / 2
-                implicitHeight: root.anchors[0] && root.anchors[3] ? panelWindow.sheight - root.blurPower*2 : panelWindow.sheight / 2
+                implicitHeight: root.anchors[0] && root.anchors[3] ? panelWindow.sheight : panelWindow.sheight / 2
                 color: root.color
                 layer.enabled: true
                 layer.effect: MultiEffect {
