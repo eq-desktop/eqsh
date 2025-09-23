@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import QtQuick.Effects
 import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick.Layouts
@@ -87,6 +88,11 @@ BoxExperimental {
 					anchors.verticalCenter: parent.verticalCenter
 					width: 12
 					height: 12
+					layer.enabled: true
+					layer.effect: MultiEffect {
+						colorization: 1
+						colorizationColor: Config.general.darkMode ? "#fff" : "#222"
+					}
 				}
 				Label {
 					id: closeButtonText
@@ -94,7 +100,7 @@ BoxExperimental {
 					anchors.leftMargin: 5
 					anchors.verticalCenter: parent.verticalCenter
 					text: "Remove"
-					color: "#fff"
+					color: Config.general.darkMode ? "#fff" : "#222"
 					font.pixelSize: 12
 					opacity: 0
 					Behavior on opacity {
