@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import qs.Config
 import qs.Core.System
 import qs.ui.Controls.providers
