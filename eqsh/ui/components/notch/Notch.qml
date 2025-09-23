@@ -450,6 +450,10 @@ Scope {
               if (searchInput.text[0] == "=") {
                 root.notchMode = "calc"
                 panelWindow.implicitHeight = Config.notch.height + 100;
+              } else if (searchInput.text == "randQuote") {
+                root.notchMode = "quote"
+                panelWindow.implicitHeight = Config.notch.height + 100;
+                panelWindow.implicitWidth = notchText.implicitWidth + 100;
               } else {
                 root.notchMode = "shell"
                 panelWindow.implicitHeight = Config.notch.height + 60
@@ -472,7 +476,7 @@ Scope {
               top: searchInput.bottom
               horizontalCenter: parent.horizontalCenter
             }
-            visible: expanded && root.notchMode == "calc"
+            visible: expanded && ["calc", "quote"].includes(root.notchMode)
             implicitHeight: 30
             implicitWidth: panelWindow.width-75
             color: "transparent"
@@ -482,18 +486,31 @@ Scope {
               color: "#55aaaaaa"
             }
             Text {
+              id: notchText
               anchors.fill: parent
-              visible: expanded && root.notchMode == "calc"
+              visible: expanded && ["calc", "quote"].includes(root.notchMode)
               horizontalAlignment: Text.AlignHCenter
               verticalAlignment: Text.AlignVCenter
               color: "#fff"
               function getText() {
+                const quotes = [
+                  "\"When it is a question of shilling, every widget is of the same kind\"- Voltaire",
+                  "\"when the shell doesn't shill, accept it's ways\"- Sun Tzu",
+                  "\"To shill, one must be quick with the shell\" — Sun Tzu",
+                  "\"Give me 6 hours to create a bar and I'll spend the first 4 shilling\" - Abraham Lincoln"
+                ]
                 if (root.notchMode == "calc") {
                   try {
                     return typeof eval(root.notchInput.slice(1)) === "number" ? eval(root.notchInput.slice(1)) : "";
                   } catch (_) {
                     return "⬤";
                   }
+                } else if (root.notchMode == "quote") {
+                  if (root.notchInput == "randQuote") {
+                    return quotes[Math.floor(Math.random() * quotes.length)];
+                  } else {
+                    return quotes[root.notchInput];
+                }
                 } else {
                   return "";
                 }
