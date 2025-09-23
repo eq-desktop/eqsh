@@ -6,12 +6,17 @@ import qs.Config
 
 Singleton {
   id: root
+  readonly property string date: clock.date
   readonly property string time: {
     Qt.formatDateTime(clock.date, Config.bar.dateFormat);
   }
 
   function getTime(format) {
     return Qt.formatDateTime(clock.date, format);
+  }
+
+  function getSeconds() {
+    return clock.date.getSeconds();
   }
 
   SystemClock {

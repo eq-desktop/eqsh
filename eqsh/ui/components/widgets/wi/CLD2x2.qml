@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Config
+import qs
 import qs.ui.Controls.providers
 
 BaseWidget {
