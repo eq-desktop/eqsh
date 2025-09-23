@@ -13,7 +13,10 @@ Singleton {
         target: Hyprland
         function onActiveToplevelChanged(event) {
             const window = Hyprland.activeToplevel.wayland;
-            if (!window) root.applicationName = "";
+            if (window == null) {
+                root.applicationName = ""
+                return;
+            };
             root.applicationName = SPAppName.getAppName(window.appId);
             root.appInFullscreen = window.fullscreen;
         }

@@ -75,7 +75,7 @@ BoxExperimental {
 				color: "#50ffffff"
 				width: 1
 			}
-			color: "#111"
+			color: Config.general.darkMode ? "#aa111111" : "#aaffffff"
 			Item {
 				anchors.fill: parent
 				id: closeButtonIcon
@@ -372,7 +372,7 @@ BoxExperimental {
 				id: expandBtn
 				width: 45
 				height: 25
-				color: "#aa555555"
+				color: "#50555555"
 				radius: 50
 				visible: true
 
@@ -401,8 +401,8 @@ BoxExperimental {
 					hoverEnabled: true
 
 					onClicked: singleNotif.expanded = !singleNotif.expanded
-					onEntered: parent.color = "#aa888888"
-					onExited: parent.color = "#aa555555"
+					onEntered: parent.color = "#50888888"
+					onExited: parent.color = "#50555555"
 				}
 			}
 		}

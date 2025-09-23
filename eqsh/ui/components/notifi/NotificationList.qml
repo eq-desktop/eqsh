@@ -23,6 +23,7 @@ Scope {
 		PanelWindow {
 			id: root
 			WlrLayershell.namespace: "eqsh:blur"
+			WlrLayershell.layer: WlrLayer.Overlay
 
 			property var modelData
 			screen: modelData
@@ -43,31 +44,25 @@ Scope {
 
 			color: "transparent"
 
+			mask: Region {
+				item: maskId.contentItem
+				Region {
+					item: maskId.headerItem
+				}
+			}
+
 			property int notificationCount: scope.showAll ? NotificationDaemon.list.length : NotificationDaemon.popupList.length
 
-			LayerShadow {
+			EdgeShadow {
 				id: layerShadow
-				anchors: [
-					true,
-					false,
-					true,
-					true
-				]
-				margins: [0, 0, -100, 0]
-				rounding: 100
-				width: 650
-				height: maskId.implicitHeight
 				blurPower: 64
-				color: "#50000000"
-				layer: WlrLayer.Top
+				color: "#aa000000"
+				strength: 100
+				edge: EdgeShadow.Right
 				visible: scope.showAll
 			}
 
 			visible: true
-
-			mask: Region {
-				item: maskId.contentItem
-			}
 
 			ListView {
 				id: maskId
@@ -75,7 +70,7 @@ Scope {
 					values: scope.showAll ? [...NotificationDaemon.list].reverse() : [...NotificationDaemon.popupList].reverse()
 				}
 
-				implicitHeight: parent.height
+				implicitHeight: parent.height - 40
 				implicitWidth: 400
 
 				anchors.top: parent.top
@@ -134,6 +129,42 @@ Scope {
 						easing.type: Easing.OutBack
 						easing.overshoot: 1
 						properties: "x,y"
+					}
+				}
+
+				headerPositioning: ListView.OverlayHeader
+
+				header: Item {
+					implicitWidth: 200
+					implicitHeight: 30
+					anchors.horizontalCenter: parent.horizontalCenter
+					z: 2
+					MouseArea {
+						anchors.fill: parent
+						cursorShape: Qt.PointingHandCursor
+						hoverEnabled: true
+						onClicked: {
+							NotificationDaemon.discardAllNotifications();
+						}
+					}
+					Box {
+						id: removeAllButton
+						anchors {
+							top: parent.top
+							topMargin: -10
+							horizontalCenter: parent.horizontalCenter
+						}
+						width: 200
+						height: 30
+						color: Config.general.darkMode ? "#aa222222" : "#eee"
+						visible: scope.showAll && maskId.y // scrolling is above 0
+						Text {
+							text: "Remove all notifications"
+							color: Config.general.darkMode ? "#eee" : "#222"
+							anchors.fill: parent
+							verticalAlignment: Text.AlignVCenter
+							horizontalAlignment: Text.AlignHCenter
+						}
 					}
 				}
 			}
