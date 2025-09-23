@@ -130,7 +130,7 @@ Item {
 		property string batteryFormat: "%p%"
 		property string batteryFormatChargin: "*%p%"
   		property string batteryMode: "pill" // pill, percentage, number, number-pill, percentage-pill, bubble
-		property string defaultAppName: "eqSh" // When no toplevel is focused it will show this text. Ideas: "eqSh" | "Hyprland" | "YOURUSERNAME"
+		property string defaultAppName: "Equora" // When no toplevel is focused it will show this text. Ideas: "Equora" | "eqSh" | "Hyprland" | "YOURUSERNAME"
 		// Example dateFormats:
 		// DEFAULT:
 		//     ddd, dd MMM HH:mm

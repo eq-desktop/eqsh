@@ -7,7 +7,7 @@ import qs.ui.Controls.providers
 BaseWidget {
     content: Item {
         id: root
-        property int currentSecond: new Date().getSeconds()
+        property int currentSecond: Time.getSeconds()
 
         Text {
             id: daylong
@@ -27,7 +27,7 @@ BaseWidget {
             color: Config.general.darkMode ? "#fff" : "#222"
             font.family: Fonts.sFProRounded.family
             font.pixelSize: 30
-            text: Qt.formatDateTime(new Date(), "dd")
+            text: Time.getTime("dd")
             anchors.top: daylong.bottom
             anchors.left: parent.left
             anchors.leftMargin: 10

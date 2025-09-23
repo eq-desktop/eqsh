@@ -173,7 +173,6 @@ Rectangle {
 		}
 		Label {
 			id: clock
-			property var date: new Date()
 
 			anchors {
 				horizontalCenter: parent.horizontalCenter
@@ -187,20 +186,11 @@ Rectangle {
 			font.pointSize: 80
 			font.weight: Font.Bold
 
-			Timer {
-				running: true
-				repeat: true
-				interval: 1000
-
-				onTriggered: clock.date = new Date();
-			}
-
-			text: {return Qt.formatDateTime(clock.date, Config.lockScreen.timeFormat)}
+			text: {Time.getTime(Config.lockScreen.timeFormat)}
 		}
 
 		Label {
 			id: dateClock
-			property var date: new Date()
 
 			anchors {
 				horizontalCenter: parent.horizontalCenter
@@ -214,17 +204,7 @@ Rectangle {
 			font.pointSize: 18
 			font.weight: Font.Bold
 
-			Timer {
-				running: true
-				repeat: true
-				interval: 60000
-
-				onTriggered: clock.date = new Date();
-			}
-
-			text: {
-				return Qt.formatDateTime(clock.date, Config.lockScreen.dateFormat);
-			}
+			text: {Time.getDate(Config.lockScreen.dateFormat)}
 		}
 
 		Rectangle {

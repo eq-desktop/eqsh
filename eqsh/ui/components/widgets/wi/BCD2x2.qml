@@ -8,59 +8,110 @@ import qs.ui.Controls.providers
 BaseWidget {
     content: Item {
         id: root
-        property int currentSecond: new Date().getSeconds()
+        anchors.fill: parent
 
-        Timer {
-            interval: 1000
-            running: true
-            repeat: true
-            onTriggered: {
-                root.currentSecond = new Date().getSeconds()
-                dashCanvas.requestPaint()
-                text.text = Qt.formatTime(new Date(), "hh:mm")
-            }
-        }
-
-        Canvas {
-            id: dashCanvas
+        Rectangle {
+            id: background
+            color: "transparent"
             anchors.fill: parent
-            onPaint: {
-                let ctx = getContext("2d");
-                ctx.reset();
-                ctx.lineWidth = 2;
 
-                let dashCount = 60;
-                let r = Math.min(width, height) / 2 - 6;
-                let cx = width / 2;
-                let cy = height / 2;
+            Text {
+                id: text
+                anchors.fill: parent
+                color: Config.general.darkMode ? "#fff" : "#222"
+                font.family: Fonts.sFProRounded.family
+                font.pixelSize: 40
+                font.weight: Font.Bold
+                text: Time.getTime("hh:mm")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
 
-                for (let i = 0; i < dashCount; i++) {
-                    ctx.strokeStyle = (i <= root.currentSecond) ? AccentColor.color : (Config.general.darkMode ? "#333" : "#ddd"); // past=white, future=dark
+            PathView {
+                id: pathView
+                model: 60
+                anchors.fill: parent
 
-                    let angle = (i / dashCount) * 2 * Math.PI;
-                    let x1 = cx + Math.cos(angle) * r;
-                    let y1 = cy + Math.sin(angle) * r;
-                    let x2 = cx + Math.cos(angle) * (r - 6);
-                    let y2 = cy + Math.sin(angle) * (r - 6);
+                delegate: Rectangle {
+                    id: rect
+                    required property int modelData
+                    width: pathView.width / 60
+                    height: pathView.width / 20
+                    color: "white"
+                    radius: 15
+                    antialiasing: true
+                    rotation: modelData * 360 / pathView.model
 
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x2, y2);
-                    ctx.stroke();
+                    // distance behind current second (wrap around)
+                    property int diff: (Time.getSeconds() - modelData + pathView.model) % pathView.model
+
+                    // set tail length
+                    property int tailLength: 50
+                    opacity: diff <= tailLength ? Math.exp(-0.06 * diff) : 0
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+                    }
+                }
+
+                path: Path {
+                    id: myPath
+                    property real radius: pathView.width / 4
+                    startX: pathView.width / 2
+
+                    PathLine {
+                        relativeX: pathView.width / 4
+                    }
+
+                    PathArc {
+                        relativeX: myPath.radius
+                        relativeY: myPath.radius
+                        radiusX: myPath.radius
+                        radiusY: myPath.radius
+                    }
+
+                    PathLine {
+                        relativeX: 0
+                        relativeY: pathView.width / 2
+                    }
+
+                    PathArc {
+                        relativeX: -myPath.radius
+                        relativeY: myPath.radius
+                        radiusX: myPath.radius
+                        radiusY: myPath.radius
+                    }
+
+                    PathLine {
+                        relativeX: -pathView.width / 2
+                        relativeY: 0
+                    }
+
+                    PathArc {
+                        relativeX: -myPath.radius
+                        relativeY: -myPath.radius
+                        radiusX: myPath.radius
+                        radiusY: myPath.radius
+                    }
+
+                    PathLine {
+                        relativeX: 0
+                        relativeY: -pathView.width / 2
+                    }
+
+                    PathArc {
+                        relativeX: myPath.radius
+                        relativeY: -myPath.radius
+                        radiusX: myPath.radius
+                        radiusY: myPath.radius
+                    }
+
+                    PathLine {
+                        relativeX: pathView.width / 4
+                        relativeY: 0
+                    }
                 }
             }
-        }
-
-        Text {
-            id: text
-            anchors.fill: parent
-            color: Config.general.darkMode ? "#fff" : "#222"
-            font.family: Fonts.sFProRounded.family
-            font.pixelSize: Math.min(width, height) / 4
-            font.weight: Font.Bold
-            text: Qt.formatTime(new Date(), "hh:mm")
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
         }
     }
 }
