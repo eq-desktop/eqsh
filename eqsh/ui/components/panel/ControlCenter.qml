@@ -4,6 +4,7 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Widgets
+import QtQuick.Layouts
 import Quickshell.Wayland
 import qs.ui.Controls.Auxiliary
 import qs.ui.Controls.providers
@@ -184,6 +185,49 @@ Scope {
                         left: parent.left
                         topMargin: 10
                         leftMargin: 10
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            NotificationDaemon.toggleDND()
+                        }
+                    }
+                    ClippingRectangle {
+                        id: focusClipping
+                        anchors {
+                            left: parent.left
+                            leftMargin: 15
+                            verticalCenter: parent.verticalCenter
+                        }
+                        radius: 40
+                        width: 40
+                        height: 40
+                        color: NotificationDaemon.popupInhibited ? "#ffffff" : "#60ffffff"
+                        VectorImage {
+                            id: rBFocus
+                            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/dnd.svg")
+                            width: 40
+                            height: 40
+                            Layout.preferredWidth: 40
+                            Layout.preferredHeight: 40
+                            preferredRendererType: VectorImage.CurveRenderer
+                            anchors.centerIn: parent
+                            layer.enabled: true
+                            layer.effect: MultiEffect {
+                                colorization: 1
+                                colorizationColor: NotificationDaemon.popupInhibited ? "#2495ff" : "#fff"
+                            }
+                        }
+                    }
+                    UIText {
+                        text: "Focus"
+                        font.weight: 600
+                        color: "#fff"
+                        anchors {
+                            left: focusClipping.right
+                            leftMargin: 5
+                            verticalCenter: parent.verticalCenter
+                        }
                     }
                 }
                 BoxButton {
