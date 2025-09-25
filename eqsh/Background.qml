@@ -5,6 +5,7 @@ import QtQuick.Effects
 import QtQuick
 import qs.Config
 import qs.ui.components.widgets
+import qs.ui.components.desktop
 import qs
 import qs.ui.Controls.Auxiliary
 import qs.ui.Controls.providers
@@ -15,6 +16,7 @@ Scope {
 
     PanelWindow {
       WlrLayershell.layer: WlrLayer.Background
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
       id: panelWindow
       required property var modelData
       screen: modelData
@@ -27,8 +29,6 @@ Scope {
       }
 
 	    exclusiveZone: -1
-
-      mask: Region {}
 
       color: Config.wallpaper.color
       ClippingRectangle {
@@ -71,10 +71,15 @@ Scope {
             }
           }
         }
+        Loader { active: true; anchors.fill: parent; sourceComponent: Desktop {}}
         Loader { active: Config.widgets.enable; anchors.fill: parent; sourceComponent: WidgetGrid {
           opacity: 0
+          id: grid
           anchors.fill: parent
-          editable: false
+          editable: true
+          onWidgetMoved: (item) => {
+            grid.save(item);
+          }
           Behavior on opacity {
             NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
           }

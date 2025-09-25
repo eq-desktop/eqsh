@@ -14,7 +14,6 @@ BaseWidget {
     content: Item {
         id: root
 
-        // Example device batteries (replace with provider data)
         property var devices: [
             { type: UPower.displayDevice.isLaptopBattery ? "laptop" : "desktop", name: "Micky's Macbook Air 2019", level: UPower.displayDevice.percentage },
             { type: "", name: "", level: 0 },

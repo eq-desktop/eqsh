@@ -39,17 +39,20 @@ Item {
     required property var modelData
     signal widgetMoved()
     // Ghost rectangle
-    Rectangle {
+    Control {
         id: ghostRect
-        width: sizeW
-        height: sizeH
-        color: "#22000000"
-        border.color: "#55ffffff"
-        border.width: 3
-        radius: 8
         visible: false
         x: gridSizeX * xPos
         y: gridSizeY * yPos
+        width: sizeW
+        height: sizeH
+        padding: 6
+        contentItem: Rectangle {
+            color: "transparent"
+            border.color: "#55ffffff"
+            border.width: 2
+            radius: 20
+        }
     }
     Rectangle {
         id: draggableRect

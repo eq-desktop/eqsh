@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 import Quickshell.Wayland
 import Quickshell.Io
+import QtQuick.Controls
 
 import qs.Config
 import qs.Core.System
@@ -44,10 +45,16 @@ Scope {
 
 			color: "transparent"
 
+			Item {
+				id: emptyItem
+				implicitWidth: 0
+				implicitHeight: 0
+			}
+
 			mask: Region {
-				item: maskId.contentItem
+				item: scope.showAll ? maskId.contentItem : emptyItem
 				Region {
-					item: maskId.headerItem
+					item: scope.showAll ? maskId.headerItem.children[0] : emptyItem
 				}
 			}
 
@@ -137,33 +144,35 @@ Scope {
 				header: Item {
 					implicitWidth: 200
 					implicitHeight: 30
-					anchors.horizontalCenter: parent.horizontalCenter
-					z: 2
-					MouseArea {
-						anchors.fill: parent
-						cursorShape: Qt.PointingHandCursor
-						hoverEnabled: true
-						onClicked: {
-							NotificationDaemon.discardAllNotifications();
-						}
+					anchors {
+						horizontalCenter: parent.horizontalCenter
 					}
-					Box {
-						id: removeAllButton
+					Button {
+						implicitWidth: 200
+						implicitHeight: 30
 						anchors {
 							top: parent.top
 							topMargin: -10
 							horizontalCenter: parent.horizontalCenter
 						}
-						width: 200
-						height: 30
-						color: Config.general.darkMode ? "#aa222222" : "#eee"
-						visible: scope.showAll && maskId.y // scrolling is above 0
-						Text {
-							text: "Remove all notifications"
-							color: Config.general.darkMode ? "#eee" : "#222"
-							anchors.fill: parent
-							verticalAlignment: Text.AlignVCenter
-							horizontalAlignment: Text.AlignHCenter
+						background: Item {}
+						z: 2
+						onClicked: {
+							NotificationDaemon.discardAllNotifications();
+						}
+						Box {
+							id: removeAllButton
+							width: 200
+							height: 30
+							color: Config.general.darkMode ? "#aa222222" : "#eee"
+							visible: scope.showAll && maskId.y // scrolling is above 0
+							Text {
+								text: "Remove all notifications"
+								color: Config.general.darkMode ? "#eee" : "#222"
+								anchors.fill: parent
+								verticalAlignment: Text.AlignVCenter
+								horizontalAlignment: Text.AlignHCenter
+							}
 						}
 					}
 				}
