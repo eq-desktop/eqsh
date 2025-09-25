@@ -50,6 +50,7 @@ Item {
 	component Account: JsonObject {
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
 		property string name: "First Lastname"
+		property bool   firstTimeRunning: true
 		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
 	}
 
@@ -96,7 +97,7 @@ Item {
 		property bool   onlyVisual: false
 		property int    hideDuration: 10
 		property bool   fluidEdge: true // Cutout corners
-		property real   fluidEdgeStrength: 0.4 // can be 0-1
+		property real   fluidEdgeStrength: 0.6 // can be 0-1
 		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
 		property color  signatureColor: "#fff"
 		property bool   autohide: false
