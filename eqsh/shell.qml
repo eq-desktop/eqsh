@@ -13,6 +13,7 @@ import qs.ui.components.launchpad
 import qs.ui.components.osd
 import qs.ui.components.dialog
 import qs.ui.components.notch
+import qs.ui.components.spotlight
 import qs.ui.components.widgets
 import qs.ui.components.settings
 import qs.ui.Controls.Auxiliary
@@ -68,6 +69,7 @@ Scope {
   NotificationList {}
   Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
   Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
+  Launcher {}
   Notch {
     id: notch
     onCollapse: (monitor) => triggerNotch.toggle(monitor);
@@ -99,7 +101,6 @@ Scope {
     }
   }
   Loader { active: Config.dialogs.enable; sourceComponent: Dialog {}}
-  Loader { active: Config.widgets.enable; sourceComponent: EditWidgets {}}
   ActivateLinux {}
   Version {}
   ScreenCorners {}
