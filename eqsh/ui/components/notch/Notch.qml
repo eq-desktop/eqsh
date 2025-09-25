@@ -58,6 +58,7 @@ Scope {
     blockLoading: true
   }
   onLockedChanged: {
+    console.info(Config.account.firstTimeRunning)
     if (locked) {
       notch.notchInstance(fileViewer.text(), -1, Config.notch.delayedLockAnimDuration)
       //notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, AccentColor.color, 0, 1)
@@ -66,6 +67,15 @@ Scope {
       notch.leftIconHide()
       notch.customNotchHide()
       notch.temporaryResizeReset()
+    }
+  }
+
+  Component.onCompleted: {
+    console.info(Config.account.firstTimeRunning)
+    if (Config.account.firstTimeRunning == false) {
+      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Welcome.qml"
+      notch.notchInstance(fileViewer.text(), -1, 2000)
+      notch.temporaryResize(300, 150, -1, -1, true, 2000)  
     }
   }
 
