@@ -16,6 +16,9 @@ FloatingWindow {
     title: "eqSh Settings"
     minimumSize: "675x540"
     
+    onClosed: {
+        Runtime.settingsOpen = false
+    }
 
     IpcHandler {
         id: ipcHandler
