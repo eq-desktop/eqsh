@@ -96,7 +96,19 @@ guix install quickshell
 
 <details>
 <summary>
-<b>2. Clone git repository</b>
+<b>2. Install using CLI</b>
+</summary>
+
+```bash
+pip install git+https://github.com/eq-desktop/cli.git
+equora install
+```
+
+</details>
+
+<details>
+<summary>
+<b>2. Clone git repository (Old way of installing)</b>
 </summary>
 
 ```bash

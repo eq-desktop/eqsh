@@ -188,7 +188,7 @@ Item {
 		property real         zoom: 1.1
 		property int          zoomDuration: 1000
 		property bool         useCustomWallpaper: false
-		property string       customWallpaperPath: root.homeDirectory+"/eqSh/wallpapers/Sequoia-Sunrise.png"
+		property string       customWallpaperPath: root.homeDirectory+"/.local/share/equora/wallpapers/Sequoia-Sunrise.png"
 		property bool         enableShader: false
 		property string       shaderName: "Raining" // Not compatible with Blur or X-Ray
 		property string       shaderFrag: Quickshell.shellDir + "/Media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
@@ -202,7 +202,7 @@ Item {
 	component Wallpaper: JsonObject {
 		property bool   enable: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: root.homeDirectory+"/eqSh/wallpapers/Tahoe-city.jpeg"//Sequoia-Sunrise.png"
+		property string path: root.homeDirectory+"/.local/share/equora/wallpapers/Tahoe-city.jpeg"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: Quickshell.shellDir + "/Media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
