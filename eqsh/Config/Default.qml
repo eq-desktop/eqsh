@@ -19,10 +19,13 @@ Item {
 	property Widgets        widgets: adapter.widgets
 	property Osd            osd: adapter.osd
 	property Account        account: adapter.account
-	property string homeDirectory: SPPathResolver.home
+	property string         homeDirectory: SPPathResolver.home
+	property bool           loaded: fileViewer.loaded
 
 	FileView {
+		id: fileViewer
         path: Qt.resolvedUrl(Quickshell.shellDir + "/Runtime/config.json")
+		blockLoading: true
         watchChanges: true
         onFileChanged: reload()
 		onAdapterUpdated: writeAdapter()

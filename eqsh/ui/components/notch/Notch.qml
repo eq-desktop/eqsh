@@ -52,30 +52,38 @@ Scope {
 
   property bool   locked: Runtime.locked
 
-  FileView {
-    id: fileViewer
-    path: Quickshell.shellDir + "/ui/components/notch/instances/Lock.qml"
-    blockLoading: true
-  }
-  onLockedChanged: {
-    console.info(Config.account.firstTimeRunning)
-    if (locked) {
-      notch.notchInstance(fileViewer.text(), -1, Config.notch.delayedLockAnimDuration)
-      //notch.leftIconShow("builtin:locked", -1, -1, Config.notch.delayedLockAnimDuration, true, AccentColor.color, 0, 1)
-      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, 200, false, Config.notch.delayedLockAnimDuration)
+  property bool firstTimeRunning: Config.account.firstTimeRunning
+  property bool loadedConfig: Config.loaded
+
+  onFirstTimeRunningChanged: getWelcomeNotchApp()
+  onLoadedConfigChanged: getWelcomeNotchApp()
+
+  function getWelcomeNotchApp() {
+    if (Config.account.firstTimeRunning && Config.loaded) {
+      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Welcome.qml"
+      notch.notchInstance(fileViewer.text(), -1, 2000)
+      notch.temporaryResize(300, 150, -1, -1, true, 2000)
     } else {
-      notch.leftIconHide()
-      notch.customNotchHide()
-      notch.temporaryResizeReset()
+      if (hasSchedule("notch-instance")) {
+        notch.customNotchHide()
+        notch.temporaryResizeReset()
+      }
     }
   }
 
-  Component.onCompleted: {
-    console.info(Config.account.firstTimeRunning)
-    if (Config.account.firstTimeRunning == false) {
-      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Welcome.qml"
-      notch.notchInstance(fileViewer.text(), -1, 2000)
-      notch.temporaryResize(300, 150, -1, -1, true, 2000)  
+  FileView {
+    id: fileViewer
+    path: Quickshell.shellDir + "/ui/components/notch/instances/Lock.qml"
+    blockAllReads: true
+  }
+  onLockedChanged: {
+    if (locked) {
+      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Lock.qml"
+      notch.notchInstance(fileViewer.text(), -1, Config.notch.delayedLockAnimDuration)
+      notch.temporaryResize(Config.notch.minWidth + 40, Config.notch.height+20, -1, 200, false, Config.notch.delayedLockAnimDuration)
+    } else {
+      notch.customNotchHide()
+      notch.temporaryResizeReset()
     }
   }
 
@@ -118,6 +126,23 @@ Scope {
     }
   }
 
+  function hasSchedule(name) {
+    for (let i = 0; i < scheduledJobs.length; ++i) {
+      if (scheduledJobs[i].name === name) {
+        return true
+      }
+    }
+    return false
+  }
+
+  function removeSchedule(name) {
+    for (let i = scheduledJobs.length - 1; i >= 0; --i) {
+      if (scheduledJobs[i].name === name) {
+        scheduledJobs.splice(i, 1)
+      }
+    }
+  }
+
   function notchInstance(code, timeout, start_delay=0) {
     root.customNotchVisible = false
     root.customNotchCode = code
@@ -132,7 +157,9 @@ Scope {
 
   function customNotchHide() {
     root.customNotchVisible = false
+    root.customNotchVisibleInfinite = false
     root.customNotchCode = ""
+    removeSchedule("notch-instance")
   }
 
   function leftIconShow(path, timeout, margin=-1, start_delay=0, animate=true, color="", rotation=0, scale=1) {
@@ -155,6 +182,7 @@ Scope {
   }
   function leftIconHide() {
     root.leftIconVisible = false
+    removeSchedule("left")
   }
 
   function rightIconShow(path, timeout, margin=5, start_delay=0, animate=true, color="", rotation=0, scale=1) {
@@ -177,6 +205,7 @@ Scope {
   }
   function rightIconHide() {
     root.rightIconVisible = false
+    removeSchedule("right")
   }
 
   function temporaryResize(width=-1, height=-1, rounding=-1, timeout=5000, force=false, start_delay=0) {
@@ -195,11 +224,13 @@ Scope {
     }, start_delay, "resize")
   }
   function temporaryResizeReset() {
+    tempResize = false
+    tempResizeForce = false
     tempWidth = 0
     tempHeight = 0
     tempRounding = 0
-    tempResize = false
-    tempResizeForce = false
+    tempResizeInfinite = false
+    removeSchedule("resize")
   }
 
   signal expand(ShellScreen monitor)

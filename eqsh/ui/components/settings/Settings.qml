@@ -25,7 +25,6 @@ FloatingWindow {
         target: "settings"
         function toggle() {
             Runtime.settingsOpen = !Runtime.settingsOpen;
-            console.info(Runtime.settingsOpen)
         }
     }
 
