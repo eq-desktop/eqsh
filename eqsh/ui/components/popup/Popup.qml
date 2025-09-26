@@ -202,6 +202,7 @@ Scope {
             horizontalCenter: parent.horizontalCenter
           }
           SequentialAnimation {
+            alwaysRunToEnd: true
             running: root.showing && localPopup ? localPopup.important : false
             loops: -1
             NumberAnimation { target: popupBg; property: "rotation"; to: -3; duration: 240; easing.type: Easing.InOutQuad }
@@ -230,6 +231,16 @@ Scope {
               Behavior on blur {
                 NumberAnimation { duration: 500; easing.type: Easing.InOutQuad }
               }
+            }
+            SequentialAnimation {
+              alwaysRunToEnd: true
+              running: root.showing && localPopup ? localPopup.important : false
+              loops: -1
+              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 3; duration: 240; easing.type: Easing.InOutQuad }
+              NumberAnimation { target: popupNotiContent; property: "rotation"; to: -3; duration: 240; easing.type: Easing.InOutQuad }
+              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 1; duration: 180; easing.type: Easing.InOutQuad }
+              NumberAnimation { target: popupNotiContent; property: "rotation"; to: -1; duration: 180; easing.type: Easing.InOutQuad }
+              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 0; duration: 150; easing.type: Easing.InOutQuad }
             }
             opacity: popupContent.opacityV
             Column {
