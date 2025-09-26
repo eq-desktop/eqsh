@@ -35,9 +35,9 @@ BaseWidget {
             anchors.top: layout.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             color: Config.general.darkMode ? "#fff" : "#222"
-            font.family: Fonts.sFProRounded.family
+            font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 60
-            font.weight: 600
+            font.weight: 400
             text: Time.getTime("dd")
         }
     }

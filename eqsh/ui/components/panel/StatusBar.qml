@@ -34,6 +34,7 @@ Scope {
       property string applicationName: HyprlandExt.applicationName != "" ? HyprlandExt.applicationName : Config.bar.defaultAppName
 
       component UIBButton: BButton {
+        font.weight: 600
         onHover: {
           this.jumpUp();
         }
@@ -161,7 +162,7 @@ Scope {
                 }
                 UIBButton {
                   text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName)
-                  font.weight: 600
+                  font.weight: 700
                 }
 
                 UIBButton {

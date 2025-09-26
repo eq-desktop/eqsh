@@ -25,7 +25,7 @@ BaseWidget {
             id: day
             anchors.fill: parent
             color: Config.general.darkMode ? "#fff" : "#222"
-            font.family: Fonts.sFProRounded.family
+            font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 30
             text: Time.getTime("dd")
             anchors.top: daylong.bottom
@@ -37,8 +37,9 @@ BaseWidget {
         Text {
             id: events
             color: Config.general.darkMode ? "#aaa" : "#555"
-            font.pixelSize: 12
+            font.pixelSize: 10
             text: "No events today"
+            font.weight: 300
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.leftMargin: 10
