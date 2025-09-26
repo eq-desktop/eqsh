@@ -231,11 +231,14 @@ Scope {
                 text: localPopup ? localPopup.title : ""
                 color: "#ffffff"
                 height: 16
+                font.family: Fonts.sFProDisplayRegular.family
+                font.weight: 600
                 font.pixelSize: 16
               }
               Text {
                 text: localPopup ? localPopup.description : ""
                 color: "#cccccc"
+                font.family: Fonts.sFProDisplayRegular.family
                 font.pixelSize: 13
                 width: (Config.notch.minWidth*2) - 40
                 wrapMode: Text.WrapAnywhere
