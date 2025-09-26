@@ -204,7 +204,7 @@ Rectangle {
 			font.pointSize: 18
 			font.weight: Font.Bold
 
-			text: {Time.getDate(Config.lockScreen.dateFormat)}
+			text: {Time.getTime(Config.lockScreen.dateFormat)}
 		}
 
 		Rectangle {
