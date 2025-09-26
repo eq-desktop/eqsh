@@ -13,6 +13,7 @@ import qs.ui.components.launchpad
 import qs.ui.components.osd
 import qs.ui.components.dialog
 import qs.ui.components.notch
+import qs.ui.components.popup
 import qs.ui.components.spotlight
 import qs.ui.components.widgets
 import qs.ui.components.settings
@@ -70,6 +71,7 @@ Scope {
   Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
   Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
   Launcher {}
+  Popup {}
   Notch {
     id: notch
     onCollapse: (monitor) => triggerNotch.toggle(monitor);
