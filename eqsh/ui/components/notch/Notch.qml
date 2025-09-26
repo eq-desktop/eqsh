@@ -276,6 +276,10 @@ Scope {
         NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
       }
 
+      onImplicitHeightChanged: {
+        Runtime.notchHeight = implicitHeight - 40
+      }
+
       Item {
         anchors.fill: parent
         scale: Config.general.reduceMotion ? 1 : 0
