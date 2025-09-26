@@ -7,6 +7,7 @@ import Quickshell.Io
 Singleton {
     property string customAppName: ""
     property bool   locked: false
+    property int    notchHeight: 0
     property bool   settingsOpen: false
     Process {
         command: ["ls", Quickshell.shellDir + "/Runtime/config.json"]
