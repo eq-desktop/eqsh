@@ -19,11 +19,12 @@ Scope {
   property bool showing: false
   signal showPopup(var popup)
 
-  function openPopup(iconPath, title, description, timeout) {
+  function openPopup(iconPath, title, description, timeout, important) {
     let popup = {
       iconPath: iconPath,
       title: title,
       description: description,
+      important: important,
       timeout: (timeout > 0 ? timeout : 3000)
     }
     popups.push(popup)
@@ -61,7 +62,7 @@ Scope {
       anchors.top: true
       margins.top: (Config.notch.islandMode ? Config.notch.margin : 0)
       implicitWidth: Config.notch.minWidth*2
-      implicitHeight: 100 + (Config.notch.margin*2) + (Config.notch.height) + 25 // 25 is for bouncing box
+      implicitHeight: 100 + (Config.notch.margin*2) + (Runtime.notchHeight) + 25 // 25 is for bouncing box
       exclusiveZone: -1
       color: "transparent"
 
@@ -99,7 +100,7 @@ Scope {
             NumberAnimation {
               target: popupBg
               property: "height"
-              from: (Config.notch.height)
+              from: (Runtime.notchHeight)
               to: 100
               duration: 500
               easing.type: Easing.OutBack
@@ -117,7 +118,7 @@ Scope {
               target: popupBg
               property: "anchors.topMargin"
               from: Config.notch.islandMode ? Config.notch.margin : 0
-              to: Config.notch.margin+(Config.notch.height)
+              to: Config.notch.margin+(Runtime.notchHeight)
               duration: 300
               easing.type: Easing.OutBack
             }
@@ -145,7 +146,7 @@ Scope {
             NumberAnimation {
               target: popupBg
               property: "anchors.topMargin"
-              from: Config.notch.margin+(Config.notch.height)
+              from: Config.notch.margin+(Runtime.notchHeight)
               to: Config.notch.islandMode ? Config.notch.margin : 0
               duration: 500
               easing.type: Easing.InBack
@@ -164,7 +165,7 @@ Scope {
               target: popupBg
               property: "height"
               from: 100
-              to: (Config.notch.height)
+              to: (Runtime.notchHeight)
               duration: 500
               easing.type: Easing.InBack
             }
@@ -199,6 +200,15 @@ Scope {
             top: parent.top
             topMargin: 0
             horizontalCenter: parent.horizontalCenter
+          }
+          SequentialAnimation {
+            running: root.showing && localPopup ? localPopup.important : false
+            loops: -1
+            NumberAnimation { target: popupBg; property: "rotation"; to: -3; duration: 240; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: popupBg; property: "rotation"; to: 3; duration: 240; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: popupBg; property: "rotation"; to: -1; duration: 180; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: popupBg; property: "rotation"; to: 1; duration: 180; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: popupBg; property: "rotation"; to: 0; duration: 150; easing.type: Easing.InOutQuad }
           }
           width: Config.notch.minWidth-40
           height: Config.notch.height
@@ -271,8 +281,8 @@ Scope {
 
   IpcHandler {
     target: "popup"
-    function openPopup(iconPath: string, title: string, description: string, timeout: int) {
-      root.openPopup(iconPath, title, description, timeout)
+    function openPopup(iconPath: string, title: string, description: string, timeout: int, important: bool) {
+      root.openPopup(iconPath, title, description, timeout, important)
     }
   }
 }
