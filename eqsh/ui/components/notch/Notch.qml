@@ -270,10 +270,10 @@ Scope {
       }
 
       Behavior on implicitHeight {
-        NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+        NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.2 }
       }
       Behavior on implicitWidth {
-        NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 3 }
+        NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
       }
 
       Item {
