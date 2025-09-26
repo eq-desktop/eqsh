@@ -50,15 +50,14 @@ Scope {
 				implicitWidth: 0
 				implicitHeight: 0
 			}
+			property int notificationCount: scope.showAll ? NotificationDaemon.list.length : NotificationDaemon.popupList.length
 
 			mask: Region {
-				item: scope.showAll ? maskId.contentItem : emptyItem
+				item: scope.showAll ? maskId.contentItem : (notificationCount > 0 ? maskId.contentItem : emptyItem)
 				Region {
 					item: scope.showAll ? maskId.headerItem.children[0] : emptyItem
 				}
 			}
-
-			property int notificationCount: scope.showAll ? NotificationDaemon.list.length : NotificationDaemon.popupList.length
 
 			EdgeShadow {
 				id: layerShadow
