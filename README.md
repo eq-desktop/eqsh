@@ -143,6 +143,15 @@ exec-once = qs -c eqsh
 
 </details>
 
+<details>
+<summary>
+<b>4. Post-Install</b>
+</summary>
+
+Icon theme: [MacTahoe Icon Theme](https://github.com/vinceliuice/MacTahoe-icon-theme)
+
+GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-theme)
+
 ---
 
 ## ✨ Features
