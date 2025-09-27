@@ -43,7 +43,8 @@ Button {
   layer.enabled: true
   layer.effect: MultiEffect {
     shadowEnabled: true
-    shadowBlur: 1
+    shadowBlur: 0.5
+    shadowOpacity: 1
     shadowColor: "#000000"
   }
   MouseArea {
