@@ -64,7 +64,7 @@ Scope {
       Timer {
         id: timer
         running: false
-        interval: root.active ? 0 : 700
+        interval: root.active ? 0 : 200
         onTriggered: {
           root.hovered(modelData)
         }
