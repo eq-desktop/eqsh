@@ -6,13 +6,14 @@ import qs.ui.Controls.providers
 import QtQuick.VectorImage
 import QtQuick.Effects
 
-Rectangle {
+Item {
+    property var details: QtObject {
+        property string version: "0.1.0"
+    }
     anchors.fill: parent
-    color: "transparent"
-    scale: 0
     opacity: 0
     Component.onCompleted: {
-        scale = 1
+        notch.setSize(notch.defaultWidth + 40, notch.defaultHeight + 20)
         opacity = 1
     }
     Behavior on scale {
@@ -28,11 +29,8 @@ Rectangle {
         preferredRendererType: VectorImage.CurveRenderer
         anchors {
             left: parent.left
-            leftMargin: Math.min((notchBg.height/2)-7.5, Config.notch.radius-7.5)
+            leftMargin: 20
             verticalCenter: parent.verticalCenter
-            Behavior on leftMargin {
-                NumberAnimation { duration: Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
-            }
         }
         source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/notch/locked.svg")
         rotation: 0

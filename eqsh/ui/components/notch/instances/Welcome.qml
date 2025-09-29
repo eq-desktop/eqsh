@@ -6,12 +6,15 @@ import qs.ui.Controls.providers
 import QtQuick.VectorImage
 import QtQuick.Effects
 
-Rectangle {
+Item {
+    property var details: QtObject {
+        property string version: "0.1.0"
+    }
     anchors.fill: parent
-    color: "transparent"
     scale: 0.8
     opacity: 0
     Component.onCompleted: {
+        notch.setSize(300, 150)
         scale = 1
         opacity = 1
     }

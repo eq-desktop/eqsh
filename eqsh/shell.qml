@@ -95,7 +95,6 @@ Scope {
   Popup {}
   Notch {
     id: notch
-    onCollapse: (monitor) => triggerNotch.toggle(monitor);
     EdgeTrigger {
       id: triggerNotch
       position: "tlr"
