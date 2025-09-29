@@ -18,6 +18,7 @@ Scope {
   id: root
 
   property bool shown: false
+  property var desktopentries: DesktopEntries
 
   component DockItem: Button {
     id: app
@@ -28,7 +29,7 @@ Scope {
     property string appName: ""
     property bool   launchpad: false
     property bool   settings: false
-    property var    entry: (launchpad || settings) ? null : appName != "" ? DesktopEntries.heuristicLookup(appName) : null
+    property var    entry: (launchpad || settings) ? null : appName != "" ? desktopentries.heuristicLookup(appName) : null
 
     background: Rectangle {
       anchors.fill: parent
@@ -77,6 +78,13 @@ Scope {
       } else if (settings) {
         Runtime.settingsOpen = !Runtime.settingsOpen
       }
+    }
+  }
+
+  Connections {
+    target: DesktopEntries
+    function onApplicationsChanged() {
+      desktopentries = DesktopEntries
     }
   }
 

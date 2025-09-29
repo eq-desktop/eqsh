@@ -1,10 +1,13 @@
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
+import qs
 import qs.ui.Controls.Advanced
+import qs.ui.Controls.Auxiliary
 import qs.ui.Controls.providers
 
 PanelWindow {
@@ -13,15 +16,20 @@ PanelWindow {
     implicitHeight: 600
     color: "transparent"
     focusable: true
-    visible: false
     WlrLayershell.namespace: "eqsh:blur"
+
+    mask: Region {
+        item: Runtime.spotlightOpen ? background : null
+    }
 
     BoxExperimental {
         id: background
-        anchors.centerIn: parent
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: Runtime.spotlightOpen
         width: parent.width * 0.85
-        height: parent.height * 0.85
-        radius: 16
+        implicitHeight: results.height + search.height + 32
+        radius: 25
         highlight: AccentColor.color
 
         ColumnLayout {
@@ -33,14 +41,23 @@ PanelWindow {
                 id: search
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
-                placeholderText: "Search apps…"
                 font.pixelSize: 16
                 color: "white"
-                background: Rectangle {
-                    radius: 8
-                    color: "#333"
+                background: Text {
+                    anchors.fill: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
+                    anchors.leftMargin: 12
+                    color: "#fff"
+                    visible: search.text == ""
+                    text: "Search..."
                 }
                 focus: true
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Escape) {
+                        launcher.toggle();
+                    }
+                }
             }
 
             ListView {
@@ -48,23 +65,50 @@ PanelWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 clip: true
+                height: search.text == "" ? 0 : 400
                 spacing: 4
 
-                model: DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(search.text.toLowerCase()))
+                model: ScriptModel {
+                    values: search.text == "" ? [] : DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(search.text.toLowerCase()))
+                }
 
                 delegate: Rectangle {
                     required property DesktopEntry modelData
-                    width: parent.width
+                    width: parent ? parent.width : 0
                     height: 40
-                    radius: 6
-                    color: hovered ? "#444" : "transparent"
+                    radius: 15
+                    color: hovered ? AccentColor.color : "transparent"
 
                     property bool hovered: false
+
+                    Image {
+                        id: icon
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        source: Quickshell.iconPath(modelData.icon)
+                        width: 32
+                        height: 32
+                        smooth: true
+                        mipmap: true
+                        layer.enabled: true
+                        scale: 0
+                        Behavior on scale {
+                            NumberAnimation {
+                                duration: 200
+                                easing.type: Easing.OutBack
+                                easing.overshoot: 1
+                            }
+                        }
+                        Component.onCompleted: {
+                            scale = 1
+                        }
+                    }
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.left: parent.left
-                        anchors.leftMargin: 12
+                        anchors.leftMargin: 56
                         text: modelData.name
                         color: "white"
                         font.pixelSize: 15
@@ -76,10 +120,33 @@ PanelWindow {
                         hoverEnabled: true
                         onEntered: parent.hovered = true
                         onExited: parent.hovered = false
-                        onClicked: modelData.execute()
+                        onClicked: {modelData.execute(); launcher.toggle();}
                     }
                 }
             }
+        }
+    }
+
+    function toggle() {
+        Runtime.spotlightOpen = !Runtime.spotlightOpen;
+        if (Runtime.spotlightOpen) {
+            search.focus = true;
+        } else {
+            search.text = "";
+        }
+    }
+
+    IpcHandler {
+        target: "spotlight"
+        function toggle() {
+            launcher.toggle();
+        }
+    }
+    CustomShortcut {
+        name: "spotlight"
+        description: "Toggle Spotlight"
+        onPressed: {
+            launcher.toggle();
         }
     }
 }
