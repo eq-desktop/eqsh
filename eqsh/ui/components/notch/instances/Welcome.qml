@@ -3,27 +3,15 @@ import Quickshell
 import qs.Config
 import qs.Core.System
 import qs.ui.Controls.providers
+import qs.ui.Controls.Auxiliary
 import QtQuick.VectorImage
 import QtQuick.Effects
 
-Item {
-    property var details: QtObject {
-        property string version: "0.1.0"
-    }
-    anchors.fill: parent
-    scale: 0.8
-    opacity: 0
-    Component.onCompleted: {
-        notch.setSize(300, 150)
-        scale = 1
-        opacity = 1
-    }
-    Behavior on scale {
-        NumberAnimation { duration: Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
-    }
-    Behavior on opacity {
-        NumberAnimation { duration: Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
-    }
+NotchApplication {
+    details.version: "0.1.0"
+    meta.width: 300
+    meta.height: 150
+    meta.startScale: 0.8
     VectorImage {
         id: welcomeIcon
         width: 60
@@ -85,8 +73,8 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            customNotchHide()
-            temporaryResizeReset()
+            notch.closeNotchInstance()
+            notch.resetSize()
             Config.account.firstTimeRunning = false
         }
     }

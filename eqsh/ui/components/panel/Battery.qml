@@ -12,6 +12,11 @@ Item {
   id: root
 
   property int iconSize: 24
+  property string batteryMode: Config.bar.batteryMode
+  property string chargeColor: "#fff"
+  property string textColor: "#000"
+  property string borderColor: "#aaa"
+  property bool allowZap: true
   readonly property bool batCharging: UPower.onBattery ? (UPower.displayDevice.state == UPowerDeviceState.Charging) : true
   readonly property string batIcon: {
     (batPercentage > 0.98) ? "100" : (batPercentage > 0.90) ? "090" : (batPercentage > 0.80) ? "080" : (batPercentage > 0.70) ? "070" : (batPercentage > 0.60) ? "060" : (batPercentage > 0.50) ? "050" : (batPercentage > 0.40) ? "040" : (batPercentage > 0.30) ? "030" : (batPercentage > 0.20) ? "020" : (batPercentage > 0.10) ? "010" : "000";
@@ -23,7 +28,7 @@ Item {
   component BatteryCon: Shape {
     id: rBContact
     width: 8
-    height: rBPillBorder.height
+    height: rBLoader.height
     anchors.left: rBPillBorder.right
     anchors.leftMargin: 2
     anchors.verticalCenter: parent.verticalCenter
@@ -31,7 +36,7 @@ Item {
 
     ShapePath {
       strokeWidth: 0
-      fillColor: "#aaa"
+      fillColor: root.borderColor
 
       startX: 0
       startY: 0
@@ -64,7 +69,7 @@ Item {
         color: "transparent"
         border {
           width: 1
-          color: "#aaa"
+          color: root.borderColor
         }
         anchors.centerIn: parent
         ClippingRectangle {
@@ -79,14 +84,14 @@ Item {
             width: parent.width * batPercentage
             height: parent.height
             anchors.left: parent.left
-            color: "#fff"
+            color: root.chargeColor
           }
         }
         Text {
           id: rBText
           text: Math.round(batPercentage * 100) + Config.bar.batteryMode == "percentage-pill" ? "%" : ""
           anchors.centerIn: parent
-          color: "#000"
+          color: root.textColor
           font.pixelSize: 8
           visible: Config.bar.batteryMode != "pill"
         }
@@ -98,7 +103,7 @@ Item {
         id: rBText
         text: Math.round(batPercentage * 100) + (Config.bar.batteryMode == "percentage" ? "%" : "")
         anchors.centerIn: parent
-        color: "#fff"
+        color: root.textColor
         font.pixelSize: 12
       }
     }
@@ -120,23 +125,24 @@ Item {
           width: parent.width * batPercentage
           height: parent.height
           anchors.left: parent.left
-          color: "#fff"
+          color: root.chargeColor
         }
       }
       Text {
         id: rBText
         text: Math.round(batPercentage * 100)
         anchors.centerIn: parent
-        color: "#000"
+        color: root.textColor
         font.weight: 600
         transform: Translate { x: -1; }
+        visible: Config.bar.batteryMode == "bubble-percentage"
         font.pixelSize: 12
       }
       BatteryCon {
         anchors.left: rBPill.right
       }
     }
-    sourceComponent: ["pill", "percentage-pill", "number-pill"].includes(Config.bar.batteryMode) ? pillMode : ["percentage", "number"].includes(Config.bar.batteryMode) ? percentageMode : bubbleMode
+    sourceComponent: ["pill", "percentage-pill", "number-pill"].includes(root.batteryMode) ? pillMode : ["percentage", "number"].includes(root.batteryMode) ? percentageMode : bubbleMode
   }
 
   VectorImage {
@@ -148,6 +154,6 @@ Item {
     Layout.preferredHeight: 14
     preferredRendererType: VectorImage.CurveRenderer
     anchors.centerIn: parent
-    visible: !UPower.onBattery && ["pill", "bubble", "percentage-pill", "number-pill"].includes(Config.bar.batteryMode)
+    visible: (!UPower.onBattery && ["pill", "bubble", "percentage-pill", "number-pill"].includes(root.batteryMode)) && root.allowZap
   }
 }

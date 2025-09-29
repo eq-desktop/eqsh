@@ -3,23 +3,14 @@ import Quickshell
 import qs.Config
 import qs.Core.System
 import qs.ui.Controls.providers
+import qs.ui.Controls.Auxiliary
 import QtQuick.VectorImage
 import QtQuick.Effects
 
-Item {
-    property var details: QtObject {
-        property string version: "0.1.0"
-        property string shadowColor: "#ed6168"
-    }
-    anchors.fill: parent
-    opacity: 0
-    Component.onCompleted: {
-        notch.setSize(notch.defaultWidth + 0, notch.defaultHeight + 10)
-        opacity = 1
-    }
-    Behavior on opacity {
-        NumberAnimation { duration: Config.notch.leftIconAnimDuration/2; easing.type: Easing.OutBack; easing.overshoot: 1 }
-    }
+NotchApplication {
+    details.version: "0.1.0"
+    details.shadowColor: "#ed6168"
+    meta.height: notch.defaultHeight+10
     Rectangle {
         id: recordingIndicator
         anchors {

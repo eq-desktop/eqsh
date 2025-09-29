@@ -66,9 +66,7 @@ Scope {
       exclusiveZone: -1
       color: "transparent"
 
-      mask: Region {
-        item: popupBg
-      }
+      mask: Region {}
 
       // local popup copy for this window
       property var localPopup: null
