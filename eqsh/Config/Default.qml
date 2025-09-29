@@ -20,6 +20,7 @@ Item {
 	property Osd            osd: adapter.osd
 	property Account        account: adapter.account
 	property string         homeDirectory: SPPathResolver.home
+	property Dock		    dock: adapter.dock
 	property bool           loaded: fileViewer.loaded
 
 	FileView {
@@ -45,6 +46,7 @@ Item {
 			property Widgets        widgets: Widgets {}
 			property Osd            osd: Osd {}
 			property Account        account: Account {}
+			property Dock		    dock: Dock {}
 		}
 	}
 
@@ -85,6 +87,21 @@ Item {
 		property string declineButtonTextColor: "#fff"
 		property string acceptButtonColor: "#2369ff"
 		property string acceptButtonTextColor: "#fff"
+	}
+
+	component Dock: JsonObject {
+		property bool   enable: true
+		property bool   showAnimation: true
+		property bool   autohide: false
+		property int    autohideDelay: 2000
+		property int    scale: 1
+		property string position: "bottom" // bottom | left | right
+		property list<string> apps: [
+			"org.gnome.Nautilus",
+			"org.mozilla.firefox",
+			"kitty",
+			"code"
+		]
 	}
 
 	component Notch: JsonObject {

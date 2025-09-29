@@ -28,6 +28,7 @@ Control {
 
     contentItem: ClippingRectangle {
         radius: Config.widgets.radius
+        color: "transparent"
         Loader {
             id: loader
             anchors.fill: parent

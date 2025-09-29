@@ -221,13 +221,28 @@ Scope {
           }
         }
       }
-      function toggleLP() {
+      function toggleLP(force=false, state=false) {
+        if (force) {
+          launchpadLoader.shown = state;
+          if (state) {
+            showAnim.start();
+          } else {
+            hideAnim.start();
+          }
+          return;
+        }
         if (launchpadLoader.shown) {
           launchpadLoader.shown = false;
           hideAnim.start();
         } else {
           launchpadLoader.shown = true;
           showAnim.start();
+        }
+      }
+      Connections {
+        target: Runtime
+        function onLaunchpadOpenChanged() {
+          toggleLP(true, Runtime.launchpadOpen);
         }
       }
       IpcHandler {

@@ -1,5 +1,6 @@
 //@ pragma UseQApplication
 //@ pragma Env QT_SCALE_FACTOR=1
+//@ pragma IconTheme MacTahoe-dark
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
@@ -37,7 +38,27 @@ Scope {
       onLock: Runtime.locked = true
     }
   }
-  //Dock {}
+  Dock {
+    id: dock
+    EdgeTrigger {
+      id: triggerDock
+      position: "blr"
+      height: 1
+      onHovered: (monitor) => {
+        if (triggerDock.active) {
+          triggerDock.active = false
+          triggerDock.height = 2
+          dock.shown = false
+          triggerDock.bottomMargin = 0
+          return;
+        }
+        triggerDock.active = true
+        triggerDock.height = monitor.height - 120
+        dock.shown = true
+        triggerDock.bottomMargin = 120
+      }
+    }
+  }
   StatusBar {
     id: bar
     customAppName: Runtime.customAppName
@@ -45,7 +66,7 @@ Scope {
     EdgeTrigger {
       id: triggerBar
       position: "tlr"
-      height: 1
+      height: 2
       onHovered: (monitor) => {
         if (triggerBar.active) {
           triggerBar.active = false
@@ -78,11 +99,11 @@ Scope {
     EdgeTrigger {
       id: triggerNotch
       position: "tlr"
-      height: 1
+      height: 2
       function toggle(monitor) {
         if (triggerNotch.active && !notch.expanded) {
           triggerNotch.active = false
-          triggerNotch.height = 1
+          triggerNotch.height = 2
           notch.shown = false
           triggerNotch.topMargin = 0
           if (Config.notch.autohide) {

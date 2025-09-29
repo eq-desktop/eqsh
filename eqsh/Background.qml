@@ -47,6 +47,7 @@ Scope {
           radius = 0;
         }
         BackgroundImage {
+          id: backgroundImage
           opacity: 0
           duration: 700
           fadeIn: true

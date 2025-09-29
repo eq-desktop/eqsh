@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Widgets
 import QtQuick
 import QtQuick.VectorImage
 import QtQuick.Layouts
@@ -9,14 +10,14 @@ import qs.Config
 import qs
 import qs.Core.Foundation
 import qs.ui.Controls.Auxiliary
+import qs.ui.Controls.Advanced
+import qs.ui.Controls.providers
 import QtQuick.Controls.Fusion
 
 Scope {
   id: root
 
-  property real magnifyRadius: 106
-  property real maxScale: 1.5
-  property real lift: 20
+  property bool shown: false
 
   component DockItem: Button {
     id: app
@@ -24,112 +25,83 @@ Scope {
     height: 56
     implicitHeight: 56
     implicitWidth: 56
+    property string appName: ""
+    property bool   launchpad: false
+    property bool   settings: false
+    property var    entry: (launchpad || settings) ? null : appName != "" ? DesktopEntries.heuristicLookup(appName) : null
 
     background: Rectangle {
       anchors.fill: parent
-      color: "#ffffff11"
+      color: "transparent"
       radius: 12
-    }
-
-    readonly property real centreXInDock: parent.x + x + width/2
-    readonly property real distance: Math.abs(centreXInDock - dock.mouseX)
-    property string appName: ""
-    text: appName
-    readonly property real ratio: (dock.mouseInside ? Math.max(0, 1 - (distance / root.magnifyRadius)) : 0)
-
-    property real targetScale: 1 + (root.maxScale - 1) * ratio
-    property real liftY: -ratio * root.lift
-
-    Behavior on targetScale {
-      NumberAnimation {
-        duration: 50
+      Image {
+        anchors.fill: parent
+        source: launchpad ? Qt.resolvedUrl(Quickshell.shellDir + "/Media/pngs/launchpad.png") : settings ? Quickshell.iconPath("org.gnome.Settings") : ""
+        fillMode: Image.PreserveAspectFit
+        visible: launchpad || settings
+        width: 56
+        height: 56
+        smooth: true
+        mipmap: true
+        layer.enabled: true
+      }
+      Image {
+        anchors.centerIn: parent
+        width: 56
+        height: 56
+        asynchronous: false
+        smooth: true
+        mipmap: true
+        visible: entry !== null && !(launchpad || settings)
+        source: entry ? Quickshell.iconPath(entry.icon) : ""
+        layer.enabled: true
+      }
+      Rectangle {
+        radius: 99
+        width: 4
+        height: 4
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: -6
+        visible: appName == "org.gnome.Nautilus" && !(launchpad || settings)
+        color: Config.general.darkMode ? "#80ffffff" : "#80000000"
       }
     }
-
-    Behavior on liftY {
-      NumberAnimation {
-        duration: 50
-      }
-    }
-
-    transform: [
-      Scale {
-        id: scaleT
-        origin.x: width/2
-        origin.y: height
-        xScale: targetScale
-        yScale: targetScale
-      },
-      Translate {
-        y: liftY
-      }
-    ]
 
     onClicked: {
-      if (app.appName === "kitty") Hyprland.dispatch("exec kitty")
+      if (entry) {
+        entry.execute()
+      }
+      if (launchpad) {
+        Runtime.launchpadOpen = !Runtime.launchpadOpen
+      } else if (settings) {
+        Runtime.settingsOpen = !Runtime.settingsOpen
+      }
     }
   }
-
-
 
   Variants {
     model: Quickshell.screens
 
     PanelWindow {
       WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.namespace: "eqsh:blur"
       required property var modelData
       screen: modelData
-
-      property string applicationName: "eqSh"
 
       anchors {
         bottom: true
       }
 
-      margins {
-        bottom: 5
+      mask: Region {
+        item: root.shown ? dock : null
       }
 
       implicitHeight: 120
-      implicitWidth: dock.implicitWidth
+      implicitWidth: dock.implicitWidth + 10
       exclusiveZone: -1
       color: "transparent"
       visible: true
-
-      Item {
-        id: dock
-        implicitWidth: 700
-        anchors.fill: parent
-
-        Rectangle {
-          id: dockBackground
-          anchors.horizontalCenter: parent.horizontalCenter
-          anchors.bottom: parent.bottom
-          color: "#222222cc"
-          implicitWidth: 420
-          implicitHeight: 72
-          radius: 20
-          anchors.bottomMargin: 6
-        }
-
-        // Public state für Maus
-        property real mouseX: 0
-        property bool mouseInside: false
-
-        RowLayout {
-          id: dockRow
-          anchors.horizontalCenter: parent.horizontalCenter
-          anchors.bottom: parent.bottom
-          anchors.bottomMargin: 14
-          spacing: 8
-
-          DockItem { text: "kitty" }
-          DockItem {}
-          DockItem {}
-          DockItem {}
-          DockItem {}
-        }
-      }
       MouseArea {
         id: dockMouseArea
         anchors.fill: parent
@@ -146,6 +118,51 @@ Scope {
         propagateComposedEvents: true
         onClicked: (mouse)=> {
           mouse.accepted = false
+        }
+        Item {
+          id: dock
+          implicitWidth: dockRow.implicitWidth + 20
+          anchors {
+            fill: parent
+            bottomMargin: root.shown ? 0 : -100
+            Behavior on bottomMargin {
+              NumberAnimation {
+                duration: Config.dock.showAnimation ? 500 : 0
+                easing.type: Easing.InOutQuad
+              }
+            }
+          }
+
+          BoxExperimental {
+            id: dockBackground
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            color: Config.general.darkMode ? "#ee222222" : "#eeffffff"
+            highlight: AccentColor.color
+            implicitWidth: dockRow.implicitWidth + 20
+            implicitHeight: 80
+            radius: 25
+            anchors.bottomMargin: 6
+          }
+
+          // Public state für Maus
+          property real mouseX: 0
+          property bool mouseInside: false
+
+          RowLayout {
+            id: dockRow
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+            spacing: 8
+
+            DockItem { appName: "org.gnome.Nautilus" }
+            DockItem { launchpad: true }
+            DockItem { settings: true }
+            DockItem { appName: "kitty" }
+            DockItem { appName: "org.mozilla.firefox" }
+            DockItem { appName: "code" }
+          }
         }
       }
     }

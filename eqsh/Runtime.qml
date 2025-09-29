@@ -9,6 +9,7 @@ Singleton {
     property bool   locked: false
     property int    notchHeight: 0
     property bool   settingsOpen: false
+    property bool   launchpadOpen: false
     Process {
         command: ["ls", Quickshell.shellDir + "/Runtime/config.json"]
         running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/config.json"]); }

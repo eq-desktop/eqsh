@@ -111,32 +111,34 @@ Item {
             ctx.fill();
 
             // === "Dim" gradients ===
-            // Top-right dim
-            let trGrad = ctx.createRadialGradient(w, 0, 0, w, 0, tr * 2);
-            trGrad.addColorStop(0, weakHighlight ? weakHighlight : "transparent");
-            trGrad.addColorStop(0.1, weakHighlight ? weakHighlight : "transparent");
-            trGrad.addColorStop(1, highlight ? highlight : "transparent");
+
+            // Top-right soft fade
+            let trGrad = ctx.createRadialGradient(w, 0, 0, w, 0, tr * 3);
+            trGrad.addColorStop(0, highlight);
+            trGrad.addColorStop(0.4, Qt.alpha(highlight, 0.6));
+            trGrad.addColorStop(1, "transparent");
 
             ctx.beginPath();
             ctx.moveTo(w - tr, 0);
             ctx.arcTo(w, 0, w, tr, tr);
-            ctx.strokeStyle = trGrad;
-            ctx.lineWidth = 2;
-            ctx.stroke();
+            ctx.lineTo(w, 0);
+            ctx.closePath();
+            ctx.fillStyle = trGrad;
+            ctx.fill();
 
-            // Bottom-left dim
-            let blGrad = ctx.createRadialGradient(0, h, 0, 0, h, bl * 2);
-            blGrad.addColorStop(0, weakHighlight ? weakHighlight : "transparent");
-            blGrad.addColorStop(0.1, weakHighlight ? weakHighlight : "transparent");
-            blGrad.addColorStop(1, highlight ? highlight : "transparent");
+            // Bottom-left soft fade
+            let blGrad = ctx.createRadialGradient(0, h, 0, 0, h, bl * 3);
+            blGrad.addColorStop(0, highlight);
+            blGrad.addColorStop(0.4, Qt.alpha(highlight, 0.6));
+            blGrad.addColorStop(1, "transparent");
 
             ctx.beginPath();
             ctx.moveTo(0, h - bl);
             ctx.arcTo(0, h, bl, h, bl);
-            ctx.strokeStyle = blGrad;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            ctx.fillStyle = blGrad;
+            ctx.fill();
 
             ctx.restore();
 

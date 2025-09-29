@@ -1,10 +1,12 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 import qs
 import qs.Config
 import qs.ui.Controls.providers
 
 BaseWidget {
+    id: rt
     content: Item {
         id: root
         property int currentSecond: Time.getSeconds()
