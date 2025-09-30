@@ -152,6 +152,8 @@ Icon theme: [MacTahoe Icon Theme](https://github.com/vinceliuice/MacTahoe-icon-t
 
 GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-theme)
 
+</details>
+
 ---
 
 ## ✨ Features
