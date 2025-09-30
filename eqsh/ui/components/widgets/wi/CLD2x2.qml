@@ -39,7 +39,7 @@ BaseWidget {
             anchors.margins: 8
             spacing: 6
 
-            // Month + year header
+            // Month header
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 8
@@ -50,7 +50,7 @@ BaseWidget {
                     font.bold: true
                     font.pixelSize: 10
                     color: Config.general.darkMode ? AccentColor.color : Qt.darker(AccentColor.color, 1.1)
-                    text: Qt.formatDate(new Date(root.year, root.month, 1), "MMMM")
+                    text: Time.getTime("MMMM")
                 }
             }
 

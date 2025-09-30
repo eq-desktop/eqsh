@@ -8,11 +8,11 @@ Singleton {
   id: root
   readonly property string date: clock.date
   readonly property string time: {
-    Qt.formatDateTime(clock.date, Config.bar.dateFormat);
+    getTime(Config.bar.dateFormat);
   }
 
   function getTime(format) {
-    return Qt.formatDateTime(clock.date, format);
+    return Qt.locale(Config.general.language).toString(clock.date, format)
   }
 
   function getSeconds() {

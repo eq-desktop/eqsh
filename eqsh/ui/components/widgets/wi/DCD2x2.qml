@@ -20,14 +20,14 @@ BaseWidget {
                 color: AccentColor.color
                 font.pixelSize: 20
                 font.weight: 600
-                text: Time.getTime("ddd")
+                text: Time.getTime("ddd").replace(/\.$/, "")
             }
             Text {
                 id: mon
                 color: Config.general.darkMode ? "#fff" : "#222"
                 font.pixelSize: 20
                 font.weight: 600
-                text: Time.getTime("MMM")
+                text: Time.getTime("MMM").replace(/\.$/, "")
             }
         }
         Text {
