@@ -5,11 +5,11 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.Config
+import qs.config
 import qs
-import qs.Core.Foundation
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
+import qs.core.foundation
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -93,7 +93,7 @@ Scope {
 
           UIBButton {VectorImage {
             id: lBAppMenu
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/icon.svg")
+            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/icon.svg")
             width: barFS
             height: barFS
             preferredRendererType: VectorImage.CurveRenderer
@@ -219,7 +219,7 @@ Scope {
 
           UIBButton {VectorImage {
             id: rBBluetooth
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/bluetooth-clear.svg")
+            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
             width: barIS * 1.2
             height: barIS * 1.2
             preferredRendererType: VectorImage.CurveRenderer
@@ -228,7 +228,7 @@ Scope {
 
           UIBButton {VectorImage {
             id: rBSearch
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/search.svg")
+            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/search.svg")
             width: barIS * 0.7
             height: barIS * 0.7
             Layout.preferredWidth: barIS * 0.7
@@ -240,7 +240,7 @@ Scope {
           UIBButton {
             VectorImage {
               id: rBControlCenter
-              source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/control-center.svg")
+              source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/control-center.svg")
               width: barIS
               height: barIS
               Layout.preferredWidth: barIS

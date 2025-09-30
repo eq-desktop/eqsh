@@ -7,10 +7,10 @@ import Quickshell
 import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
-import qs.Config
+import qs.config
 import qs
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
 
 Scope {
   id: root
@@ -80,7 +80,7 @@ Scope {
 
   function getIcon(path) {
     if (path.startsWith("builtin:")) {
-      return Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/notch/" + path.substring(8) + ".svg")
+      return Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/notch/" + path.substring(8) + ".svg")
     } else {
       return Qt.resolvedUrl(path)
     }

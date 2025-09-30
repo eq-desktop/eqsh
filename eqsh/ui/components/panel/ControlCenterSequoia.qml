@@ -2,8 +2,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
-import qs.ui.Controls.Auxiliary
-import qs.Config
+import qs.ui.controls.auxiliary
+import qs.config
 import QtQuick.Controls.Fusion
 
 Scope {

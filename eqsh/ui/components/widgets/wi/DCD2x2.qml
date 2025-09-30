@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs
-import qs.Config
-import qs.ui.Controls.providers
+import qs.config
+import qs.ui.controls.providers
 
 BaseWidget {
     content: Item {

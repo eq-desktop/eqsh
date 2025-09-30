@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import qs.Config
+import qs.config
 
 ShellRoot {
 	id: root

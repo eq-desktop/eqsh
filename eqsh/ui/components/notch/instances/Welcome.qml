@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
-import qs.Config
-import qs.Core.System
-import qs.ui.Controls.providers
-import qs.ui.Controls.Auxiliary
+import qs.config
+import qs.core.system
+import qs.ui.controls.providers
+import qs.ui.controls.auxiliary
 import QtQuick.VectorImage
 import QtQuick.Effects
 
@@ -22,7 +22,7 @@ NotchApplication {
             leftMargin: 30
             verticalCenter: parent.verticalCenter
         }
-        source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/smiley.svg")
+        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/smiley.svg")
         rotation: 0
         layer.enabled: true
         layer.effect: MultiEffect {

@@ -6,12 +6,12 @@ import Quickshell.Bluetooth
 import Quickshell.Widgets
 import QtQuick.Layouts
 import Quickshell.Wayland
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
-import qs.ui.Controls.Advanced
-import qs.ui.Controls.windows
-import qs.Core.System
-import qs.Config
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
+import qs.ui.controls.advanced
+import qs.ui.controls.windows
+import qs.core.system
+import qs.config
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -110,7 +110,7 @@ Scope {
                         VectorImage {
                             transform: Translate {y:-3}
                             id: rBWifi
-                            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/wifi/nm-signal-100-symbolic.svg")
+                            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/wifi/nm-signal-100-symbolic.svg")
                             width: 25
                             height: 25
                             preferredRendererType: VectorImage.CurveRenderer
@@ -155,7 +155,7 @@ Scope {
                     enabled: Bluetooth.defaultAdapter?.enabled || false
                     VectorImage {
                         id: rBBluetooth
-                        source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/bluetooth-clear.svg")
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
                         width: panelWindow.box-10
                         height: panelWindow.box-10
                         preferredRendererType: VectorImage.CurveRenderer
@@ -205,7 +205,7 @@ Scope {
                         color: NotificationDaemon.popupInhibited ? "#ffffff" : "#60ffffff"
                         VectorImage {
                             id: rBFocus
-                            source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/dnd.svg")
+                            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dnd.svg")
                             width: 40
                             height: 40
                             Layout.preferredWidth: 40

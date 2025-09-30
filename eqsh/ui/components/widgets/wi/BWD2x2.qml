@@ -7,8 +7,8 @@ import QtQuick.Layouts
 import QtQuick.VectorImage
 import QtQuick.Effects
 import qs
-import qs.Config
-import qs.ui.Controls.providers
+import qs.config
+import qs.ui.controls.providers
 
 BaseWidget {
     bg: Rectangle {
@@ -54,7 +54,7 @@ BaseWidget {
         property int temperature: 0
         property string description: ""
         property string hlVal: "H: --, L: --"
-        property url icon: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/weather/cloud-sun.svg")
+        property url icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/weather/cloud-sun.svg")
 
         Text {
             id: locationT

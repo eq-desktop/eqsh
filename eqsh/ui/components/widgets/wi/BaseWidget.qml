@@ -7,8 +7,8 @@ import QtQuick.Layouts
 import QtQuick.VectorImage
 import QtQuick.Effects
 import qs
-import qs.Config
-import qs.ui.Controls.providers
+import qs.config
+import qs.ui.controls.providers
 
 Control {
     id: root

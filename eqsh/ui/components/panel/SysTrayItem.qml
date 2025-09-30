@@ -5,7 +5,7 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
-import qs.Config
+import qs.config
 import Qt.labs.folderlistmodel
 
 MouseArea {

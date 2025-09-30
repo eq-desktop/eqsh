@@ -8,10 +8,10 @@ import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick.Controls
 
-import qs.Config
-import qs.Core.System
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.Advanced
+import qs.config
+import qs.core.system
+import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
 
 Scope {
 	id: scope

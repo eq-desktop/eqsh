@@ -6,12 +6,12 @@ import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Io
-import qs.Config
+import qs.config
 import qs
-import qs.Core.Foundation
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.apps
-import qs.ui.Controls.providers
+import qs.core.foundation
+import qs.ui.controls.auxiliary
+import qs.ui.controls.apps
+import qs.ui.controls.providers
 import QtQuick.Controls.Fusion
 
 Scope {

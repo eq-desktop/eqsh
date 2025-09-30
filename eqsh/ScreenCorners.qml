@@ -1,8 +1,8 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import qs.Config
-import qs.ui.Controls.Auxiliary
+import qs.config
+import qs.ui.controls.auxiliary
 
 Scope {
   Variants {

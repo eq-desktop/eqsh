@@ -6,9 +6,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
 import qs
-import qs.ui.Controls.Advanced
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
+import qs.ui.controls.advanced
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
 
 PanelWindow {
     id: launcher

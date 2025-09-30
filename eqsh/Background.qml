@@ -3,12 +3,12 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import QtQuick.Effects
 import QtQuick
-import qs.Config
+import qs.config
 import qs.ui.components.widgets
 import qs.ui.components.desktop
 import qs
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
 
 Scope {
   Variants {

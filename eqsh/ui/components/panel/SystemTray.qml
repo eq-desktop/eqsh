@@ -3,7 +3,7 @@ import Quickshell.Widgets
 import QtQuick.VectorImage
 import QtQuick
 import QtQuick.Layouts
-import qs.ui.Controls.Auxiliary
+import qs.ui.controls.auxiliary
 import Quickshell.Services.SystemTray
 
 GlintButton {
@@ -46,7 +46,7 @@ GlintButton {
     VectorImage {
       id: stToggle
       Layout.rightMargin: 5
-      source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/chevron-right.svg")
+      source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right.svg")
       width: 23
       height: 23
       Layout.preferredWidth: 23
@@ -57,10 +57,10 @@ GlintButton {
         onClicked: {
           opened = !opened
           if (opened) {
-            stToggle.source = Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/chevron-left.svg")
+            stToggle.source = Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-left.svg")
           } else {
             tempWidth = rowLayout.implicitWidth
-            stToggle.source = Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/chevron-right.svg")
+            stToggle.source = Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right.svg")
           }
         }
       }

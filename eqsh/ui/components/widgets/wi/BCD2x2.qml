@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import qs
-import qs.Config
+import qs.config
 import Quickshell.Widgets
-import qs.ui.Controls.providers
+import qs.ui.controls.providers
 
 BaseWidget {
     content: Item {

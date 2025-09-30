@@ -6,12 +6,12 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.Config
+import qs.config
 import qs
-import qs.Core.Foundation
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.Advanced
-import qs.ui.Controls.providers
+import qs.core.foundation
+import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
+import qs.ui.controls.providers
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -37,7 +37,7 @@ Scope {
       radius: 12
       Image {
         anchors.fill: parent
-        source: launchpad ? Qt.resolvedUrl(Quickshell.shellDir + "/Media/pngs/launchpad.png") : settings ? Quickshell.iconPath("org.gnome.Settings") : ""
+        source: launchpad ? Qt.resolvedUrl(Quickshell.shellDir + "/media/pngs/launchpad.png") : settings ? Quickshell.iconPath("org.gnome.Settings") : ""
         fillMode: Image.PreserveAspectFit
         visible: launchpad || settings
         width: 56

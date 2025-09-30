@@ -5,12 +5,12 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
-import qs.Config
+import qs.config
 import qs
-import qs.Core.Foundation
-import qs.ui.Controls.Auxiliary
+import qs.core.foundation
+import qs.ui.controls.auxiliary
 import QtQuick.Controls.Fusion
-import qs.ui.Controls.windows
+import qs.ui.controls.windows
 
 Scope {
   id: root

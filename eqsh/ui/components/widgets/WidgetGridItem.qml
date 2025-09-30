@@ -9,11 +9,11 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.windows
-import qs.Config
+import qs.ui.controls.auxiliary
+import qs.ui.controls.windows
+import qs.config
 import qs.ui.components.panel
-import qs.ui.Controls.providers
+import qs.ui.controls.providers
 import qs
 import qs.ui.components.widgets.wi
 

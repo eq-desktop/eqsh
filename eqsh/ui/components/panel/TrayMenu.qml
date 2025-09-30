@@ -2,10 +2,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import qs.Config
-import qs.ui.Controls.providers
-import qs.ui.Controls.Primitives
-import qs.ui.Controls.Advanced
+import qs.config
+import qs.ui.controls.providers
+import qs.ui.controls.primitives
+import qs.ui.controls.advanced
 import Quickshell.Wayland
 
 PopupWindow {

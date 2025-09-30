@@ -4,9 +4,9 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import QtQuick.VectorImage
 import qs
-import qs.Config
-import qs.ui.Controls.providers
-import qs.ui.Controls.Primitives
+import qs.config
+import qs.ui.controls.providers
+import qs.ui.controls.primitives
 import Quickshell
 import Quickshell.Services.UPower
 
@@ -49,7 +49,7 @@ BaseWidget {
                             anchors.centerIn: parent
                             VectorImage {
                                 id: bIcon
-                                source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/devices/" + modelData.type + ".svg")
+                                source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/devices/" + modelData.type + ".svg")
                                 width: 20
                                 height: 20
                                 Layout.preferredWidth: 20

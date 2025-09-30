@@ -6,9 +6,9 @@ import Quickshell
 import QtQuick
 import QtQuick.Effects
 import QtQuick.VectorImage
-import qs.Config
+import qs.config
 import qs
-import qs.ui.Controls.Auxiliary
+import qs.ui.controls.auxiliary
 
 
 Scope {

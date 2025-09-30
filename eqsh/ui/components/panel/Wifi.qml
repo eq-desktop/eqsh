@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.VectorImage
 import QtQuick.Layouts
 import Quickshell
-import qs.Core.System
+import qs.core.system
 
 Item {
   id: root
@@ -19,7 +19,7 @@ Item {
 
   VectorImage {
     id: rBWifi
-    source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/wifi/nm-signal-" + networkIcon +  "-symbolic.svg")
+    source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/wifi/nm-signal-" + networkIcon +  "-symbolic.svg")
     width: root.iconSize
     height: root.iconSize
     Layout.preferredWidth: root.iconSize

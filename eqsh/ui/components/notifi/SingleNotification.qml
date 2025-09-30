@@ -7,13 +7,13 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 import QtQuick.Controls
 import QtQuick.VectorImage
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.Advanced
-import qs.ui.Controls.providers
+import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
+import qs.ui.controls.providers
 
-import qs.Config
-import qs.Core.System
-import "root:/Agents/notification_utils.js" as NotificationUtils
+import qs.config
+import qs.core.system
+import "root:/agents/notification_utils.js" as NotificationUtils
 
 
 BoxExperimental {
@@ -82,7 +82,7 @@ BoxExperimental {
 				id: closeButtonIcon
 				VectorImage {
 					id: closeIcon
-					source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/x.svg")
+					source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/x.svg")
 					anchors.left: parent.left
 					anchors.leftMargin: 5
 					anchors.verticalCenter: parent.verticalCenter
@@ -392,7 +392,7 @@ BoxExperimental {
 				VectorImage {
 					id: stToggle
 					anchors.centerIn: parent
-					source: singleNotif.expanded ? Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/chevron-left.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/chevron-right.svg")
+					source: singleNotif.expanded ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-left.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right.svg")
 					width: 23
 					height: 23
 					Layout.preferredWidth: 23

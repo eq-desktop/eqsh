@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.providers
+import qs.ui.controls.auxiliary
+import qs.ui.controls.providers
 import QtQuick.Effects
 import Qt5Compat.GraphicalEffects
 

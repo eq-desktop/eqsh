@@ -2,7 +2,7 @@ import Quickshell
 import QtQuick
 import QtMultimedia
 import QtQuick.Effects
-import qs.Config
+import qs.config
 
 Loader {
     anchors.fill: parent

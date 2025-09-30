@@ -4,8 +4,8 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Widgets
 import Quickshell.Wayland
-import qs.ui.Controls.Auxiliary
-import qs.Config
+import qs.ui.controls.auxiliary
+import qs.config
 import QtQuick.Effects
 
 Scope {
@@ -41,7 +41,7 @@ Scope {
                     Layout.alignment: Qt.AlignHCenter
                     implicitWidth: 60
                     implicitHeight: 60
-                    source: root.muted ? Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/volume/audio-volume-0.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/volume/audio-volume-3.svg");
+                    source: root.muted ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/volume/audio-volume-0.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/volume/audio-volume-3.svg");
                 }
 
                 Rectangle {

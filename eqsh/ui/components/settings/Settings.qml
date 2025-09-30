@@ -1,12 +1,12 @@
 import QtQuick
 import QtQuick.Controls
-import qs.Config
+import qs.config
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Effects
 import Quickshell
 import qs
-import qs.ui.Controls.providers
+import qs.ui.controls.providers
 import Quickshell.Io
 import Quickshell.Widgets
 
@@ -166,7 +166,7 @@ FloatingWindow {
 
                                     Image {
                                         anchors.fill: parent
-                                        source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/settings/" + modelData.toLowerCase() + ".svg")
+                                        source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/settings/" + modelData.toLowerCase() + ".svg")
                                         fillMode: Image.PreserveAspectCrop
                                     }
                                 }

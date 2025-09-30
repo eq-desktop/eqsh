@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
-import qs.Config
-import qs.Core.System
-import qs.ui.Controls.providers
+import qs.config
+import qs.core.system
+import qs.ui.controls.providers
 import QtQuick.VectorImage
 import QtQuick.Effects
 

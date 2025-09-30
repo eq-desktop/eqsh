@@ -1,5 +1,5 @@
 import QtQuick
-import qs.Config
+import qs.config
 import QtQuick.Effects
 
 Item {

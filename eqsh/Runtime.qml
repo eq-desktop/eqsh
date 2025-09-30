@@ -12,24 +12,24 @@ Singleton {
     property bool   spotlightOpen: false
     property bool   launchpadOpen: false
     Process {
-        command: ["ls", Quickshell.shellDir + "/Runtime/config.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/config.json"]); }
+        command: ["ls", Quickshell.shellDir + "/runtime/config.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/runtime/config.json"]); }
     }
     Process {
-        command: ["ls", Quickshell.shellDir + "/Runtime/notifications.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/notifications.json"]); }
+        command: ["ls", Quickshell.shellDir + "/runtime/notifications.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/runtime/notifications.json"]); }
     }
     Process {
-        command: ["ls", Quickshell.shellDir + "/Runtime/widgets.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/widgets.json"]); }
+        command: ["ls", Quickshell.shellDir + "/runtime/widgets.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/runtime/widgets.json"]); }
     }
     Process {
-        command: ["ls", Quickshell.shellDir + "/Runtime/runtime"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/Runtime/runtime"]); }
+        command: ["ls", Quickshell.shellDir + "/runtime/runtime"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Quickshell.shellDir + "/runtime/runtime"]); }
     }
     FileView {
         id: runtimeF
-        path: Quickshell.shellDir + "/Runtime/runtime"
+        path: Quickshell.shellDir + "/runtime/runtime"
         blockLoading: true
         JsonAdapter {
             id: runtimeAd

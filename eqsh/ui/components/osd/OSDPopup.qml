@@ -4,10 +4,10 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Widgets
 import Quickshell.Wayland
-import qs.ui.Controls.Auxiliary
-import qs.ui.Controls.Advanced
-import qs.ui.Controls.providers
-import qs.Config
+import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
+import qs.ui.controls.providers
+import qs.config
 import QtQuick.Effects
 
 Scope {

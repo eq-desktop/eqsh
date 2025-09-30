@@ -4,7 +4,7 @@ import QtQuick.VectorImage
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
-import qs.Config
+import qs.config
 import Quickshell.Widgets
 import Quickshell.Services.UPower
 
@@ -147,7 +147,7 @@ Item {
 
   VectorImage {
     id: rBWifi
-    source: Qt.resolvedUrl(Quickshell.shellDir + "/Media/icons/battery/zap.svg")
+    source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/battery/zap.svg")
     width: 14
     height: 14
     Layout.preferredWidth: 14
