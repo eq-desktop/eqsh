@@ -12,6 +12,7 @@ import qs.ui.controls.advanced
 import qs.ui.controls.windows
 import qs.core.system
 import qs.config
+import qs
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -133,7 +134,7 @@ Scope {
                         }
                     }
                     UIText {
-                        text: NetworkManager.active ? NetworkManager.active.ssid : "No network"
+                        text: NetworkManager.active ? NetworkManager.active.ssid : Translation.tr("No network")
                         elide: Text.ElideRight
                         color: "#eee"
                         height: 20
@@ -220,7 +221,7 @@ Scope {
                         }
                     }
                     UIText {
-                        text: "Focus"
+                        text: Translation.tr("Focus")
                         font.weight: 600
                         color: "#fff"
                         anchors {

@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import qs.config
 import qs.core.system
+import qs
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
 import QtQuick.VectorImage
@@ -37,7 +38,7 @@ NotchApplication {
             rightMargin: 15
             verticalCenter: parent.verticalCenter
         }
-        text: NotificationDaemon.popupInhibited ? "On" : "Off"
+        text: NotificationDaemon.popupInhibited ? Translation.tr("On") : Translation.tr("Off")
         opacity: 0.7
         color: "#8872f8"
         font.weight: 800

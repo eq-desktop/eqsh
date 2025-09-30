@@ -302,7 +302,7 @@ Rectangle {
 							Text {
 								anchors.fill: parent
 								verticalAlignment: Text.AlignVCenter
-								text: passwordBox.text == "" ? root.context.showFailure ? "Incorrect Password" : "Enter Password" : ""
+								text: passwordBox.text == "" ? root.context.showFailure ? Translation.tr("Incorrect Password") : Translation.tr("Enter Password") : ""
 								color: root.context.showFailure ? "#ffffff" : "#bbffffff"
 								anchors.leftMargin: 10
 								font.weight: 500

@@ -13,7 +13,7 @@ import Quickshell.Widgets
 FloatingWindow {
     id: settingsApp
     visible: Runtime.settingsOpen
-    title: "eqSh Settings"
+    title: Translation.tr("Equora Settings")
     minimumSize: "675x540"
     
     onClosed: {
@@ -63,145 +63,146 @@ FloatingWindow {
             id: sidebarView
             Layout.fillHeight: true
             height: parent.height
-            width: 200
-            scale: 0.99
-            Behavior on scale {
-                NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 4 }
-            }
-            MouseArea {
+            width: 250
+            Rectangle {
+                id: sidebarBackground
                 anchors.fill: parent
-                hoverEnabled: true
-                onEntered: {
-                    sidebarView.scale = 1
+                anchors.margins: 5
+                clip: true
+                radius: 20
+                color: Config.general.darkMode ? "#20111111" : "#20ffffff"
+                border {
+                    width: 1
+                    color: "#55333333"
                 }
-                onExited: {
-                    sidebarView.scale = 0.99
-                }
-                Rectangle {
-                    id: sidebarBackground
-                    anchors.fill: parent
-                    anchors.margins: 5
-                    clip: true
-                    radius: 15
-                    color: Config.general.darkMode ? "#111" : "#fff"
-                    border {
-                        width: 1
-                        color: "#55333333"
-                    }
 
-                    Item {
-                        id: searchBar
-                        height: 30
-                        width: 170
-                        z: 2
-                        anchors.horizontalCenter: parent.horizontalCenter
+                Item {
+                    id: searchBar
+                    height: 30
+                    width: 220
+                    z: 2
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    UITextField {
+                        id: searchField
+                        width: 220
+                        anchors.left: parent.left
                         anchors.top: parent.top
-                        anchors.topMargin: 20
-                        UITextField {
-                            id: searchField
-                            width: 170
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            background: Rectangle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: Config.general.darkMode ? "#ee1a1a1a" : "#eefefefe"
+                            radius: 10
+                            border {
+                                width: 1
+                                color: "#55aaaaaa"
+                            }
+                            Text {
                                 anchors.fill: parent
-                                color: Config.general.darkMode ? "#ee1a1a1a" : "#eefefefe"
-                                radius: 10
-                                border {
-                                    width: 1
-                                    color: "#55aaaaaa"
-                                }
-                                Text {
-                                    anchors.fill: parent
-                                    text: searchField.text == "" ? "Search" : ""
-                                    color: "#aaa"
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignLeft
-                                    anchors.leftMargin: 10
-                                }
+                                text: searchField.text == "" ? Translation.tr("Search") : ""
+                                color: "#aaa"
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignLeft
+                                anchors.leftMargin: 10
                             }
                         }
                     }
+                }
 
-                    // Sidebar
-                    ListView {
-                        id: sidebar
-                        width: 170
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: searchBar.bottom
+                // Sidebar
+                ListView {
+                    id: sidebar
+                    width: 220
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: searchBar.bottom
+                    anchors.topMargin: 20
+                    height: parent.height - 75
+                    model: [
+                        "_Account",
+                        "",
+                        Translation.tr("General"),
+                        Translation.tr("Appearance"),
+                        Translation.tr("Menu Bar"),
+                        Translation.tr("Wallpaper"),
+                        Translation.tr("Notifications"),
+                        Translation.tr("Dialogs"),
+                        Translation.tr("Notch"),
+                        Translation.tr("Launchpad"),
+                        Translation.tr("Lockscreen"),
+                        Translation.tr("Widgets"),
+                        Translation.tr("Osd")
+                    ]
+                    component SidebarItem: Button {
+                        text: ""
+                        height: 35
                         anchors.topMargin: 20
-                        height: parent.height - 75
-                        model: [
-                            "_Account",
-                            "",
-                            "General",
-                            "Appearance",
-                            "Menu Bar",
-                            "Wallpaper",
-                            "Notifications",
-                            "Dialogs",
-                            "Notch",
-                            "Launchpad",
-                            "Lockscreen",
-                            "Widgets",
-                            "Osd"
-                        ]
-                        component SidebarItem: Button {
-                            text: ""
-                            height: 35
-                            anchors.topMargin: 20
-                            background: Rectangle {
-                                anchors.fill: parent
-                                color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
-                                radius: 10
-                                ClippingRectangle {
-                                    id: imageContainer
-                                    width: modelData == "_Account" ? 34 : 24
-                                    height: modelData == "_Account" ? 34 : 24
-                                    radius: modelData == "_Account" ? 50 : 0
-                                    color: "transparent"
-                                    clip: true
-                                    anchors.left: parent.left
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.leftMargin: modelData == "_Account" ? 0 : 5
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
+                            radius: 10
+                            ClippingRectangle {
+                                id: imageContainer
+                                width: modelData == "_Account" ? 34 : 24
+                                height: modelData == "_Account" ? 34 : 24
+                                radius: modelData == "_Account" ? 50 : 0
+                                color: "transparent"
+                                clip: true
+                                anchors.left: parent.left
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.leftMargin: modelData == "_Account" ? 0 : 5
 
-                                    Image {
-                                        anchors.fill: parent
-                                        source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/settings/" + modelData.toLowerCase() + ".svg")
-                                        fillMode: Image.PreserveAspectCrop
-                                    }
-                                }
-                                Text {
+                                property list<string> svgs: [
+                                    "",
+                                    "general",
+                                    "appearance",
+                                    "menu bar",
+                                    "wallpaper",
+                                    "notifications",
+                                    "dialogs",
+                                    "notch",
+                                    "launchpad",
+                                    "lockscreen",
+                                    "widgets",
+                                    "osd"
+                                ]
+
+                                Image {
                                     anchors.fill: parent
-                                    text: modelData == "_Account" ? Config.account.name : modelData
-                                    color: Config.general.darkMode ? "#fff" : "#000"
-                                    font.pixelSize: 14
-                                    font.weight: modelData == "_Account" ? 500 : Font.Normal
-                                    verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignLeft
-                                    anchors.leftMargin: 40
-                                }
-                                Text {
-                                    anchors.fill: parent
-                                    visible: modelData == "_Account"
-                                    text: "Equora Account"
-                                    color: Config.general.darkMode ? "#ddd" :"#000"
-                                    font.pixelSize: 12
-                                    font.weight: 400
-                                    verticalAlignment: Text.AlignBottom
-                                    horizontalAlignment: Text.AlignLeft
-                                    anchors.leftMargin: 40
+                                    source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/settings/" + imageContainer.svgs[index-1] + ".svg")
+                                    fillMode: Image.PreserveAspectCrop
                                 }
                             }
-                            onClicked: {
-                                if (modelData == "") return
-                                contentView.currentIndex = index
+                            Text {
+                                anchors.fill: parent
+                                text: modelData == "_Account" ? Config.account.name : modelData
+                                color: Config.general.darkMode ? "#fff" : "#000"
+                                font.pixelSize: 14
+                                font.weight: modelData == "_Account" ? 500 : Font.Normal
+                                verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
+                                horizontalAlignment: Text.AlignLeft
+                                anchors.leftMargin: 40
+                            }
+                            Text {
+                                anchors.fill: parent
+                                visible: modelData == "_Account"
+                                text: Translation.tr("Equora Account")
+                                color: Config.general.darkMode ? "#ddd" :"#000"
+                                font.pixelSize: 12
+                                font.weight: 400
+                                verticalAlignment: Text.AlignBottom
+                                horizontalAlignment: Text.AlignLeft
+                                anchors.leftMargin: 40
                             }
                         }
-                        delegate: SidebarItem {
-                            width: parent.width
+                        onClicked: {
+                            if (modelData == "") return
+                            contentView.currentIndex = index
                         }
-                    } 
-                }   
+                    }
+                    delegate: SidebarItem {
+                        width: parent.width
+                    }
+                } 
             }
         }
 
@@ -285,7 +286,7 @@ FloatingWindow {
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 4
 
-                            UILabel { text: "Profile Picture Path" }
+                            UILabel { text: Translation.tr("Profile Picture Path") }
                             UITextField {
                                 text: Config.account.avatarPath
                                 onEditingFinished: Config.account.avatarPath = text
@@ -298,12 +299,12 @@ FloatingWindow {
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 4
 
-                            UILabel { text: "Activation Key" }
+                            UILabel { text: Translation.tr("Activation Key") }
                             UITextField {
                                 Layout.preferredWidth: 300
                                 text: Config.account.activationKey
                                 onEditingFinished: Config.account.activationKey = text
-                                placeholderText: "Activation Key"
+                                placeholderText: Translation.tr("Activation Key")
                             }
                         }
                     }
@@ -318,14 +319,25 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Dark Mode"
+                            textVal: Translation.tr("Dark Mode")
                             checked: Config.general.darkMode
                             onToggled: Config.general.darkMode = checked
                         }
                         UICheckBox {
-                            textVal: "Reduce Motion"
+                            textVal: Translation.tr("Reduce Motion")
                             checked: Config.general.reduceMotion
                             onToggled: Config.general.reduceMotion = checked
+                        }
+                        UILabel { text: Translation.tr("Language") }
+                        ComboBox {
+                            model: Translation.availableLanguages
+                            Component.onCompleted: { // Prevents Binding loop
+                                // set initial index once
+                                currentIndex = model.findIndex(l => l === Config.general.language)
+                            }
+                            onCurrentTextChanged: {
+                                Config.general.language = currentText;
+                            }
                         }
                     }
                 }
@@ -334,20 +346,20 @@ FloatingWindow {
                 ScrollView {
                     ColumnLayout {
                         anchors.fill: parent
-                        UILabel { text: "Icon Color Type" }
+                        UILabel { text: Translation.tr("Icon Color Type") }
                         ComboBox {
-                            model: ["Original", "Monochrome", "Tinted"]
+                            model: [Translation.tr("Original"), Translation.tr("Monochrome"), Translation.tr("Tinted")]
                             currentIndex: Config.appearance.iconColorType - 1
                             onCurrentIndexChanged: Config.appearance.iconColorType = currentIndex + 1
                         }
                         UICheckBox {
-                            textVal: "Use Dynamic Accent Color"
+                            textVal: Translation.tr("Use Dynamic Accent Color")
                             checked: Config.appearance.dynamicAccentColor
                             onToggled: Config.appearance.dynamicAccentColor = checked
                         }
-                        UILabel { text: "Accent Color" }
+                        UILabel { text: Translation.tr("Accent Color") }
                         Button {
-                            text: "Set Color"
+                            text: Translation.tr("Set Color")
                             onClicked: colorDialog2.open()
                         }
                         ColorDialog {
@@ -363,25 +375,25 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Bar"
+                            textVal: Translation.tr("Enable Bar")
                             checked: Config.bar.enable
                             onToggled: Config.bar.enable = checked
                         }
-                        UILabel { text: "Default App" }
+                        UILabel { text: Translation.tr("Default App") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.bar.defaultAppName
                             onEditingFinished: Config.bar.defaultAppName = text
                         }
-                        UILabel { text: "Date Format" }
+                        UILabel { text: Translation.tr("Date Format") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.bar.dateFormat
                             onEditingFinished: Config.bar.dateFormat = text
                         }
-                        UILabel { text: "Auto hide" }
+                        UILabel { text: Translation.tr("Auto hide") }
                         ComboBox {
-                            model: ["No", "Yes"]
+                            model: [Translation.tr("No"), Translation.tr("Yes")]
                             currentIndex: Config.bar.autohide ? 1 : 0
                             onCurrentIndexChanged: Config.bar.autohide = currentIndex == 1
                         }
@@ -393,7 +405,7 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Wallpaper"
+                            textVal: Translation.tr("Enable Wallpaper")
                             checked: Config.wallpaper.enable
                             onToggled: Config.wallpaper.enable = checked
                         }
@@ -401,7 +413,7 @@ FloatingWindow {
                             Layout.fillWidth: true
                             text: Config.wallpaper.path
                             onEditingFinished: Config.wallpaper.path = text
-                            placeholderText: "Wallpaper path"
+                            placeholderText: Translation.tr("Wallpaper path")
                         }
                         ComboBox {
                             id: colorCombo
@@ -446,7 +458,7 @@ FloatingWindow {
                 ScrollView {
                     ColumnLayout {
                         anchors.fill: parent
-                        UILabel { text: "Nothing here yet :(" }
+                        UILabel { text: Translation.tr("Nothing here yet :(") }
                     }
                 }
 
@@ -455,17 +467,17 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Dialogs"
+                            textVal: Translation.tr("Enable Dialogs")
                             checked: Config.dialogs.enable
                             onToggled: Config.dialogs.enable = checked
                         }
-                        UILabel { text: "Width" }
+                        UILabel { text: Translation.tr("Width") }
                         SpinBox {
                             value: Config.dialogs.width
                             onValueModified: Config.dialogs.width = value
                             from: 100; to: 600
                         }
-                        UILabel { text: "Height" }
+                        UILabel { text: Translation.tr("Height") }
                         SpinBox {
                             value: Config.dialogs.height
                             onValueModified: Config.dialogs.height = value
@@ -479,19 +491,19 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Notch"
+                            textVal: Translation.tr("Enable Notch")
                             checked: Config.notch.enable
                             onToggled: Config.notch.enable = checked
                         }
-                        UILabel { text: "Island mode" }
+                        UILabel { text: Translation.tr("Island mode") }
                         ComboBox {
-                            model: ["Dynamic Island", "Notch"]
+                            model: [Translation.tr("Dynamic Island"), Translation.tr("Notch")]
                             currentIndex: Config.notch.islandMode ? 0 : 1
                             onCurrentIndexChanged: Config.notch.islandMode = currentIndex == 0
                         }
-                        UILabel { text: "Background color" }
+                        UILabel { text: Translation.tr("Background color") }
                         Button {
-                            text: "Set Color"
+                            text: Translation.tr("Set Color")
                             onClicked: colorDialog.open()
                         }
                         ColorDialog {
@@ -499,20 +511,20 @@ FloatingWindow {
                             selectedColor: Config.notch.backgroundColor
                             onAccepted: Config.notch.backgroundColor = selectedColor
                         }
-                        UILabel { text: "Visual-Only mode" }
+                        UILabel { text: Translation.tr("Visual-Only mode") }
                         ComboBox {
-                            model: ["No", "Yes"]
+                            model: [Translation.tr("No"), Translation.tr("Yes")]
                             currentIndex: Config.notch.onlyVisual ? 1 : 0
                             onCurrentIndexChanged: Config.notch.onlyVisual = currentIndex == 1
                         }
-                        UILabel { text: "Signature" }
+                        UILabel { text: Translation.tr("Signature") }
                         UITextField {
                             text: Config.notch.signature
                             onEditingFinished: Config.notch.signature = text
                         }
-                        UILabel { text: "Auto hide" }
+                        UILabel { text: Translation.tr("Auto hide") }
                         ComboBox {
-                            model: ["No", "Yes"]
+                            model: [Translation.tr("No"), Translation.tr("Yes")]
                             currentIndex: Config.notch.autohide ? 1 : 0
                             onCurrentIndexChanged: Config.notch.autohide = currentIndex == 1
                         }
@@ -524,7 +536,7 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Launchpad"
+                            textVal: Translation.tr("Enable Launchpad")
                             checked: Config.launchpad.enable
                             onToggled: Config.launchpad.enable = checked
                         }
@@ -536,42 +548,42 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Lockscreen"
+                            textVal: Translation.tr("Enable Lockscreen")
                             checked: Config.lockScreen.enable
                             onToggled: Config.lockScreen.enable = checked
                         }
-                        UILabel { text: "Date Format" }
+                        UILabel { text: Translation.tr("Date Format") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.lockScreen.dateFormat
                             onEditingFinished: Config.lockScreen.dateFormat = text
                         }
-                        UILabel { text: "Time Format" }
+                        UILabel { text: Translation.tr("Time Format") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.lockScreen.timeFormat
                             onEditingFinished: Config.lockScreen.timeFormat = text
                         }
-                        UILabel { text: "Blur Lockscreen" }
+                        UILabel { text: Translation.tr("Blur Lockscreen") }
                         ComboBox {
-                            model: ["No", "Yes"]
+                            model: [Translation.tr("No"), Translation.tr("Yes")]
                             currentIndex: Config.lockScreen.blur ? 1 : 0
                             onCurrentIndexChanged: Config.lockScreen.blur = currentIndex == 1
                         }
-                        UILabel { text: "Avatar Size" }
+                        UILabel { text: Translation.tr("Avatar Size") }
                         SpinBox {
                             value: Config.lockScreen.avatarSize
                             onValueModified: Config.lockScreen.avatarSize = value
                             from: 0; to: 100
                         }
-                        UILabel { text: "User Note" }
+                        UILabel { text: Translation.tr("User Note") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.lockScreen.userNote
                             onEditingFinished: Config.lockScreen.userNote = text
                         }
                         UICheckBox {
-                            textVal: "Custom Background"
+                            textVal: Translation.tr("Custom Background")
                             checked: Config.lockScreen.useCustomWallpaper
                             onToggled: Config.lockScreen.useCustomWallpaper = checked
                         }
@@ -589,11 +601,11 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable Widgets"
+                            textVal: Translation.tr("Enable Widgets")
                             checked: Config.widgets.enable
                             onToggled: Config.widgets.enable = checked
                         }
-                        UILabel { text: "Location" }
+                        UILabel { text: Translation.tr("Location") }
                         UITextField {
                             Layout.fillWidth: true
                             text: Config.widgets.location
@@ -607,13 +619,13 @@ FloatingWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         UICheckBox {
-                            textVal: "Enable OSD"
+                            textVal: Translation.tr("Enable OSD")
                             checked: Config.osd.enable
                             onToggled: Config.osd.enable = checked
                         }
-                        UILabel { text: "Animation" }
+                        UILabel { text: Translation.tr("Animation") }
                         ComboBox {
-                            model: ["Scale", "Fade", "Bubble"]
+                            model: [Translation.tr("Scale"), Translation.tr("Fade"), Translation.tr("Bubble")]
                             currentIndex: Config.osd.animation - 1
                             onCurrentIndexChanged: Config.osd.animation = currentIndex + 1
                         }

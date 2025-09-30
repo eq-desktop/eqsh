@@ -135,6 +135,10 @@ Scope {
   function flushSize() {
     root.customSizes.pop()
     const size = root.customSizes[root.customSizes.length - 1]
+    if (!size) {
+      root.resetSize()
+      return;
+    }
     root.customResize = false
     root.customWidth = size[0]
     root.customHeight = size[1]

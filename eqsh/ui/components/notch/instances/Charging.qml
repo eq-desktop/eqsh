@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.config
+import qs
 import qs.core.system
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
@@ -47,7 +48,7 @@ NotchApplication {
             verticalCenter: parent.verticalCenter
         }
         color: "white"
-        text: "Charging"
+        text: Translation.tr("Charging")
         opacity: 1
         font.family: Fonts.sFProDisplayRegular.family
         font.pixelSize: 15

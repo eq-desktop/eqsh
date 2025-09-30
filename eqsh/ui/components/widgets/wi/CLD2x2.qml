@@ -58,7 +58,7 @@ BaseWidget {
             RowLayout {
                 Layout.fillWidth: true
                 Repeater {
-                    model: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+                    model: [Translation.tr("Mo"), Translation.tr("Tu"), Translation.tr("We"), Translation.tr("Th"), Translation.tr("Fr"), Translation.tr("Sa"), Translation.tr("Su")]
                     Label {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter

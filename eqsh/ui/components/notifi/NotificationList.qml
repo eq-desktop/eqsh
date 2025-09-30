@@ -9,6 +9,7 @@ import Quickshell.Io
 import QtQuick.Controls
 
 import qs.config
+import qs
 import qs.core.system
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
@@ -166,7 +167,7 @@ Scope {
 							color: Config.general.darkMode ? "#aa222222" : "#eee"
 							visible: scope.showAll && maskId.y // scrolling is above 0
 							Text {
-								text: "Remove all notifications"
+								text: Translation.tr("Remove all notifications")
 								color: Config.general.darkMode ? "#eee" : "#222"
 								anchors.fill: parent
 								verticalAlignment: Text.AlignVCenter

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import qs.config
+import qs
 
 ShellRoot {
 	id: root
@@ -42,13 +43,13 @@ ShellRoot {
 				id: content
 
 				Text {
-					text: "Activate Equora"
+					text: Translation.tr("Activate Equora")
 					color: "#50ffffff"
 					font.pointSize: 22
 				}
 
 				Text {
-					text: "Go to Settings to activate your Account."
+					text: Translation.tr("Go to Settings to activate your Account.")
 					color: "#50ffffff"
 					font.pointSize: 14
 				}

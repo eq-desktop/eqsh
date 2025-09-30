@@ -166,7 +166,7 @@ Scope {
                 }
 
                 UIBButton {
-                  text: "File"
+                  text: Translation.tr("File")
                   id: globalMenuFileButton
                   DropDownMenu {
                     id: globalMenuFile
@@ -179,24 +179,24 @@ Scope {
                 }
 
                 UIBButton {
-                  text: "Edit"
+                  text: Translation.tr("Edit")
                 }
 
                 UIBButton {
-                  text: "View"
+                  text: Translation.tr("View")
                 }
 
                 UIBButton {
-                  text: "Go"
+                  text: Translation.tr("Go")
                 }
 
                 UIBButton {
-                  text: "Window"
+                  text: Translation.tr("Window")
                   
                 }
 
                 UIBButton {
-                  text: "Help"
+                  text: Translation.tr("Help")
                 }
               }
             }

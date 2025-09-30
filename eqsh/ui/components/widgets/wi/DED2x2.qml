@@ -40,7 +40,7 @@ BaseWidget {
             id: events
             color: Config.general.darkMode ? "#aaa" : "#555"
             font.pixelSize: 10
-            text: "No events today"
+            text: Translation.tr("No events today")
             font.weight: 300
             anchors.bottom: parent.bottom
             anchors.left: parent.left

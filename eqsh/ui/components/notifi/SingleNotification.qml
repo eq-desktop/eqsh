@@ -10,6 +10,7 @@ import QtQuick.VectorImage
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
+import qs
 
 import qs.config
 import qs.core.system
@@ -99,7 +100,7 @@ BoxExperimental {
 					anchors.left: closeIcon.right
 					anchors.leftMargin: 5
 					anchors.verticalCenter: parent.verticalCenter
-					text: "Remove"
+					text: Translation.tr("Remove")
 					color: Config.general.darkMode ? "#fff" : "#222"
 					font.pixelSize: 12
 					opacity: 0
@@ -240,7 +241,7 @@ BoxExperimental {
 				Text {
 					color: "#fff"
 
-					text: NotificationUtils.getFriendlyNotifTimeString(modelData.time)
+					text: NotificationUtils.getFriendlyNotifTimeString(modelData.time, Translation)
 
 					font.weight: 600
 					font.pixelSize: 11

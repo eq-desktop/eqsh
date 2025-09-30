@@ -131,7 +131,7 @@ Scope {
                     anchors.centerIn: parent
                     visible: searchBox.text == ""
                     verticalAlignment: Text.AlignVCenter
-                    text: "Search"
+                    text: Translation.tr("Search")
                     color: "#55ffffff"
                     font.weight: 500
                   }

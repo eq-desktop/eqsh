@@ -2,12 +2,14 @@ import QtQuick
 import Quickshell
 import qs.config
 import qs.core.system
+import qs
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
 import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
+    id: root
     details.version: "0.1.0"
     meta.width: 300
     meta.height: 150
@@ -40,7 +42,7 @@ NotchApplication {
             top: welcomeIcon.top
             topMargin: -8
         }
-        text: "Welcome"
+        text: Translation.tr("Welcome")
         color: "white"
         font.pixelSize: 32
     }
@@ -52,7 +54,7 @@ NotchApplication {
             top: welcomeText.bottom
         }
         font.family: Fonts.sFProRounded.family
-        text: "to Equora"
+        text: Translation.tr("to Equora")
         color: "white"
         font.pixelSize: 16
     }
@@ -65,7 +67,7 @@ NotchApplication {
             bottomMargin: 10
         }
         font.family: Fonts.sFProRounded.family
-        text: "(click to close)"
+        text: Translation.tr("(click to close)")
         color: "#80ffffff"
         font.pixelSize: 12
     }
@@ -76,6 +78,7 @@ NotchApplication {
             notch.closeNotchInstance()
             notch.resetSize()
             Config.account.firstTimeRunning = false
+            root.destroy()
         }
     }
 }

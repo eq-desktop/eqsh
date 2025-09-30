@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.config
+import qs
 import qs.core.system
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
@@ -19,42 +20,42 @@ NotchApplication {
         Text {
             id: fileText
             color: "#fff"
-            text: "File"
+            text: Translation.tr("File")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }
         Text {
             id: editText
             color: "white"
-            text: "Edit"
+            text: Translation.tr("Edit")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }
         Text {
             id: viewText
             color: "white"
-            text: "View"
+            text: Translation.tr("View")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }
         Text {
             id: goText
             color: "white"
-            text: "Go"
+            text: Translation.tr("Go")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }
         Text {
             id: windowText
             color: "white"
-            text: "Window"
+            text: Translation.tr("Window")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }
         Text {
             id: helpText
             color: "white"
-            text: "Help"
+            text: Translation.tr("Help")
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 15
         }

@@ -1,4 +1,3 @@
-// Desktop.qml
 import Quickshell
 import QtQuick
 
