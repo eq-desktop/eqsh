@@ -1,0 +1,62 @@
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import qs.Config
+import qs.Core.System
+import qs.ui.Controls.providers
+import qs.ui.Controls.Auxiliary
+import qs.ui.components.panel
+import QtQuick.VectorImage
+import QtQuick.Effects
+
+NotchApplication {
+    details.version: "0.1.0"
+    meta.height: notch.defaultHeight+10
+    meta.width: 300
+    meta.closeAfterMs: -1
+    RowLayout {
+        anchors.centerIn: parent
+        Text {
+            id: fileText
+            color: "#fff"
+            text: "File"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+        Text {
+            id: editText
+            color: "white"
+            text: "Edit"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+        Text {
+            id: viewText
+            color: "white"
+            text: "View"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+        Text {
+            id: goText
+            color: "white"
+            text: "Go"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+        Text {
+            id: windowText
+            color: "white"
+            text: "Window"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+        Text {
+            id: helpText
+            color: "white"
+            text: "Help"
+            font.family: Fonts.sFProDisplayRegular.family
+            font.pixelSize: 15
+        }
+    }
+}
