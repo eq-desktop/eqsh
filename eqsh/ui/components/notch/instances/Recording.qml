@@ -9,6 +9,7 @@ import QtQuick.Effects
 
 NotchApplication {
     details.version: "0.1.0"
+    details.appType: "media"
     details.shadowColor: "#ed6168"
     meta.height: notch.defaultHeight+10
     Rectangle {

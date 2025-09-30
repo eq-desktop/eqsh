@@ -179,7 +179,7 @@ Scope {
           id: notchBg
           anchors {
             top: parent.top
-            topMargin: inFullscreen ? -(root.height + topMargin) : root.topMargin
+            topMargin: inFullscreen ? -(root.height + topMargin + 5) : root.topMargin
             horizontalCenter: parent.horizontalCenter
             Behavior on topMargin {
               NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
@@ -261,7 +261,7 @@ Scope {
           width: 20
           height: 20 * Config.notch.fluidEdgeStrength
           anchors {
-            top: parent.top
+            top: notchBg.top
             right: notchBg.left
             rightMargin: -1
           }
@@ -274,7 +274,7 @@ Scope {
           width: 20
           height: 20 * Config.notch.fluidEdgeStrength
           anchors {
-            top: parent.top
+            top: notchBg.top
             left: notchBg.right
             leftMargin: -1
           }

@@ -12,6 +12,7 @@ import QtQuick.Effects
 
 NotchApplication {
     details.version: "0.1.0"
+    details.appType: "media"
     meta.height: notch.defaultHeight+10
     meta.width: 300
     meta.closeAfterMs: -1
