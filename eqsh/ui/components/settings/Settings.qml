@@ -489,23 +489,24 @@ FloatingWindow {
                 // Notch
                 ScrollView {
                     ColumnLayout {
+                        id: notchView
                         anchors.fill: parent
                         UICheckBox {
                             textVal: Translation.tr("Enable Notch")
                             checked: Config.notch.enable
                             onToggled: Config.notch.enable = checked
                         }
-                        UILabel { text: Translation.tr("Island mode") }
-                        property var notchOptions: ["Dynamic Island", "Notch"]
-                        ComboBox {
-                            model: notchOptions.map(Translation.tr)
-                            Component.onCompleted: {
-                                currentIndex = Config.notch.islandMode ? 0 : 1
-                            }
-                            onCurrentIndexChanged: {
-                                Config.notch.islandMode = (currentIndex == 0)
-                            }
-                        }
+                        //UILabel { text: Translation.tr("Island mode") }
+                        //property var notchOptions: ["Dynamic Island", "Notch"]
+                        //ComboBox {
+                        //    model: notchView.notchOptions.map(Translation.tr)
+                        //    Component.onCompleted: {
+                        //        currentIndex = Config.notch.islandMode ? 0 : 1
+                        //    }
+                        //    onCurrentIndexChanged: {
+                        //        Config.notch.islandMode = (currentIndex == 0)
+                        //    }
+                        //}
                         UILabel { text: Translation.tr("Background color") }
                         Button {
                             text: Translation.tr("Set Color")
