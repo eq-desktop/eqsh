@@ -152,7 +152,6 @@ Scope {
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.namespace: "eqsh:lock"
       id: panelWindow
-      property bool islandMode: Config.notch.islandMode
       required property var modelData
       screen: modelData
 
@@ -195,8 +194,8 @@ Scope {
           }
           implicitWidth: root.width
           implicitHeight: root.height
-          topLeftRadius: panelWindow.islandMode ? Config.notch.radius : 0
-          topRightRadius: panelWindow.islandMode ? Config.notch.radius : 0
+          topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
+          topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
           bottomLeftRadius: Config.notch.radius
           bottomRightRadius: Config.notch.radius
           property bool customResize: root.customResize
@@ -263,8 +262,8 @@ Scope {
           height: 20 * Config.notch.fluidEdgeStrength
           anchors {
             top: parent.top
-            left: parent.left
-            leftMargin: 1
+            right: notchBg.left
+            rightMargin: -1
           }
           color: Config.notch.backgroundColor
         }
@@ -276,8 +275,8 @@ Scope {
           height: 20 * Config.notch.fluidEdgeStrength
           anchors {
             top: parent.top
-            right: parent.right
-            rightMargin: 1
+            left: notchBg.right
+            leftMargin: -1
           }
           color: Config.notch.backgroundColor
         }

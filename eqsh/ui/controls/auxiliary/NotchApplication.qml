@@ -15,8 +15,8 @@ Item {
         id: notchBg
         anchors.fill: parent
         color: Config.notch.backgroundColor
-        topLeftRadius: panelWindow.islandMode ? Config.notch.radius : 0
-        topRightRadius: panelWindow.islandMode ? Config.notch.radius : 0
+        topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
+        topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
         bottomLeftRadius: Config.notch.radius
         bottomRightRadius: Config.notch.radius
     }

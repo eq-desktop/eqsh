@@ -496,10 +496,15 @@ FloatingWindow {
                             onToggled: Config.notch.enable = checked
                         }
                         UILabel { text: Translation.tr("Island mode") }
+                        property var notchOptions: ["Dynamic Island", "Notch"]
                         ComboBox {
-                            model: [Translation.tr("Dynamic Island"), Translation.tr("Notch")]
-                            currentIndex: Config.notch.islandMode ? 0 : 1
-                            onCurrentIndexChanged: Config.notch.islandMode = currentIndex == 0
+                            model: notchOptions.map(Translation.tr)
+                            Component.onCompleted: {
+                                currentIndex = Config.notch.islandMode ? 0 : 1
+                            }
+                            onCurrentIndexChanged: {
+                                Config.notch.islandMode = (currentIndex == 0)
+                            }
                         }
                         UILabel { text: Translation.tr("Background color") }
                         Button {

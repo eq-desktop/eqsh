@@ -12,7 +12,6 @@ Scope {
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.namespace: "eqsh:lock"
       id: panelWindow
-      property bool islandMode: true
       required property var modelData
       property int radius: Config.screenEdges.radius
       screen: modelData
