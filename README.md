@@ -115,6 +115,7 @@ equora install
 mkdir ~/eqSh
 mkdir ~/.config/quickshell
 git clone https://github.com/eq-desktop/eqSh ~/eqSh
+git submodule update --init --recursive
 mv ~/eqSh/eqsh ~/.config/quickshell/
 ```
 

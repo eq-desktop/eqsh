@@ -1,0 +1,3 @@
+[submodule "eqsh/translations"]
+	path = eqsh/translations
+	url = https://github.com/eq-desktop/translations
