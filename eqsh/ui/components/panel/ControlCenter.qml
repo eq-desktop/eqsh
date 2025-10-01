@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick.VectorImage
 import QtQuick.Effects
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Widgets
+import Quickshell.Services.Pipewire
 import QtQuick.Layouts
 import Quickshell.Wayland
 import qs.ui.controls.auxiliary
@@ -175,6 +177,20 @@ Scope {
                         right: wifiWidget.right
                         topMargin: 10
                     }
+                    enabled: true
+                    VectorImage {
+                        id: rBAirdrop
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/airdrop.svg")
+                        width: panelWindow.box-30
+                        height: panelWindow.box-30
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors.centerIn: parent
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: true ? "#2495ff" : "#fff"
+                        }
+                    } 
                 }
                 BoxButton {
                     id: focusWidget
@@ -235,13 +251,14 @@ Scope {
                     id: musicWidget
                     width: panelWindow.box*2+panelWindow.boxMargin
                     height: panelWindow.box*2+panelWindow.boxMargin
-                    radius: 40
+                    radius: 25
                     anchors {
                         top: parent.top
                         left: wifiWidget.right
                         leftMargin: 10
                         topMargin: 10
                     }
+                    MusicPlayer {}
                 }
                 Button1x1 {
                     id: stageWidget
@@ -249,6 +266,20 @@ Scope {
                         top: musicWidget.bottom
                         left: musicWidget.left
                         topMargin: 10
+                    }
+                    enabled: false
+                    VectorImage {
+                        id: rBStage
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/stageman.svg")
+                        width: panelWindow.box-30
+                        height: panelWindow.box-30
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors.centerIn: parent
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: false ? "#2495ff" : "#fff"
+                        }
                     }
                 }
                 Button1x1 {
@@ -258,27 +289,247 @@ Scope {
                         right: musicWidget.right
                         topMargin: 10
                     }
+                    enabled: false
+                    VectorImage {
+                        id: rBScreenshare
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/screenshare.svg")
+                        width: panelWindow.box-30
+                        height: panelWindow.box-30
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors.centerIn: parent
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: false ? "#2495ff" : "#fff"
+                        }    
+                    }
                 }
                 BoxButton {
                     id: displayWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
-                    height: panelWindow.box+10
+                    height: panelWindow.box
                     radius: 25
                     anchors {
                         top: focusWidget.bottom
                         left: parent.left
                         margins: 10
                     }
+                    Text {
+                        id: brightnessTitle
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            topMargin: 10
+                            leftMargin: 15
+                        }
+                        text: "Display"
+                        color: "#fff"
+                    }
+                    VectorImage {
+                        id: rBDisplayLeft
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/sun-small.svg")
+                        width: 15
+                        height: 15
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors {
+                            verticalCenter: brightnessSlider.verticalCenter
+                            right: brightnessSlider.left
+                            rightMargin: 5
+                        }
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: "#fff"
+                        }
+                    }
+                    VectorImage {
+                        id: rBDisplayRight
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/sun-huge.svg")
+                        width: 15
+                        height: 15
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors {
+                            verticalCenter: brightnessSlider.verticalCenter
+                            left: brightnessSlider.right
+                            leftMargin: 5
+                        }
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: "#fff"
+                        }
+                    }
+                    Slider {
+                        id: brightnessSlider
+                        anchors {
+                            top: brightnessTitle.bottom
+                            left: parent.left
+                            right: parent.right
+                            topMargin: 10
+                            leftMargin: 30
+                            rightMargin: 30
+                        }
+                        background: Rectangle {
+                            x: brightnessSlider.leftPadding
+                            y: brightnessSlider.topPadding + brightnessSlider.availableHeight / 2 - height / 2
+                            implicitWidth: 200
+                            implicitHeight: 8
+                            width: brightnessSlider.availableWidth
+                            height: implicitHeight
+                            radius: 10
+                            color: "#20ffffff"
+
+                            Rectangle {
+                                width: brightnessSlider.visualPosition * parent.width
+                                height: parent.height
+                                color: "#fff"
+                                radius: 10
+                            }
+                        }
+                        handle: Item {}
+                        from: 0
+                        to: 1
+                        stepSize: 1 / 100.0
+                        value: Brightness.monitors[0].brightness
+                        property var lastValue: null
+                        property bool screenDimHelper: false
+
+                        // Update the monitor brightness when the slider moves
+                        onValueChanged: {
+                            Brightness.monitors[0].setBrightnessDebounced(value)
+                            if (value <= 0.01) {
+                                screenIsStillOn.restart()
+                            } else {
+                                if (screenDimHelper) return
+                                screenIsStillOn.stop()
+                                screenIsStillOn2.stop()
+                            }
+                        }
+                        Connections {
+                            target: Brightness
+                            function onMonitorBrightnessChanged(monitor, newBrightness) {
+                                if (monitor === Brightness.monitors[0]) {
+                                    brightnessSlider.value = newBrightness
+                                }
+                            }
+                        }
+
+                        Timer {
+                            id: screenIsStillOn
+                            interval: 1000 * 15 // 15 seconds
+                            running: false
+                            repeat: false
+                            onTriggered: {
+                                brightnessSlider.lastValue = brightnessSlider.value
+                                brightnessSlider.screenDimHelper = true
+                                Brightness.monitors[0].setBrightnessDebounced(0.05)
+                                screenIsStillOn2.start()
+                            }
+                        }
+                        Timer {
+                            id: screenIsStillOn2
+                            interval: 1000
+                            running: false
+                            onTriggered: {
+                                Brightness.monitors[0].setBrightnessDebounced(brightnessSlider.lastValue)
+                                brightnessSlider.screenDimHelper = false
+                            }
+                        }
+                    }
                 }
                 BoxButton {
                     id: volumeWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
-                    height: panelWindow.box+10
+                    height: panelWindow.box
                     radius: 25
                     anchors {
                         top: displayWidget.bottom
                         left: parent.left
                         margins: 10
+                    }
+                    Text {
+                        id: volumeTitle
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            topMargin: 10
+                            leftMargin: 15
+                        }
+                        text: "Volume"
+                        color: "#fff"
+                    }
+                    VectorImage {
+                        id: rBVolumeLeft
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/volume/audio-volume-1.svg")
+                        width: 15
+                        height: 15
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors {
+                            verticalCenter: volumeSlider.verticalCenter
+                            right: volumeSlider.left
+                            rightMargin: 5
+                        }
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: "#fff"
+                        }
+                    }
+                    VectorImage {
+                        id: rBVolumeRight
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/volume/audio-volume-3.svg")
+                        width: 15
+                        height: 15
+                        preferredRendererType: VectorImage.CurveRenderer
+                        anchors {
+                            verticalCenter: volumeSlider.verticalCenter
+                            left: volumeSlider.right
+                            leftMargin: 5
+                        }
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: "#fff"
+                        }
+                    }
+                    Slider {
+                        id: volumeSlider
+                        anchors {
+                            top: volumeTitle.bottom
+                            left: parent.left
+                            right: parent.right
+                            topMargin: 10
+                            leftMargin: 30
+                            rightMargin: 30
+                        }
+                        background: Rectangle {
+                            x: volumeSlider.leftPadding
+                            y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
+                            implicitWidth: 200
+                            implicitHeight: 8
+                            width: volumeSlider.availableWidth
+                            height: implicitHeight
+                            radius: 10
+                            color: "#20ffffff"
+
+                            Rectangle {
+                                width: volumeSlider.visualPosition * parent.width
+                                height: parent.height
+                                color: "#fff"
+                                radius: 10
+                                Behavior on width { NumberAnimation { duration: 100 } }
+                            }
+                        }
+                        handle: Item {}
+                        from: 0
+                        to: 1
+                        stepSize: 1 / 100.0
+                        value: Pipewire.defaultAudioSink?.audio.volume ?? 0
+                        onValueChanged: {
+                            if (Pipewire.defaultAudioSink) {
+                                Pipewire.defaultAudioSink.audio.volume = volumeSlider.value
+                            }
+                        }
                     }
                 }
                 Button1x1 {

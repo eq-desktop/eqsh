@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- right triangle (flipped left) -->
+  <polygon 
+    points="16,8 16,24 25,16" 
+    fill="#fff" 
+    stroke="#fff" 
+    stroke-width="1" 
+    stroke-linejoin="round"/>
+    
+  <!-- left triangle (flipped left) -->
+  <polygon 
+    points="7,8 7,24 16,16" 
+    fill="#fff" 
+    stroke="#fff" 
+    stroke-width="1" 
+    stroke-linejoin="round"/>
+</svg>

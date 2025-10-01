@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Left stacked filled rectangles, slightly smaller -->
+  <rect x="2" y="6" width="5" height="5" fill="#fff" rx="1" ry="1"/>
+  <rect x="2" y="14" width="5" height="5" fill="#fff" rx="1" ry="1"/>
+  <rect x="2" y="22" width="5" height="5" fill="#fff" rx="1" ry="1"/>
+
+  <!-- Right big outlined rectangle, wider -->
+  <rect x="10" y="8" width="20" height="17" fill="none" stroke="#fff" stroke-width="2" rx="2" ry="2"/>
+</svg>

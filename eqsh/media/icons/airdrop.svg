@@ -1,0 +1,11 @@
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="App-Icon-/-Apple-/-AirDrop-/" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="AirDrop" transform="translate(17.000000, 36.000000)">
+            <circle id="Oval" fill="#fff" cx="495" cy="495" r="24"/>
+            <path d="M495,575 C539.18278,575 575,539.18278 575,495 C575,450.81722 539.18278,415 495,415 C450.81722,415 415,450.81722 415,495 C415,539.18278 450.81722,575 495,575 Z" id="Oval" stroke="#fff" stroke-width="44.9122807" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="385,125" transform="translate(495.000000, 495.000000) rotate(-42.000000) translate(-495.000000, -495.000000) "/>
+            <path d="M495,665 C588.888407,665 665,588.888407 665,495 C665,401.111593 588.888407,325 495,325 C401.111593,325 325,401.111593 325,495 C325,588.888407 401.111593,665 495,665 Z" id="Oval-Copy" stroke="#fff" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="842,202" transform="translate(495.000000, 495.000000) rotate(-42.000000) translate(-495.000000, -495.000000) "/>
+            <path d="M495,755 C638.594035,755 755,638.594035 755,495 C755,351.405965 638.594035,235 495,235 C351.405965,235 235,351.405965 235,495 C235,638.594035 351.405965,755 495,755 Z" id="Oval-Copy-2" stroke="#fff" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1302,282" transform="translate(495.000000, 495.000000) rotate(-42.000000) translate(-495.000000, -495.000000) "/>
+            <path d="M495,845 C688.299662,845 845,688.299662 845,495 C845,301.700338 688.299662,145 495,145 C301.700338,145 145,301.700338 145,495 C145,688.299662 301.700338,845 495,845 Z" id="Oval-Copy-3" stroke="#fff" stroke-width="46.6666667" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1758,368" transform="translate(495.000000, 495.000000) rotate(-42.000000) translate(-495.000000, -495.000000) "/>
+        </g>
+    </g>
+</svg>

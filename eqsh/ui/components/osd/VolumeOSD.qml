@@ -60,7 +60,7 @@ Scope {
                         color: "white"
 
                         Behavior on width {
-                            NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
+                            NumberAnimation { duration: 150; }
                         }
 
                         width: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
