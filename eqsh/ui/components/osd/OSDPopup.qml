@@ -13,6 +13,7 @@ import QtQuick.Effects
 Scope {
     id: root
     default required property Component content
+    required property var modelData
 
     function show() {
         showAnim.start()
@@ -38,6 +39,7 @@ Scope {
         margins {
             bottom: 0
         }
+        screen: root.modelData
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "eqsh:blur"
         implicitWidth: 180
@@ -48,7 +50,7 @@ Scope {
 
         BoxExperimental {
             id: box
-            radius: 24
+            radius: 30
             implicitWidth: 180
             implicitHeight: 180
             scale: Config.osd.animation == 1 ? 0 : 1

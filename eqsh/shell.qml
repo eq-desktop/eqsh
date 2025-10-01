@@ -91,6 +91,7 @@ Scope {
   NotificationList {}
   Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
   Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
+  Loader { active: Config.osd.enable; sourceComponent: BrightnessOSD {} }
   Launcher {}
   Popup {}
   Notch {
