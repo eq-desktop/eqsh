@@ -17,7 +17,7 @@ Scope {
         OSDPopup {
             id: popup
 
-            property real brightness: Brightness.monitors[0].brightness
+            property real brightness: Brightness.getMonitorForScreen(popup.modelData).brightness
             onBrightnessChanged: { popup.show() }
             Item {
                 ColumnLayout {

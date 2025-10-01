@@ -22,6 +22,7 @@ Scope {
         panelWindow.opened = true;
     }
     id: root
+    required property var screen
     Pop {
         id: panelWindow
         margins.right: 30
@@ -69,13 +70,13 @@ Scope {
             Rectangle {
                 transform: [
                     Translate {
-                        y: -10
+                        y: Config.general.reduceMotion ? 0 : -10
                     },
                     Scale {
                         origin.x: (rect.width/1.5)
                         origin.y: 0
-                        xScale: panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
-                        yScale: panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
+                        xScale: Config.general.reduceMotion ? 1 : panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
+                        yScale: Config.general.reduceMotion ? 1 : panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
                         Behavior on xScale { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                         Behavior on yScale { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                     }

@@ -251,6 +251,7 @@ Scope {
             onClick: controlCenter.open()
             ControlCenter {
               id: controlCenter
+              screen: panelWindow.screen
             }
             
           }
