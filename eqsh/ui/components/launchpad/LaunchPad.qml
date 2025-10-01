@@ -17,6 +17,20 @@ import QtQuick.VectorImage
 
 Scope {
   id: root
+  property bool showLP: false
+  IpcHandler {
+    target: "launchpad"
+    function toggle() {
+      showLP = !showLP
+    }
+  }
+  CustomShortcut {
+    name: "launchpad"
+    description: "Toggle Launchpad"
+    onPressed: {
+      showLP = !showLP
+    }
+  }
   Variants {
     model: Quickshell.screens
 
@@ -57,8 +71,7 @@ Scope {
         property bool shown: false
         anchors.fill: parent
         Keys.onEscapePressed: {
-          launchpadLoader.shown = false;
-          hideAnim.start();
+          root.showLP = false
         }
         PropertyAnimation {
           id: showAnim
@@ -186,7 +199,7 @@ Scope {
                         appInfo: modelData
                         onClicked: {
                           appInfo.execute();
-                          toggleLP();
+                          root.showLP = false
                         }
                       }
                     }
@@ -221,41 +234,20 @@ Scope {
           }
         }
       }
-      function toggleLP(force=false, state=false) {
-        if (force) {
-          launchpadLoader.shown = state;
-          if (state) {
-            showAnim.start();
-          } else {
-            hideAnim.start();
-          }
-          return;
-        }
-        if (launchpadLoader.shown) {
-          launchpadLoader.shown = false;
-          hideAnim.start();
+      property bool showLP: root.showLP
+      onShowLPChanged: {
+        if (panelWindow.showLP) {
+          launchpadLoader.shown = true
+          showAnim.start()
         } else {
-          launchpadLoader.shown = true;
-          showAnim.start();
+          launchpadLoader.shown = false
+          hideAnim.start()
         }
       }
       Connections {
         target: Runtime
         function onLaunchpadOpenChanged() {
-          toggleLP(true, Runtime.launchpadOpen);
-        }
-      }
-      IpcHandler {
-        target: "launchpad"
-        function toggle() {
-          toggleLP();
-        }
-      }
-      CustomShortcut {
-        name: "launchpad"
-        description: "Open Launchpad"
-        onPressed: {
-          toggleLP();
+          panelWindow.showLP = true
         }
       }
     }
