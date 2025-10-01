@@ -3,7 +3,6 @@ import QtQuick.Controls
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import QtQuick.Effects
-import Qt5Compat.GraphicalEffects
 
 Item {
     id: box
@@ -33,45 +32,30 @@ Item {
         opacity: box.enableShadow ? 0 : 1
     }
 
-    // Capture it as a texture
-    ShaderEffectSource {
-        id: rectSource
-        sourceItem: boxContainer
-        live: true
-        hideSource: box.enableShadow
-        visible: box.enableShadow
-    }
-
     // First inner shadow
     InnerShadow {
-        anchors.fill: parent
-        source: rectSource
-        radius: 6
-        samples: 16
-        horizontalOffset: 0
-        verticalOffset: -3
-        color: highlight // "#ff0000"
-        opacity: box.shadowOpacity
+        strength: 3
+        offsetX: 0
+        offsetY: -3
+        color: "#fff"
+        opacity: 0.5
         visible: box.enableShadow
     }
 
     // Second inner shadow
     InnerShadow {
-        anchors.fill: parent
-        source: rectSource
-        radius: 4
-        samples: 16
-        horizontalOffset: 0
-        verticalOffset: 3
-        color: negHighlight// "#0000ff"
-        opacity: box.shadowOpacity/2
+        strength: 3
+        offsetX: 0
+        offsetY: 3
+        color: "#000"
+        opacity: 0.3
         visible: box.enableShadow
     }
 
     Box {
         id: boxContainer2
         anchors.fill: parent
-        color: "transparent"
+        color: "#40000000"
         radius: box.radius
         highlight: "#eeaaaaaa"
         opacity: box.enableShadow ? 1 : 0
