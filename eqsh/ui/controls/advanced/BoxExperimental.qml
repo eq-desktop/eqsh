@@ -7,11 +7,10 @@ import QtQuick.Effects
 Item {
     id: box
 
-    property color color: "#bb000000"
+    property color color: "#40000000"
     property int borderSize: 1
     property real shadowOpacity: 0.5
     property color highlight: '#fff'
-    property bool enableShadow: highlight != "transparent"
     property color negHighlight: Colors.complementary(highlight)
 
     // Individual corner radii
@@ -29,17 +28,16 @@ Item {
         color: box.color
         radius: box.radius
         highlight: box.highlight
-        opacity: box.enableShadow ? 0 : 1
     }
 
     // First inner shadow
     InnerShadow {
-        strength: 3
+        strength: 2
         offsetX: 0
-        offsetY: -3
+        offsetY: -2
         color: "#fff"
-        opacity: 0.5
-        visible: box.enableShadow
+        opacity: 0.8
+        blurMax: 40
     }
 
     // Second inner shadow
@@ -48,16 +46,15 @@ Item {
         offsetX: 0
         offsetY: 3
         color: "#000"
-        opacity: 0.3
-        visible: box.enableShadow
+        blurMax: 64
+        opacity: 0.7
     }
 
     Box {
         id: boxContainer2
         anchors.fill: parent
-        color: "#40000000"
+        color: "transparent"
         radius: box.radius
         highlight: "#eeaaaaaa"
-        opacity: box.enableShadow ? 1 : 0
     }
 }

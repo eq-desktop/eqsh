@@ -38,10 +38,10 @@ Scope {
             radius: 40
             property bool enabled: false
             color: {Config.appearance.glassMode == 0 ?
-                boxbutton.enabled ? "#fff" : "#77000000" : Config.appearance.glassMode == 1 ?
-                boxbutton.enabled ? "#fff" : "#bb000000" : Config.appearance.glassMode == 2 ?
-                boxbutton.enabled ? "#fff" : "#bb000000" : Config.appearance.glassMode == 3 ?
-                boxbutton.enabled ? "#fff" : "#bb000000" : "#fff"
+                boxbutton.enabled ? "#fff" : "#10000000" : Config.appearance.glassMode == 1 ?
+                boxbutton.enabled ? "#fff" : "#40000000" : Config.appearance.glassMode == 2 ?
+                boxbutton.enabled ? "#fff" : "#40000000" : Config.appearance.glassMode == 3 ?
+                boxbutton.enabled ? "#fff" : "#40000000" : "#fff"
             }
             shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
             highlight: {Config.appearance.glassMode == 2 ?
