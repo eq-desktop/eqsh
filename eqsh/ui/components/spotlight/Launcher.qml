@@ -26,7 +26,7 @@ Scope {
             focusable: true
             WlrLayershell.namespace: "eqsh:blur"
 
-            property bool focusedScreen: (modelData.name == Hyprland.focusedMonitor.name)
+            property bool focusedScreen: (modelData.name == (Hyprland.focusedMonitor?.name ?? ""))
 
             mask: Region {
                 item: Runtime.spotlightOpen && focusedScreen ? background : null

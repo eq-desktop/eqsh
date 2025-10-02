@@ -96,6 +96,7 @@ Singleton {
         root.ddcMonitors = ddcProc.ddcMonitors.filter(m => m.isDdc)
       }
     }
+    stderr: StdioCollector {}
   }
 
   component Monitor: QtObject {

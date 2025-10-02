@@ -11,6 +11,7 @@ import Quickshell.Wayland
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import qs.ui.controls.advanced
+import qs.ui.controls.primitives
 import qs.ui.controls.windows
 import qs.core.system
 import qs.config
@@ -43,6 +44,7 @@ Scope {
                 boxbutton.enabled ? "#fff" : "#40000000" : Config.appearance.glassMode == 3 ?
                 boxbutton.enabled ? "#fff" : "#40000000" : "#fff"
             }
+            highlightEnabled: !boxbutton.enabled
             shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
             highlight: {Config.appearance.glassMode == 2 ?
                 (boxbutton.enabled ? "transparent" : "#f00") : boxbutton.enabled ?
@@ -360,7 +362,7 @@ Scope {
                             colorizationColor: "#fff"
                         }
                     }
-                    Slider {
+                    CFSlider {
                         id: brightnessSlider
                         anchors {
                             top: brightnessTitle.bottom
@@ -370,24 +372,6 @@ Scope {
                             leftMargin: 30
                             rightMargin: 30
                         }
-                        background: Rectangle {
-                            x: brightnessSlider.leftPadding
-                            y: brightnessSlider.topPadding + brightnessSlider.availableHeight / 2 - height / 2
-                            implicitWidth: 200
-                            implicitHeight: 8
-                            width: brightnessSlider.availableWidth
-                            height: implicitHeight
-                            radius: 10
-                            color: "#20ffffff"
-
-                            Rectangle {
-                                width: brightnessSlider.visualPosition * parent.width
-                                height: parent.height
-                                color: "#fff"
-                                radius: 10
-                            }
-                        }
-                        handle: Item {}
                         from: 0
                         to: 1
                         stepSize: 1 / 100.0
@@ -493,7 +477,7 @@ Scope {
                             colorizationColor: "#fff"
                         }
                     }
-                    Slider {
+                    CFSlider {
                         id: volumeSlider
                         anchors {
                             top: volumeTitle.bottom
@@ -503,25 +487,6 @@ Scope {
                             leftMargin: 30
                             rightMargin: 30
                         }
-                        background: Rectangle {
-                            x: volumeSlider.leftPadding
-                            y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
-                            implicitWidth: 200
-                            implicitHeight: 8
-                            width: volumeSlider.availableWidth
-                            height: implicitHeight
-                            radius: 10
-                            color: "#20ffffff"
-
-                            Rectangle {
-                                width: volumeSlider.visualPosition * parent.width
-                                height: parent.height
-                                color: "#fff"
-                                radius: 10
-                                Behavior on width { NumberAnimation { duration: 100 } }
-                            }
-                        }
-                        handle: Item {}
                         from: 0
                         to: 1
                         stepSize: 1 / 100.0

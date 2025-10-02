@@ -10,8 +10,12 @@ Item {
     property color color: "#40000000"
     property int borderSize: 1
     property real shadowOpacity: 0.5
+    property bool highlightEnabled: true
     property color highlight: '#fff'
-    property color negHighlight: Colors.complementary(highlight)
+    
+    property color light: '#fff'
+    property real  glowStrength: 0.8
+    property color negLight: '#000'
 
     // Individual corner radii
     property int radius: 20
@@ -27,17 +31,18 @@ Item {
         anchors.fill: parent
         color: box.color
         radius: box.radius
-        highlight: box.highlight
+        highlight: "transparent"
     }
 
     // First inner shadow
     InnerShadow {
-        strength: 2
+        strength: box.glowStrength*2.5 // 0.8*
         offsetX: 0
-        offsetY: -2
-        color: "#fff"
-        opacity: 0.8
+        offsetY: -box.glowStrength*2.5
+        color: box.light
+        opacity: box.glowStrength
         blurMax: 40
+        visible: box.highlightEnabled
     }
 
     // Second inner shadow
@@ -45,9 +50,10 @@ Item {
         strength: 3
         offsetX: 0
         offsetY: 3
-        color: "#000"
+        color: box.negLight
         blurMax: 64
         opacity: 0.7
+        visible: box.highlightEnabled
     }
 
     Box {
@@ -55,6 +61,6 @@ Item {
         anchors.fill: parent
         color: "transparent"
         radius: box.radius
-        highlight: "#eeaaaaaa"
+        highlight: "#50ffffff"
     }
 }

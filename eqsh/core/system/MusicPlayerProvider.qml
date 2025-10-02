@@ -8,10 +8,10 @@ Singleton {
     id: mpris
     property var players: Mpris.players.values
     property var activePlayer: mpris.players[mpris.players.length - 1] || null
-    property string title: mpris.activePlayer?.trackTitle ?? "--"
-    property string artist: mpris.activePlayer?.trackArtist ?? "--"
-    property string album: mpris.activePlayer?.trackAlbum ?? "--"
-    property url thumbnail: mpris.activePlayer?.trackArtUrl ?? null
+    property string title: mpris.activePlayer?.trackTitle ?? "Not Playing"
+    property string artist: mpris.activePlayer?.trackArtist ?? ""
+    property string album: mpris.activePlayer?.trackAlbum ?? ""
+    property url thumbnail: mpris.activePlayer?.trackArtUrl ?? ""
     property bool isPlaying: mpris.activePlayer?.isPlaying ?? false
     property int duration: 0
     property int position: 0
