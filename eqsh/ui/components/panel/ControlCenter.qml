@@ -129,7 +129,7 @@ Scope {
                         }
                     }
                     UIText {
-                        text: "Wi-Fi"
+                        text: Translation.tr("Wi-Fi")
                         font.weight: 600
                         color: "#fff"
                         anchors {
@@ -325,7 +325,7 @@ Scope {
                             topMargin: 10
                             leftMargin: 15
                         }
-                        text: "Display"
+                        text: Translation.tr("Display")
                         color: "#fff"
                     }
                     VectorImage {
@@ -440,7 +440,7 @@ Scope {
                             topMargin: 10
                             leftMargin: 15
                         }
-                        text: "Volume"
+                        text: Translation.tr("Volume")
                         color: "#fff"
                     }
                     VectorImage {

@@ -6,6 +6,7 @@ import QtQuick.Dialogs
 import QtQuick.Effects
 import Quickshell
 import qs
+import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import Quickshell.Io
 import Quickshell.Widgets
@@ -24,6 +25,14 @@ FloatingWindow {
         id: ipcHandler
         target: "settings"
         function toggle() {
+            Runtime.settingsOpen = !Runtime.settingsOpen;
+        }
+    }
+
+    CustomShortcut {
+        name: "settings"
+        description: "Toggle Settings"
+        onPressed: {
             Runtime.settingsOpen = !Runtime.settingsOpen;
         }
     }
