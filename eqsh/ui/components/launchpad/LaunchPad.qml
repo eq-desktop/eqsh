@@ -17,18 +17,18 @@ import QtQuick.VectorImage
 
 Scope {
   id: root
-  property bool showLP: false
+  property bool showLP: Runtime.launchpadOpen
   IpcHandler {
     target: "launchpad"
     function toggle() {
-      showLP = !showLP
+      Runtime.launchpadOpen = !Runtime.launchpadOpen
     }
   }
   CustomShortcut {
     name: "launchpad"
     description: "Toggle Launchpad"
     onPressed: {
-      showLP = !showLP
+      Runtime.launchpadOpen = !Runtime.launchpadOpen
     }
   }
   Variants {
@@ -71,7 +71,7 @@ Scope {
         property bool shown: false
         anchors.fill: parent
         Keys.onEscapePressed: {
-          root.showLP = false
+          Runtime.launchpadOpen = false
         }
         PropertyAnimation {
           id: showAnim
@@ -199,7 +199,7 @@ Scope {
                         appInfo: modelData
                         onClicked: {
                           appInfo.execute();
-                          root.showLP = false
+                          Runtime.launchpadOpen = false
                         }
                       }
                     }
@@ -242,12 +242,6 @@ Scope {
         } else {
           launchpadLoader.shown = false
           hideAnim.start()
-        }
-      }
-      Connections {
-        target: Runtime
-        function onLaunchpadOpenChanged() {
-          panelWindow.showLP = true
         }
       }
     }
