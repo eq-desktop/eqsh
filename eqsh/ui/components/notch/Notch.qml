@@ -2,6 +2,7 @@ import QtQuick.Controls.Fusion
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Widgets
+import Quickshell.Services.UPower
 import Quickshell.Io
 import Quickshell
 import QtQuick
@@ -9,6 +10,7 @@ import QtQuick.Effects
 import QtQuick.VectorImage
 import qs.config
 import qs
+import qs.core.system
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 
@@ -41,6 +43,8 @@ Scope {
 
   property bool firstTimeRunning: Config.account.firstTimeRunning
   property bool loadedConfig: Config.loaded
+  property bool dndMode: NotificationDaemon.popupInhibited
+  readonly property bool batCharging: UPower.onBattery ? (UPower.displayDevice.state == UPowerDeviceState.Charging) : true
 
 
   property var details: QtObject {
@@ -57,8 +61,20 @@ Scope {
       root.notchInstance(fileViewer.text())
     } else {
       if (root.customNotchVisible) {
+        console.info(root.runningNotchInstances)
         root.closeAllNotchInstances()
       }
+    }
+  }
+  onDndModeChanged: {
+    fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/DND.qml"
+    root.notchInstance(fileViewer.text())
+  }
+
+  onBatChargingChanged: {
+    if (batCharging) {
+      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Charging.qml"
+      root.notchInstance(fileViewer.text())
     }
   }
 
@@ -96,15 +112,18 @@ Scope {
   }
 
   function closeNotchInstance(id) {
-    root.customNotchCode = ""
-    root.customNotchVisible = false
-    for (let i = 0; i < root.runningNotchInstances.length; i++) {
-      if (root.runningNotchInstances[i] === id) {
-        root.runningNotchInstances.splice(i, 1)
+    let new_notch_instances = root.runningNotchInstances
+    for (let i = 0; i < new_notch_instances.length; i++) {
+      if (new_notch_instances[i] === id) {
+        new_notch_instances.splice(i, 1)
         break;
       }
     }
-    if (root.runningNotchInstances.length === 0) {
+    root.runningNotchInstances = new_notch_instances
+    root.customNotchVisible = false
+    root.customNotchId = null
+    root.customNotchCode = ""
+    if (new_notch_instances.length === 0) {
       root.resetSize()
     } else {
       root.flushSize()
@@ -112,8 +131,9 @@ Scope {
   }
 
   function closeAllNotchInstances() {
-    root.customNotchCode = ""
     root.customNotchVisible = false
+    root.customNotchId = null
+    root.customNotchCode = ""
     root.runningNotchInstances = []
     root.resetSize()
   }
@@ -236,9 +256,11 @@ Scope {
               notchCustomCodeObj.meta.id = root.customNotchId
               root.customNotchId = null
               const version = notchCustomCodeObj.details.version
-              if (notchCustomCodeObj.details.appType == "media")
-                runningNotchInstances = [];
-              runningNotchInstances.push(notchCustomCodeObj.meta.id)
+              if (notchCustomCodeObj.details.appType == "media") {
+                runningNotchInstances = [notchCustomCodeObj.meta.id];
+              } else {
+                runningNotchInstances.push(notchCustomCodeObj.meta.id);
+              }
               if (!root.details.supportedVersions.includes(version)) {
                 console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
               }
@@ -248,7 +270,6 @@ Scope {
                 notchBg.shadowColor = "#000000"
               }
             } else {
-              if (!notchCustomCodeObj) return;
               //notchCustomCodeObj.destroy()
               notchBg.shadowColor = "#000000"
             }

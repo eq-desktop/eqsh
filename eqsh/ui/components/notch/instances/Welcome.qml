@@ -75,10 +75,8 @@ NotchApplication {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            notch.closeNotchInstance()
-            notch.resetSize()
+            notch.closeNotchInstance(meta.id)
             Config.account.firstTimeRunning = false
-            root.destroy()
         }
     }
 }
