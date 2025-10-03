@@ -77,6 +77,19 @@ Singleton {
 		root.popupInhibited = !root.popupInhibited
 	}
 
+    IpcHandler {
+        target: "doNotDisturb"
+        function toggle() {
+            root.toggleDND()
+        }
+        function enable() {
+            root.popupInhibited = false
+        }
+        function disable() {
+            root.popupInhibited = true
+        }
+    }
+
     onListChanged: {
         // Update latest time for each app
         root.list.forEach((notif) => {
