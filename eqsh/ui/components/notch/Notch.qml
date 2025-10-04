@@ -61,7 +61,6 @@ Scope {
       root.notchInstance(fileViewer.text())
     } else {
       if (root.customNotchVisible) {
-        console.info(root.runningNotchInstances)
         root.closeAllNotchInstances()
       }
     }

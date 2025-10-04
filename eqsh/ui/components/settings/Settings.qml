@@ -1,3 +1,4 @@
+//@ pragma Env QT_QUICK_CONTROLS_STYLE=Basic
 import QtQuick
 import QtQuick.Controls
 import qs.config
