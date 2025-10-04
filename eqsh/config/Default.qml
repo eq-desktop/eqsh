@@ -107,7 +107,7 @@ Item {
 
 	component Notch: JsonObject {
 		property bool   enable: true
-		property bool   islandMode: true // Dynamic Island
+		property bool   islandMode: false // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
 		property int    radius: 30
