@@ -78,6 +78,8 @@ Scope {
           id: grid
           anchors.fill: parent
           editable: true
+          scale: Runtime.locked ? 0.95 : 1
+          Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
           onWidgetMoved: (item) => {
             grid.save(item);
           }

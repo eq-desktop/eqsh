@@ -188,11 +188,11 @@ Item {
 		property list<string> interactiveScreens: ["eDP-1", "DP-1"]
 		property string       dateFormat: "dddd, MMMM dd"
 		property string       timeFormat: "HH:mm"
-		property bool         autohideInput: true // Automatically hide the password input box when not typing
-		property real         hideOpacity: 0 // Opacity of the password input box when its hidden
-		property int          avatarSize: 100
+		property bool         showName: true
+		property bool         showAvatar: true
+		property int          avatarSize: 50
 		property string       userNote: "" // A small note above the avatar
-		property string       usageInfo: "Use Touch ID or Password to unlock" // A small note below the textfield
+		property string       usageInfo: "Touch ID or Enter Password" // A small note below the textfield
 		property real         blur: 0
 		property real         blurStrength: 1
 		property bool         liquidBlur: false
@@ -201,9 +201,9 @@ Item {
 		property real         clockZoom: 1
 		property int          clockZoomDuration: 300
 		property string       dimColor: "#000000"
-		property real         dimOpacity: 0.2
-		property real         zoom: 1.1
-		property int          zoomDuration: 1000
+		property real         dimOpacity: 0.1
+		property real         zoom: 1
+		property int          zoomDuration: 0
 		property bool         useCustomWallpaper: false
 		property string       customWallpaperPath: root.homeDirectory+"/.local/share/equora/wallpapers/Sequoia-Sunrise.png"
 		property bool         enableShader: false

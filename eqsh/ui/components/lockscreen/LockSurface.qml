@@ -171,6 +171,33 @@ Rectangle {
 		Behavior on opacity {
 			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
+
+		ShaderEffectSource {
+			id: clockBlurSource
+			sourceItem: backgroundImage
+			sourceRect: Qt.rect(clock.x, clock.y, clock.width, clock.height)
+			hideSource: false
+			live: true
+		}
+
+		MultiEffect {
+			id: clockBlur
+			anchors.centerIn: clock
+			width: clock.width
+			height: clock.height
+			source: clockBlurSource
+			blurEnabled: true
+			blur: 1
+			blurMax: 64
+			brightness: 0.4
+			blurMultiplier: 1.2
+			autoPaddingEnabled: false
+			maskEnabled: true
+			maskSource: clock
+			smooth: true
+			layer.enabled: true
+		}
+
 		Label {
 			id: clock
 
@@ -181,12 +208,37 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#eeffffff"
-			font.family: Fonts.sFProRounded.family
+			color: "#77ffffff"
+			font.family: Fonts.sFProDisplayBlack.family
 			font.pointSize: 80
-			font.weight: Font.Bold
+			font.weight: 900
+			layer.enabled: true
+			layer.smooth: true
 
 			text: {Time.getTime(Config.lockScreen.timeFormat)}
+		}
+
+		ShaderEffectSource {
+			id: dateClockBlurSource
+			sourceItem: backgroundImage
+			sourceRect: Qt.rect(dateClock.x, dateClock.y, dateClock.width, dateClock.height)
+			hideSource: false
+			live: true
+		}
+
+		MultiEffect {
+			id: dateClockBlur
+			anchors.centerIn: dateClock
+			width: dateClock.width
+			height: dateClock.height
+			source: dateClockBlurSource
+			blurEnabled: true
+			blur: 1
+			blurMax: 64
+			blurMultiplier: 1.2
+			autoPaddingEnabled: false
+			maskEnabled: true
+			maskSource: dateClock
 		}
 
 		Label {
@@ -199,7 +251,7 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#eeeeeeee"
+			color: "#aaffffff"
 			font.family: Fonts.sFProRounded.family
 			font.pointSize: 18
 			font.weight: Font.Bold
@@ -212,7 +264,7 @@ Rectangle {
 			anchors {
 				top: parent.top
 				right: parent.right
-				topMargin: 10
+				topMargin: 20
 				rightMargin: 60
 			}
 			Battery {}
@@ -223,7 +275,7 @@ Rectangle {
 			anchors {
 				top: parent.top
 				right: parent.right
-				topMargin: 10
+				topMargin: 20
 				rightMargin: 30
 			}
 			Wifi {}
@@ -234,7 +286,7 @@ Rectangle {
 			anchors {
 				horizontalCenter: parent.horizontalCenter
 				bottom: parent.bottom
-				bottomMargin: 50
+				bottomMargin: 20
 			}
 
 			width: parent.width
@@ -259,6 +311,7 @@ Rectangle {
 				height: Config.lockScreen.avatarSize
 				radius: 50
 				clip: true
+				visible: Config.lockScreen.showAvatar
 
 				Layout.alignment: Qt.AlignHCenter
 
@@ -270,69 +323,90 @@ Rectangle {
 				}
 			}
 
-			property bool freeSpace: Config.lockScreen.autohideInput && Config.lockScreen.hideOpacity == 0 ? (passwordBox.text == "" ? true : false) : false
 			RowLayout {
 				Layout.alignment: Qt.AlignHCenter
-				BoxExperimental {
-					id: passwordBoxContainer
+				Item {
+					Layout.alignment: Qt.AlignHCenter
 					width: 200
 					height: 35
-					highlight: AccentColor.color
-					opacity: Config.lockScreen.autohideInput ? (passwordBox.text == "" ? Config.lockScreen.hideOpacity : 1) : 1
-					Behavior on opacity {
-						NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
-					}
-					SequentialAnimation {
-						id: wiggleAnim
-						running: false
-						loops: 1
-						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 10; duration: 100; easing.type: Easing.InOutQuad }
-						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 10; duration: 100; easing.type: Easing.InOutQuad }
-						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 7; duration: 100; easing.type: Easing.InOutQuad }
-						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 7; duration: 100; easing.type: Easing.InOutQuad }
-						PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x; duration: 100; easing.type: Easing.InOutQuad }
-					}
-					TextField {
-						id: passwordBox
-						anchors.horizontalCenter: parent.horizontalCenter
-
-						background: Rectangle {
-							color: "transparent";
-							anchors.fill: parent
-							Text {
-								anchors.fill: parent
-								verticalAlignment: Text.AlignVCenter
-								text: passwordBox.text == "" ? root.context.showFailure ? Translation.tr("Incorrect Password") : Translation.tr("Enter Password") : ""
-								color: root.context.showFailure ? "#ffffff" : "#bbffffff"
-								anchors.leftMargin: 10
-								font.weight: 500
-							}
+					Text {
+						text: Config.account.name
+						width: 200
+						height: 35
+						visible: Config.lockScreen.showName
+						font.pointSize: 12
+						verticalAlignment: Text.AlignVCenter
+						horizontalAlignment: Text.AlignHCenter
+						color: "#fff"
+						opacity: passwordBoxContainer.opacity == 0 ? 1 : 0
+						Behavior on opacity {
+							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}
-						color: "#fff";
+					}
+					BoxExperimental {
+						id: passwordBoxContainer
+						width: 200
+						height: 35
+						highlight: AccentColor.color
+						opacity: 0
+						Behavior on opacity {
+							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+						}
+						SequentialAnimation {
+							id: wiggleAnim
+							running: false
+							loops: 1
+							PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 10; duration: 100; easing.type: Easing.InOutQuad }
+							PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 10; duration: 100; easing.type: Easing.InOutQuad }
+							PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x - 7; duration: 100; easing.type: Easing.InOutQuad }
+							PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x + 7; duration: 100; easing.type: Easing.InOutQuad }
+							PropertyAnimation { target: passwordBoxContainer; property: "x"; to: passwordBoxContainer.x; duration: 100; easing.type: Easing.InOutQuad }
+						}
+						TextField {
+							id: passwordBox
+							anchors.horizontalCenter: parent.horizontalCenter
 
-						implicitWidth: 200
-						implicitHeight: 35
-						padding: 10
+							background: Rectangle {
+								color: "transparent";
+								anchors.fill: parent
+								Text {
+									anchors.fill: parent
+									verticalAlignment: Text.AlignVCenter
+									text: passwordBox.text == "" ? root.context.showFailure ? Translation.tr("Incorrect Password") : Translation.tr("Enter Password") : ""
+									color: root.context.showFailure ? "#ffffff" : "#bbffffff"
+									anchors.leftMargin: 10
+									font.weight: 500
+								}
+							}
+							color: "#fff";
 
-						focus: true
-						enabled: !root.context.unlockInProgress
-						echoMode: TextInput.Password
-						inputMethodHints: Qt.ImhSensitiveData
+							implicitWidth: 200
+							implicitHeight: 35
+							padding: 10
 
-						onTextChanged: root.context.currentText = this.text;
+							focus: true
+							enabled: !root.context.unlockInProgress
+							echoMode: TextInput.Password
+							inputMethodHints: Qt.ImhSensitiveData
 
-						onAccepted: root.context.tryUnlock();
-
-						Connections {
-							target: root.context
-
-							function onCurrentTextChanged() {
-								passwordBox.text = root.context.currentText;
+							onTextChanged: {
+								root.context.currentText = this.text;
+								passwordBoxContainer.opacity = 1;
 							}
 
-							function onShowFailureChanged() {
-								if (root.context.showFailure) {
-									wiggleAnim.start();
+							onAccepted: root.context.tryUnlock();
+
+							Connections {
+								target: root.context
+
+								function onCurrentTextChanged() {
+									passwordBox.text = root.context.currentText;
+								}
+
+								function onShowFailureChanged() {
+									if (root.context.showFailure) {
+										wiggleAnim.start();
+									}
 								}
 							}
 						}
@@ -340,16 +414,17 @@ Rectangle {
 				}
 			}
 
-			Label {
+			Text {
 				Layout.alignment: Qt.AlignHCenter
+				horizontalAlignment: Text.AlignHCenter
 				text: Config.lockScreen.usageInfo
-				color: "#fff"
-				font.pointSize: 10
+				color: "#55ffffff"
+				width: 180
+				Layout.preferredWidth: 180
+				wrapMode: Text.WordWrap
+				font.pointSize: 9
 				font.weight: Font.Normal
-				Layout.topMargin: Config.general.reduceMotion ? 10 : (inputArea.freeSpace ? -50 : 10)
-				Behavior on Layout.topMargin {
-					NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
-				}
+				Layout.topMargin: 10
 			}
 		}
 	}
