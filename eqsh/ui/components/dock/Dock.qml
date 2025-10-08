@@ -22,10 +22,10 @@ Scope {
 
   component DockItem: Button {
     id: app
-    width: 56
-    height: 56
-    implicitHeight: 56
-    implicitWidth: 56
+    width: 50
+    height: 50
+    implicitWidth: width
+    implicitHeight: height
     property string appName: ""
     property bool   launchpad: false
     property bool   settings: false
@@ -40,16 +40,16 @@ Scope {
         source: launchpad ? Qt.resolvedUrl(Quickshell.shellDir + "/media/pngs/launchpad.png") : settings ? Quickshell.iconPath("org.gnome.Settings") : ""
         fillMode: Image.PreserveAspectFit
         visible: launchpad || settings
-        width: 56
-        height: 56
+        width: app.width
+        height: app.height
         smooth: true
         mipmap: true
         layer.enabled: true
       }
       Image {
         anchors.centerIn: parent
-        width: 56
-        height: 56
+        width: app.width
+        height: app.height
         asynchronous: false
         smooth: true
         mipmap: true
@@ -145,11 +145,10 @@ Scope {
             id: dockBackground
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            color: Config.general.darkMode ? "#ee222222" : "#eeffffff"
             highlight: AccentColor.color
             implicitWidth: dockRow.implicitWidth + 20
-            implicitHeight: 80
-            radius: 25
+            implicitHeight: 65
+            radius: 20
             anchors.bottomMargin: 6
           }
 
@@ -161,7 +160,7 @@ Scope {
             id: dockRow
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 15
             spacing: 8
 
             DockItem { appName: "org.gnome.Nautilus" }

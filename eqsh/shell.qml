@@ -38,27 +38,6 @@ Scope {
       onLock: Runtime.locked = true
     }
   }
-  Dock {
-    id: dock
-    EdgeTrigger {
-      id: triggerDock
-      position: "blr"
-      height: 1
-      onHovered: (monitor) => {
-        if (triggerDock.active) {
-          triggerDock.active = false
-          triggerDock.height = 2
-          dock.shown = false
-          triggerDock.bottomMargin = 0
-          return;
-        }
-        triggerDock.active = true
-        triggerDock.height = monitor.height - 120
-        dock.shown = true
-        triggerDock.bottomMargin = 120
-      }
-    }
-  }
   StatusBar {
     id: bar
     customAppName: Runtime.customAppName
@@ -90,6 +69,27 @@ Scope {
   }
   NotificationList {}
   Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
+  Dock {
+    id: dock
+    EdgeTrigger {
+      id: triggerDock
+      position: "blr"
+      height: 1
+      onHovered: (monitor) => {
+        if (triggerDock.active) {
+          triggerDock.active = false
+          triggerDock.height = 2
+          dock.shown = false
+          triggerDock.bottomMargin = 0
+          return;
+        }
+        triggerDock.active = true
+        triggerDock.height = monitor.height - 120
+        dock.shown = true
+        triggerDock.bottomMargin = 120
+      }
+    }
+  }
   Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
   Loader { active: Config.osd.enable; sourceComponent: BrightnessOSD {} }
   Launcher {}

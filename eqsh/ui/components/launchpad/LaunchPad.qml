@@ -128,11 +128,11 @@ Scope {
             }
             Box {
               id: searchBoxContainer
-              width: 200
+              width: 250
               height: 30
               anchors.horizontalCenter: parent.horizontalCenter
               anchors.top: parent.top
-              anchors.topMargin: 50
+              anchors.topMargin: 20
               TextField {
                 id: searchBox
                 anchors.centerIn: parent
@@ -164,8 +164,8 @@ Scope {
                 }
                 color: "#fff";
 
-                implicitWidth: 200
-                implicitHeight: 35
+                implicitWidth: 250
+                implicitHeight: 30
                 padding: 10
 
                 focus: true
@@ -181,21 +181,22 @@ Scope {
               Repeater {
                 model: Math.ceil(DesktopEntries.applications.values.length / 35)
                 delegate: Item {
-
                   Grid {
                     id: appGrid
                     anchors.centerIn: parent
-                    width: 7*(110+20)
-                    height: 5*(110+20)
+                    width: launchpadContainer.width - 300
+                    height: launchpadContainer.height - 200
                     columns: 7
                     rows: 5
-                    rowSpacing: 20
-                    columnSpacing: 20
+
+                    property int itemSize: 100
+                    columnSpacing: (width - (columns * itemSize)) / Math.max(columns - 1, 1)
+                    rowSpacing: (height - (rows * itemSize)) / Math.max(rows - 1, 1)
 
                     Repeater {
                       model: DesktopEntries.applications.values.slice(index * 35, (index + 1) * 35)
                       delegate: LargeAppIcon {
-                        size: 110
+                        size: appGrid.itemSize
                         appInfo: modelData
                         onClicked: {
                           appInfo.execute();
