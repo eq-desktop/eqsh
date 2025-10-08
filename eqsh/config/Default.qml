@@ -99,9 +99,12 @@ Item {
 		property string position: "bottom" // bottom | left | right
 		property list<string> apps: [
 			"org.gnome.Nautilus",
-			"org.mozilla.firefox",
+			"eq:launchpad",
+			"eq:settings",
 			"kitty",
-			"code"
+			"org.mozilla.firefox",
+			"code",
+			"org.gnome.DiskUtility"
 		]
 	}
 

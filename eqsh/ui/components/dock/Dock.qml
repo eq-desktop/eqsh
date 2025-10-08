@@ -29,7 +29,8 @@ Scope {
     property string appName: ""
     property bool   launchpad: false
     property bool   settings: false
-    property var    entry: (launchpad || settings) ? null : appName != "" ? desktopentries.heuristicLookup(appName) : null
+    property bool   spacer: false
+    property var    entry: (launchpad || settings || spacer) ? null : appName != "" ? desktopentries.heuristicLookup(appName) : null
 
     background: Rectangle {
       anchors.fill: parent
@@ -46,6 +47,14 @@ Scope {
         mipmap: true
         layer.enabled: true
       }
+      Rectangle {
+        anchors.centerIn: parent
+        width: 2
+        height: app.height * 0.75
+        radius: 2
+        color: Config.general.darkMode ? "#50ffffff" : "#50000000"
+        visible: spacer
+      }
       Image {
         anchors.centerIn: parent
         width: app.width
@@ -53,7 +62,7 @@ Scope {
         asynchronous: false
         smooth: true
         mipmap: true
-        visible: entry !== null && !(launchpad || settings)
+        visible: entry !== null && !(launchpad || settings || spacer)
         source: entry ? Quickshell.iconPath(entry.icon) : ""
         layer.enabled: true
       }
@@ -64,7 +73,7 @@ Scope {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -6
-        visible: appName == "org.gnome.Nautilus" && !(launchpad || settings)
+        visible: appName == "org.gnome.Nautilus" && !(launchpad || settings || spacer)
         color: Config.general.darkMode ? "#80ffffff" : "#80000000"
       }
     }
@@ -163,12 +172,17 @@ Scope {
             anchors.bottomMargin: 15
             spacing: 8
 
-            DockItem { appName: "org.gnome.Nautilus" }
-            DockItem { launchpad: true }
-            DockItem { settings: true }
-            DockItem { appName: "kitty" }
-            DockItem { appName: "org.mozilla.firefox" }
-            DockItem { appName: "code" }
+            Repeater {
+              id: dockRepeater
+              model: Config.dock.apps
+              delegate: DockItem {
+                appName: modelData
+                width: modelData == "eq:spacer" ? 10 : 50
+                launchpad: modelData == "eq:launchpad"
+                settings: modelData == "eq:settings"
+                spacer: modelData == "eq:spacer"
+              }
+            }
           }
         }
       }
