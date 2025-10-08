@@ -48,8 +48,8 @@ Scope {
 
 
   property var details: QtObject {
-    property list<string> supportedVersions: ["0.1.0"]
-    property string currentVersion: "0.1.0"
+    property list<string> supportedVersions: ["0.1.0", "0.1.1"]
+    property string currentVersion: "0.1.1"
   }
 
   onFirstTimeRunningChanged: getWelcomeNotchApp()
@@ -252,6 +252,7 @@ Scope {
           onNotchCustomCodeVisChanged: {
             if (notchCustomCodeVis) {
               notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
+              notchCustomCodeObj.screen = panelWindow
               notchCustomCodeObj.meta.id = root.customNotchId
               root.customNotchId = null
               const version = notchCustomCodeObj.details.version
