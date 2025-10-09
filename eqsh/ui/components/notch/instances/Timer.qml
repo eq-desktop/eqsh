@@ -107,7 +107,10 @@ NotchApplication {
 
                 MouseArea {
                     anchors.fill: parent
-                    onDoubleClicked: root.editing = true
+                    onDoubleClicked: {
+                        root.editing = true
+                        editField.focus = true
+                    }
                     hoverEnabled: true
                     cursorShape: Qt.IBeamCursor
                 }
@@ -116,13 +119,14 @@ NotchApplication {
 
         Component {
             id: editField
+            property bool focus: true
             TextInput {
                 id: inputField
                 text: root.time
                 color: "#ff4925"
                 font.family: Fonts.sFProMonoRegular.family
                 font.pixelSize: 20
-                focus: true
+                focus: editField.focus
                 selectByMouse: true
                 inputMask: "99:99"
                 onAccepted: {
