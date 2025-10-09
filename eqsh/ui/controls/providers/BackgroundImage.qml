@@ -14,7 +14,7 @@ Loader {
     property int   duration: 500
 
 
-    property string source: Config.wallpaper.path
+    property string source: Config ? Config?.wallpaper?.path ?? "/usr/share/aureli/Star-Lens.jpg" : "/usr/share/aureli/Star-Lens.jpg"
     property bool  fadeIn: false
 
     opacity: fadeIn ? 0 : 1
@@ -40,6 +40,7 @@ Loader {
         source: root.source
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
+        asynchronous: true
 
         layer.enabled: true
         layer.effect: MultiEffect {

@@ -32,6 +32,7 @@ Scope {
   Loader { active: Config.wallpaper.enable; sourceComponent: Background {}}
   Loader {
     active: Config.lockScreen.enable
+    asynchronous: true
     sourceComponent: Lock {
       onUnlocking: if (!Config.notch.delayedLockAnim) Runtime.locked = false
       onUnlock: Runtime.locked = false
@@ -68,7 +69,7 @@ Scope {
     }
   }
   NotificationList {}
-  Loader { active: Config.launchpad.enable; sourceComponent: LaunchPad {} }
+  Loader { active: Config.launchpad.enable; asynchronous: true; sourceComponent: LaunchPad {} }
   Dock {
     id: dock
     EdgeTrigger {
@@ -90,8 +91,8 @@ Scope {
       }
     }
   }
-  Loader { active: Config.osd.enable; sourceComponent: VolumeOSD {} }
-  Loader { active: Config.osd.enable; sourceComponent: BrightnessOSD {} }
+  Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: VolumeOSD {} }
+  Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: BrightnessOSD {} }
   Launcher {}
   Popup {}
   Notch {
@@ -123,7 +124,7 @@ Scope {
       onHovered: (monitor) => toggle(monitor);
     }
   }
-  Loader { active: Config.dialogs.enable; sourceComponent: Dialog {}}
+  Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Dialog {}}
   ActivateLinux {}
   Version {}
   ScreenCorners {}

@@ -64,6 +64,7 @@ Scope {
       Behavior on color { ColorAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad} }
       Loader {
         id: launchpadLoader
+        asynchronous: true
         active: true
         focus: false
         property real scaleVal: Config.launchpad.zoom

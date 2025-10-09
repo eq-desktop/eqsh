@@ -23,6 +23,7 @@ Button {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         smooth: true
+        asynchronous: true
         layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true

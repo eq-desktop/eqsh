@@ -43,6 +43,7 @@ Scope {
         visible: launchpad || settings
         width: app.width
         height: app.height
+        asynchronous: true
         smooth: true
         mipmap: true
         layer.enabled: true
@@ -59,7 +60,7 @@ Scope {
         anchors.centerIn: parent
         width: app.width
         height: app.height
-        asynchronous: false
+        asynchronous: true
         smooth: true
         mipmap: true
         visible: entry !== null && !(launchpad || settings || spacer)
