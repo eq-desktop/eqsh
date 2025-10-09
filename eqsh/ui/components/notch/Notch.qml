@@ -52,30 +52,36 @@ Scope {
     property string currentVersion: "0.1.1"
   }
 
+  property var notchRegistry: {
+    "welcome": { path: "Welcome.qml" },
+    "charging": { path: "Charging.qml" },
+    "dnd": { path: "DND.qml" },
+    "lock": { path: "Lock.qml" },
+  }
+
+  function launchById(id) {
+    const app = notchRegistry[id];
+    if (app) {
+      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/" + app.path;
+      return root.notchInstance(fileViewer.text());
+    }
+  }
+
   onFirstTimeRunningChanged: getWelcomeNotchApp()
   onLoadedConfigChanged: getWelcomeNotchApp()
 
   function getWelcomeNotchApp() {
     if (Config.account.firstTimeRunning && Config.loaded) {
-      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Welcome.qml"
-      root.notchInstance(fileViewer.text())
+      launchById("welcome")
     } else {
       if (root.customNotchVisible) {
         root.closeAllNotchInstances()
       }
     }
   }
-  onDndModeChanged: {
-    fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/DND.qml"
-    root.notchInstance(fileViewer.text())
-  }
+  onDndModeChanged: launchById("dnd")
 
-  onBatChargingChanged: {
-    if (batCharging) {
-      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Charging.qml"
-      root.notchInstance(fileViewer.text())
-    }
-  }
+  onBatChargingChanged: if (batCharging) launchById("charging")
 
   FileView {
     id: fileViewer
@@ -86,8 +92,7 @@ Scope {
   property var lockId: null
   onLockedChanged: {
     if (locked) {
-      fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/Lock.qml"
-      root.lockId = root.notchInstance(fileViewer.text())
+      root.lockId = launchById("lock")
     } else {
       root.closeNotchInstance(root.lockId)
     }

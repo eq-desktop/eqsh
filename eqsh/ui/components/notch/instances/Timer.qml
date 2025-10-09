@@ -17,9 +17,9 @@ NotchApplication {
     meta.height: 60
     meta.width: 300
 
-    property int pause: 0      // accumulated elapsed time in ms
-    property var startTime: 0  // last start timestamp
-    property string time: "--:--"
+    property int remainingMs: 5 * 60 * 1000 // default 5 min
+    property bool editing: false
+    property string time: "05:00"
 
     Timer {
         id: timer
@@ -27,12 +27,28 @@ NotchApplication {
         running: false
         repeat: true
         onTriggered: {
-            let diff = (new Date() - startTime) + pause
-            let minutes = Math.floor(diff / 60000)
-            let seconds = Math.floor((diff % 60000) / 1000)
-            root.time =
-                minutes.toString().padStart(2, '0') + ":" +
-                seconds.toString().padStart(2, '0')
+            if (remainingMs > 0) {
+                remainingMs -= 1000
+                let minutes = Math.floor(remainingMs / 60000)
+                let seconds = Math.floor((remainingMs % 60000) / 1000)
+                root.time =
+                    minutes.toString().padStart(2, '0') + ":" +
+                    seconds.toString().padStart(2, '0')
+            } else {
+                timer.stop()
+            }
+        }
+    }
+
+    function resetTimeFromString(t) {
+        let parts = t.split(":")
+        if (parts.length === 2) {
+            let m = parseInt(parts[0])
+            let s = parseInt(parts[1])
+            if (!isNaN(m) && !isNaN(s)) {
+                remainingMs = (m * 60 + s) * 1000
+                root.time = t
+            }
         }
     }
 
@@ -47,12 +63,11 @@ NotchApplication {
             width: 14
             height: 14
             radius: 7
-            border {
-                width: 4
-                color: '#33ff9100'
-            }
-            color: '#ff9100'
+            border.width: 4
+            border.color: "#33ff9100"
+            color: "#ff4925"
         }
+
         Text {
             id: indTimerText
             anchors {
@@ -60,27 +75,68 @@ NotchApplication {
                 rightMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            color: '#ff9d00'
+            color: "#ff4925"
             text: root.time
             font.family: Fonts.sFProMonoRegular.family
             font.pixelSize: 20
         }
     }
+
     active: Item {
         anchors.fill: parent
-        Text {
-            id: timerText
+
+        // TIMER TEXT / INPUT SWITCHER
+        Loader {
+            id: timerDisplay
             anchors {
                 right: parent.right
                 rightMargin: 20
                 verticalCenter: parent.verticalCenter
             }
-            color: '#ff9d00'
-            text: root.time
-            font.family: Fonts.sFProMonoRegular.family
-            font.pixelSize: 20
+            sourceComponent: root.editing ? editField : timerLabel
         }
 
+        Component {
+            id: timerLabel
+            Text {
+                id: timerText
+                text: root.time
+                color: "#ff4925"
+                font.family: Fonts.sFProMonoRegular.family
+                font.pixelSize: 20
+
+                MouseArea {
+                    anchors.fill: parent
+                    onDoubleClicked: root.editing = true
+                    hoverEnabled: true
+                    cursorShape: Qt.IBeamCursor
+                }
+            }
+        }
+
+        Component {
+            id: editField
+            TextInput {
+                id: inputField
+                text: root.time
+                color: "#ff4925"
+                font.family: Fonts.sFProMonoRegular.family
+                font.pixelSize: 20
+                focus: true
+                selectByMouse: true
+                inputMask: "99:99"
+                onAccepted: {
+                    root.resetTimeFromString(text)
+                    root.editing = false
+                }
+                onEditingFinished: {
+                    root.resetTimeFromString(text)
+                    root.editing = false
+                }
+            }
+        }
+
+        // START / PAUSE BUTTON
         Button {
             id: startButton
             width: 40
@@ -92,10 +148,9 @@ NotchApplication {
             }
             background: Rectangle {
                 anchors.fill: parent
-                color: '#30ff9e1e'
+                color: "#30ff4925"
                 radius: 99
                 VectorImage {
-                    id: rBStart
                     source: timer.running
                             ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg")
                             : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
@@ -106,25 +161,21 @@ NotchApplication {
                     layer.enabled: true
                     layer.effect: MultiEffect {
                         colorization: 1
-                        colorizationColor: "#ff9100"
+                        colorizationColor: "#ff4925"
                     }
                 }
             }
             onClicked: {
                 if (timer.running) {
-                    // pause
                     timer.stop()
-                    pause += new Date() - startTime
                 } else {
-                    // resume
-                    startTime = new Date()
                     timer.start()
                 }
             }
         }
 
-        Button {
-            id: stopButton
+        // CLOSE BUTTON
+        MouseArea {
             width: 40
             height: 40
             anchors {
@@ -132,48 +183,13 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            background: Rectangle {
-                anchors.fill: parent
-                color: '#30ffffff'
-                radius: 99
-                VectorImage {
-                    id: rBStop
-                    source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/arrow-counterclockwise.svg")
-                    width: 25
-                    height: 25
-                    preferredRendererType: VectorImage.CurveRenderer
-                    anchors.centerIn: parent
-                    rotation: -90
-                }
-            }
-            onClicked: {
-                timer.stop()
-                pause = 0
-                startTime = new Date()
-                root.time = "--:--"
-            }
-        }
+            onClicked: notch.closeNotchInstance(meta.id)
 
-        
-        MouseArea {
-            width: 40
-            height: 40
-            anchors {
-                left: stopButton.right
-                leftMargin: 10
-                verticalCenter: parent.verticalCenter
-            }
-            onClicked: {
-                notch.closeNotchInstance(meta.id)
-            }
             Rectangle {
                 id: closeButton
                 anchors.fill: parent
                 color: '#20ffffff'
                 radius: 99
-                Behavior on opacity {
-                    NumberAnimation { duration: 50; easing.type: Easing.InOutQuad}
-                }
                 VectorImage {
                     id: rBClose
                     source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/notch/x.svg")
