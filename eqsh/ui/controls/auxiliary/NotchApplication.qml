@@ -56,19 +56,23 @@ Item {
     scale: meta.startScale
 
     function activate() {
-        if (notchState !== "active")
+        if (notchState !== "active") {
             notchState = "active"
+            grab.active = true
+        }
     }
 
     function setIndicative() {
-        if (notchState !== "indicative")
+        if (notchState !== "indicative") {
             notchState = "indicative"
+            grab.active = false
+        }
     }
 
     onNotchStateChanged: {
         if (notchState === "active") {
             notch.setSize(meta.width, meta.height)
-            grab.active = true
+            if (!root.isActive || !root.onlyActive) grab.active = true
         } else {
             notch.resetSize()
             grab.active = false
@@ -80,10 +84,8 @@ Item {
         scale = 1
         if (notchState === "active") {
             notch.setSize(meta.width, meta.height)
-            grab.active = true
         } else {
             notch.resetSize()
-            grab.active = false
         }
     }
 
