@@ -7,7 +7,7 @@ import QtQuick.Effects
 Item {
     id: box
 
-    property color color: "#40000000"
+    property color color: "#20000000"
     property int borderSize: 1
     property real shadowOpacity: 0.5
     property bool highlightEnabled: true
