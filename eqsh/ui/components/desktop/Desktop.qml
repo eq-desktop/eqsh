@@ -29,11 +29,11 @@ Item {
     Rectangle {
         id: selectionBox
         visible: true
-        color: "#50ffffff"
+        color: "#20ffffff"
         opacity: 0
         border.color: "#80333333"
         border.width: 1
-        radius: 5
+        radius: 0
     }
 
     MouseArea {
