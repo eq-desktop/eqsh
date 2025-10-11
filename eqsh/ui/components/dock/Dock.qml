@@ -155,7 +155,6 @@ Scope {
             id: dockBackground
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            highlight: AccentColor.color
             implicitWidth: dockRow.implicitWidth + 20
             implicitHeight: 65
             radius: 20

@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
+import Quickshell.Io
 import QtQuick.Effects
 import QtQuick
 import qs.config
@@ -11,6 +12,19 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 
 Scope {
+  IpcHandler {
+    target: "widgets"
+    function editMode() {
+      Runtime.widgetEditMode = !Runtime.widgetEditMode
+    }
+  }
+  CustomShortcut {
+    name: "widgets"
+    description: "Enter Widget Edit Mode"
+    onPressed: {
+      Runtime.widgetEditMode = !Runtime.widgetEditMode
+    }
+  }
   Variants {
     model: Quickshell.screens
 
@@ -77,7 +91,7 @@ Scope {
           opacity: 0
           id: grid
           anchors.fill: parent
-          editable: true
+          editMode: Runtime.widgetEditMode
           scale: Runtime.locked ? 0.95 : 1
           Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
           onWidgetMoved: (item) => {

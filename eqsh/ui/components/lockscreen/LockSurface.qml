@@ -347,7 +347,6 @@ Rectangle {
 						id: passwordBoxContainer
 						width: 200
 						height: 35
-						highlight: AccentColor.color
 						opacity: 0
 						Behavior on opacity {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
@@ -367,7 +366,7 @@ Rectangle {
 							anchors.horizontalCenter: parent.horizontalCenter
 
 							background: Rectangle {
-								color: "transparent";
+								color: "transparent"
 								anchors.fill: parent
 								Text {
 									anchors.fill: parent

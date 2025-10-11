@@ -55,7 +55,6 @@ Scope {
             implicitHeight: 180
             scale: Config.osd.animation == 1 ? 0 : 1
             opacity: Config.osd.animation == 2 ? 0 : 1
-            highlight: AccentColor.color
             color: Config.osd.color
             anchors {
                 id: osdAnchor

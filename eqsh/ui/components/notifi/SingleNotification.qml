@@ -31,9 +31,6 @@ BoxExperimental {
 	radius: 27
 	implicitHeight:	notifSize
 	implicitWidth: 400
-
-	highlight: modelData.urgency == "critical" ? "#ff0000" : AccentColor.color
-
 	anchors.topMargin: 20
 
 	Behavior on implicitHeight {

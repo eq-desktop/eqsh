@@ -11,11 +11,10 @@ Item {
     property int borderSize: 1
     property real shadowOpacity: 0.5
     property bool highlightEnabled: true
-    property color highlight: '#fff'
     
-    property color light: '#fff'
+    property color light: '#a0ffffff'
     property real  glowStrength: 0.8
-    property color negLight: '#000'
+    property color negLight: '#80000000'
 
     // Individual corner radii
     property int radius: 20
@@ -24,7 +23,6 @@ Item {
     property int animationSpeed2: 16
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
-    Behavior on highlight { PropertyAnimation { duration: animationSpeed2; easing.type: Easing.InSine } }
     
     Box {
         id: boxContainer
@@ -61,6 +59,6 @@ Item {
         anchors.fill: parent
         color: "transparent"
         radius: box.radius
-        highlight: "#50ffffff"
+        highlight: highlightEnabled ? "#50ffffff" : "transparent"
     }
 }

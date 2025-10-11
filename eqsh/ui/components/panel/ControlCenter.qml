@@ -46,10 +46,6 @@ Scope {
             }
             highlightEnabled: !boxbutton.enabled
             shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
-            highlight: {Config.appearance.glassMode == 2 ?
-                (boxbutton.enabled ? "transparent" : "#f00") : boxbutton.enabled ?
-                "transparent" : AccentColor.color
-            }
         }
 
         component UIText: Text {

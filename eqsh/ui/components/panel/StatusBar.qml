@@ -10,6 +10,8 @@ import qs
 import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.windows
+import qs.ui.controls.windows.dropdown
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -46,19 +48,11 @@ Scope {
         right: true
       }
 
-      margins {
-        top: Config.bar.hideOnLock ? (root.visible ? (root.inFullscreen ? -Config.bar.height : 0) : -Config.bar.height) : (root.inFullscreen ? -Config.bar.height : 0)
-      }
+      color: "transparent"
 
       exclusiveZone: -1
 
-      Behavior on margins.top {
-        NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
-      }
-
       implicitHeight: Config.bar.height
-
-      color: root.appInFullscreen ? Config.bar.fullscreenColor : Config.bar.color
 
       visible: Config.bar.enable
 
@@ -66,19 +60,45 @@ Scope {
         screen: modelData
       }
 
+      mask: Region {
+        item: Runtime.widgetEditMode ? null : barContent
+      }
+
       readonly property real barFS: Math.max(10, Math.min(20, Math.ceil(Config.bar.height / 1.5)))
       readonly property real barIS: Math.max(10, Math.min(50, Math.ceil(Config.bar.height / 1.2)))
       Item {
         id: barContent
-        anchors.fill: parent
+        width: parent.width
+        property real topMargin: Config.bar.hideOnLock ? (root.visible ? (root.inFullscreen ? -Config.bar.height : 0) : -Config.bar.height) : (root.inFullscreen ? -Config.bar.height : 0)
+        Behavior on topMargin { NumberAnimation { duration: Config.bar.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+        anchors {
+          top: parent.top
+          left: parent.left
+          right: parent.right
+          topMargin: barContent.topMargin
+        }
+        height: Config.bar.height
         scale: Config.general.reduceMotion ? 1 : 0.8
         opacity: Config.general.reduceMotion ? 1 : 0
         Component.onCompleted: {
           scale = 1
           opacity = 1
         }
+        Rectangle {
+          color: root.appInFullscreen ? Config.bar.fullscreenColor : Config.bar.color
+          Behavior on color { ColorAnimation { duration: Config.bar.hideDuration; easing.type: Easing.InOutQuad } }
+          anchors.fill: parent
+        }
+        property bool widgetEditMode: Runtime.widgetEditMode
+        onWidgetEditModeChanged: {
+          opacity = widgetEditMode ? 0 : 1
+          scale = widgetEditMode ? 0.5 : 1
+        }
         Behavior on scale {
           NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
+        }
+        onScaleChanged: {
+          panelWindow.mask.changed();
         }
         Behavior on opacity {
           NumberAnimation { duration: 500; easing.type: Easing.InOutQuad }

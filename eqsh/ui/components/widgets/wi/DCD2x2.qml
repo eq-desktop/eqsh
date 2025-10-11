@@ -32,8 +32,7 @@ BaseWidget {
         }
         Text {
             id: daynum
-            anchors.top: layout.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.centerIn: parent
             color: Config.general.darkMode ? "#fff" : "#222"
             font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: 60

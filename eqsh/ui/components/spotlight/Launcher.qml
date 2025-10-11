@@ -40,7 +40,6 @@ Scope {
                 width: parent.width * 0.85
                 implicitHeight: results.height + search.height + 32
                 radius: 25
-                highlight: AccentColor.color
 
                 ColumnLayout {
                     anchors.fill: parent

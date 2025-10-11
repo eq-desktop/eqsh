@@ -12,6 +12,7 @@ Singleton {
     property bool   settingsOpen: false
     property bool   spotlightOpen: false
     property bool   launchpadOpen: false
+    property bool   widgetEditMode: false
     Process {
         command: ["ls", Directories.runtimeDir + "/config.json"]
         running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/config.json"]); }
