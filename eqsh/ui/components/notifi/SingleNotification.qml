@@ -173,7 +173,7 @@ BoxExperimental {
 			visible: (modelData.appIcon == "") ? true : false
 			text: ""
 
-			color: "#fff"
+			color: Config.general.darkMode ? "#fff" : "#222"
 
 			font.family: "FiraCode"
 			font.pixelSize: 35
@@ -204,7 +204,7 @@ BoxExperimental {
 
 				Text {
 					text: modelData.appName
-					color: "#aaa"
+					color: Config.general.darkMode ? "#aaa" : "#333"
 
 					font.weight: 600
 					font.pixelSize: 11
@@ -221,7 +221,7 @@ BoxExperimental {
 				}
 				Text {
 					text: "·"
-					color: "#555"
+					color: Config.general.darkMode ? "#555" : "#444"
 
 					font.weight: 600
 					font.pixelSize: 11
@@ -236,7 +236,7 @@ BoxExperimental {
 					}
 				}
 				Text {
-					color: "#fff"
+					color: Config.general.darkMode ? "#fff" : "#222"
 
 					text: NotificationUtils.getFriendlyNotifTimeString(modelData.time, Translation)
 
@@ -274,7 +274,7 @@ BoxExperimental {
 					}
 				}
 
-				color: "#fff"
+				color: Config.general.darkMode ? "#fff" : "#222"
 
 				font.weight: 600
 				font.pixelSize: 15
@@ -295,7 +295,7 @@ BoxExperimental {
 
 				text: bodyPreviewMetrics.elidedText
 
-				color: "#fff"
+				color: Config.general.darkMode ? "#fff" : "#222"
 
 				font.pixelSize: 13
 
@@ -348,7 +348,7 @@ BoxExperimental {
 					text: modelData.body
 
 					font.pixelSize: 13
-					color: "#fff"
+					color: Config.general.darkMode ? "#fff" : "#222"
 
 					visible: singleNotif.expanded
 
@@ -371,12 +371,11 @@ BoxExperimental {
 			Layout.preferredHeight: 25
 			Layout.leftMargin: 20
 
-			Box {
+			BoxExperimental {
 				Layout.alignment: Qt.AlignTop
 				id: expandBtn
 				width: 45
 				height: 25
-				color: "#50555555"
 				radius: 50
 				visible: true
 
@@ -396,6 +395,11 @@ BoxExperimental {
 					Layout.preferredWidth: 23
 					Layout.preferredHeight: 23
 					preferredRendererType: VectorImage.CurveRenderer
+					layer.enabled: true
+					layer.effect: MultiEffect {
+						colorization: 1
+						colorizationColor: Config.general.darkMode ? "#fff" : "#222"
+					}
 				}
 
 				MouseArea {

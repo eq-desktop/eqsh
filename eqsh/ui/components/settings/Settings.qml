@@ -9,6 +9,7 @@ import Quickshell
 import qs
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 import Quickshell.Io
 import Quickshell.Widgets
 
@@ -626,6 +627,13 @@ FloatingWindow {
                             Layout.fillWidth: true
                             text: Config.widgets.location
                             onEditingFinished: Config.widgets.location = text
+                        }
+                        CFButton {
+                            text: Translation.tr("Edit Widgets")
+                            onClicked: {
+                                Runtime.widgetEditMode = true
+                                Runtime.settingsOpen = false
+                            }
                         }
                     }
                 }

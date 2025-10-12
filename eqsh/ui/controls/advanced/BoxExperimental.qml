@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import qs.config
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import QtQuick.Effects
@@ -7,7 +8,7 @@ import QtQuick.Effects
 Item {
     id: box
 
-    property color color: "#20000000"
+    property color color: Config.general.darkMode ? "#20000000" : "#50ffffff"
     property int borderSize: 1
     property real shadowOpacity: 0.5
     property bool highlightEnabled: true

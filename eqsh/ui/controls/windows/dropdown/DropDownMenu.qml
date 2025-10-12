@@ -21,8 +21,8 @@ Scope {
   property int y: 0
   property int minWidth: 200
   property int contentWidth: 200
-  property int padding: 15
-  property int spacing: 5
+  property int padding: 8
+  property int spacing: 0
   property var hoverColor: AccentColor.color
   function open() {
     pop.opened = true
@@ -32,7 +32,7 @@ Scope {
     id: dropItem
     required property var modelData
     width: root.contentWidth
-    height: modelData.type == "spacer" ? 10 : 20
+    height: modelData.type == "spacer" ? 10 : 30
     property bool hover: false
     Loader {
       anchors.fill: parent
@@ -85,7 +85,6 @@ Scope {
         }
         Rectangle {
           anchors.fill: parent
-          anchors.margins: -2
           radius: 8
           color: dropItem.hover ? root.hoverColor : "transparent"
           IconImage {
@@ -112,6 +111,7 @@ Scope {
           }
           Text {
             anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 5
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignRight

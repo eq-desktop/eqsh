@@ -38,24 +38,15 @@ Scope {
             id: boxbutton
             radius: 40
             property bool enabled: false
-            color: {Config.appearance.glassMode == 0 ?
-                boxbutton.enabled ? "#fff" : "#10000000" : Config.appearance.glassMode == 1 ?
-                boxbutton.enabled ? "#fff" : "#40000000" : Config.appearance.glassMode == 2 ?
-                boxbutton.enabled ? "#fff" : "#40000000" : Config.appearance.glassMode == 3 ?
-                boxbutton.enabled ? "#fff" : "#40000000" : "#fff"
-            }
+            color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20000000" : "#50ffffff")
             highlightEnabled: !boxbutton.enabled
             shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
         }
 
         component UIText: Text {
             id: uitext
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: true
-                shadowColor: "#000000"
-                shadowBlur: 0.5
-            }
+            property bool gray: false
+            color: gray ? (Config.general.darkMode ? "#aaa" : "#555") : Config.general.darkMode ? "#fff" : "#000"
         }
         
         component Button1x1: BoxButton {
@@ -127,7 +118,6 @@ Scope {
                     UIText {
                         text: Translation.tr("Wi-Fi")
                         font.weight: 600
-                        color: "#fff"
                         anchors {
                             left: wifiClipping.right
                             leftMargin: 5
@@ -137,7 +127,7 @@ Scope {
                     UIText {
                         text: NetworkManager.active ? NetworkManager.active.ssid : Translation.tr("No network")
                         elide: Text.ElideRight
-                        color: "#eee"
+                        gray: true
                         height: 20
                         width: panelWindow.box+10
                         anchors {
@@ -238,7 +228,6 @@ Scope {
                     UIText {
                         text: Translation.tr("Focus")
                         font.weight: 600
-                        color: "#fff"
                         anchors {
                             left: focusClipping.right
                             leftMargin: 5
@@ -313,7 +302,7 @@ Scope {
                         left: parent.left
                         margins: 10
                     }
-                    Text {
+                    UIText {
                         id: brightnessTitle
                         anchors {
                             top: parent.top
@@ -322,7 +311,6 @@ Scope {
                             leftMargin: 15
                         }
                         text: Translation.tr("Display")
-                        color: "#fff"
                     }
                     VectorImage {
                         id: rBDisplayLeft
@@ -428,7 +416,7 @@ Scope {
                         left: parent.left
                         margins: 10
                     }
-                    Text {
+                    UIText {
                         id: volumeTitle
                         anchors {
                             top: parent.top
@@ -437,7 +425,6 @@ Scope {
                             leftMargin: 15
                         }
                         text: Translation.tr("Volume")
-                        color: "#fff"
                     }
                     VectorImage {
                         id: rBVolumeLeft
