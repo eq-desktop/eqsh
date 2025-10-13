@@ -48,22 +48,21 @@ Scope {
       ClippingRectangle {
         scale: Config.general.reduceMotion ? 1 : 0.9
         anchors.fill: parent
-        radius: Config.general.reduceMotion ? 0 : 20
+        radius: Config.screenEdges.enable ? Config.screenEdges.radius : 0
         color: Config.wallpaper.color
         Behavior on scale {
-          NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
+          NumberAnimation { duration: 300; easing.type: Easing.InOutQuad}
         }
         Behavior on radius {
-          NumberAnimation { duration: 700; easing.type: Easing.InOutQuad}
+          NumberAnimation { duration: 300; easing.type: Easing.InOutQuad}
         }
         Component.onCompleted: {
           scale = 1;
-          radius = 0;
         }
         BackgroundImage {
           id: backgroundImage
           opacity: 0
-          duration: 700
+          duration: 300
           fadeIn: true
           Loader {
             active: Config.wallpaper.enableShader

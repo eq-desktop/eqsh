@@ -13,6 +13,7 @@ import qs.ui.components.notifi
 import qs.ui.components.launchpad
 import qs.ui.components.osd
 import qs.ui.components.dialog
+import qs.ui.components.modal
 import qs.ui.components.notch
 import qs.ui.components.popup
 import qs.ui.components.spotlight
@@ -125,6 +126,7 @@ Scope {
     }
   }
   Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Dialog {}}
+  Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
   ActivateLinux {}
   Version {}
   ScreenCorners {}

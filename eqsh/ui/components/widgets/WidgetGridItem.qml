@@ -162,7 +162,10 @@ Item {
             onReleased: {
                 ghostRect.visible = false
                 // Snap rectangle to grid
-                if (root.xPos == gridXPos && root.yPos == gridYPos) return
+                if (root.xPos == gridXPos && root.yPos == gridYPos) {
+                    draggableRect.x = root.xPos * gridSizeX
+                    draggableRect.y = root.YPos * gridSizeY
+                }
                 root.newXPos = gridXPos
                 root.newYPos = gridYPos
                 draggableRect.x = gridXPos * gridSizeX

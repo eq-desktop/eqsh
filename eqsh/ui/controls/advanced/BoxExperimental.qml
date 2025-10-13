@@ -60,6 +60,6 @@ Item {
         anchors.fill: parent
         color: "transparent"
         radius: box.radius
-        highlight: highlightEnabled ? "#50ffffff" : "transparent"
+        highlight: highlightEnabled ? "#20ffffff" : "transparent"
     }
 }
