@@ -52,4 +52,12 @@ Singleton {
 
         return Qt.rgba(r2, g2, b2, c.a);
     }
+    function tintWhiteWith(color, amount) {
+        // amount ∈ [0,1], how strong the tint is (0 = white, 1 = full color)
+        const h = color.hslHue
+        const s = color.hslSaturation * amount
+        const l = 1.0 - (1.0 - color.hslLightness) * amount
+        const a = color.a
+        return Qt.hsla(h, s, l, a)
+    }
 }

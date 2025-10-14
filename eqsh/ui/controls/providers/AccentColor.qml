@@ -13,7 +13,7 @@ Singleton {
     }
     property var colors: colorQuantizer.colors
     property var color: Config.appearance.dynamicAccentColor ? colorQuantizer.colors.slice(-1)[0] || "#fff" : Config.appearance.accentColor
-    property var textColor: Qt.lighter(color, 1.5)
+    property var textColor: Colors.tintWhiteWith(color, 0.2)
     property var textColorT: Qt.alpha(textColor, 0.9)
     property var textColorH: Qt.alpha(textColor, 0.5)
 }

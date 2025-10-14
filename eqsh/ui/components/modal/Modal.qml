@@ -12,13 +12,13 @@ import qs
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
+import qs.ui.controls.providers
 
 Scope {
   id: root
 
   property string customAppName: ""
   property bool visible: false
-  property real opacity: 0
   property string title: ""
   property string description: ""
   property string iconPath: ""
@@ -55,7 +55,7 @@ Scope {
     WlrLayershell.layer: WlrLayer.Overlay
     id: panelWindow
     exclusiveZone: -1
-    visible: root.visible
+    visible: true
     color: "transparent"
     WlrLayershell.namespace: "eqsh:blur"
 
@@ -66,15 +66,15 @@ Scope {
       bottom: true
     }
 
-    mask: Region { item: modal }
+    mask: Region { item: root.visible ? modal : null }
 
     Item {
       id: modal
       anchors.centerIn: parent
-      opacity: root.opacity
+      opacity: root.visible ? 1 : 0
+      implicitWidth: Math.max(200, titleText.paintedWidth + 40)
+      implicitHeight: titleText.height + descriptionText.height + actionRow.implicitHeight + 80
 
-      implicitHeight: 200
-      implicitWidth: 280
 
       PropertyAnimation {
         id: fadeOutAnim
@@ -82,8 +82,7 @@ Scope {
         property: "opacity"
         to: 0
         duration: 150
-        onStopped: {
-          root.opacity = 0
+        onFinished: {
           root.visible = false
         }
       }
@@ -94,33 +93,37 @@ Scope {
 
       BoxExperimental {
         anchors.fill: parent
+        color: Config.general.darkMode ? "#80333333" : "#80ffffff"
         radius: 30
       }
       Text {
+        id: titleText
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.topMargin: 20
         anchors.leftMargin: 20
-        id: titleText
         text: root.title
         font.pixelSize: 16
-        font.bold: true
+        font.weight: 500
         color: Config.general.darkMode ? "#fff" : "#111"
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.WordWrap
       }
 
       Text {
-        anchors.top: titleText.bottom
-        anchors.left: titleText.left
+        id: descriptionText
+        anchors.centerIn: parent
+        width: parent.width - 40
         text: root.description
-        font.pixelSize: 12
+        font.pixelSize: 14
         color: Config.general.darkMode ? "#ddd" : "#333"
         horizontalAlignment: Text.AlignHCenter
+        elide: Text.ElideRight
         wrapMode: Text.WordWrap
       }
 
       RowLayout {
+        id: actionRow
         anchors {
           bottom: parent.bottom
           margins: 20
@@ -133,13 +136,21 @@ Scope {
         Repeater {
           model: root.parsedActions
           delegate: CFButton {
+            Process {
+              id: process
+              running: false
+              command: [ "sh", "-c", modelData.command ]
+            }
+            color: Config.general.darkMode ? "#80333333" : "#80ffffff"
+            palette.buttonText: modelData.primary ? AccentColor.textColor : Config.general.darkMode ? "#fff" : "#111"
             Layout.fillWidth: true
             Layout.preferredHeight: 40
             primary: modelData.primary
             text: modelData.label
             onClicked: {
-              Quickshell.execDetached(["sh", "-c", modelData.command])
+              process.running = true
               fadeOutAnim.start()
+              root.customAppName = ""
             }
           }
         }
@@ -154,9 +165,8 @@ Scope {
       root.customAppName = appName
       root.title = title
       root.description = description
-      root.visible = true
-      root.opacity = 1
       root.actions = actions
+      root.visible = true
     }
   }
 }
