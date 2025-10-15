@@ -141,7 +141,8 @@ Scope {
               running: false
               command: [ "sh", "-c", modelData.command ]
             }
-            color: Config.general.darkMode ? "#80333333" : "#80ffffff"
+            highlightEnabled: false
+            color: Config.general.darkMode ? "#80333333" : "#80dddddd"
             palette.buttonText: modelData.primary ? AccentColor.textColor : Config.general.darkMode ? "#fff" : "#111"
             Layout.fillWidth: true
             Layout.preferredHeight: 40
