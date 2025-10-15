@@ -12,6 +12,7 @@ Singleton {
     property bool   settingsOpen: false
     property bool   spotlightOpen: false
     property bool   launchpadOpen: false
+    property bool   showScrn: false
     property bool   widgetEditMode: false
     Process {
         command: ["ls", Directories.runtimeDir + "/config.json"]

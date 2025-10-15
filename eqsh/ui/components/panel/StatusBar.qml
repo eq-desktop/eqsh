@@ -231,53 +231,98 @@ Scope {
             rightMargin: 10
           }
 
-          SystemTray {}
-
-          UIBButton{Battery {iconSize: barIS} }
-
-          UIBButton {Wifi {iconSize: barIS}}
-
-          UIBButton {VectorImage {
-            id: rBBluetooth
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
-            width: barIS * 1.2
-            height: barIS * 1.2
-            preferredRendererType: VectorImage.CurveRenderer
-            anchors.centerIn: parent
-          } }
-
-          UIBButton {VectorImage {
-            id: rBSearch
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/search.svg")
-            width: barIS * 0.7
-            height: barIS * 0.7
-            Layout.preferredWidth: barIS * 0.7
-            Layout.preferredHeight: barIS * 0.7
-            preferredRendererType: VectorImage.CurveRenderer
-            anchors.centerIn: parent
-          } }
-
-          UIBButton {
-            VectorImage {
-              id: rBControlCenter
-              source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/control-center.svg")
-              width: barIS
-              height: barIS
-              Layout.preferredWidth: barIS
-              Layout.preferredHeight: barIS
-              preferredRendererType: VectorImage.CurveRenderer
-              anchors.centerIn: parent
+          Repeater {
+            model: ScriptModel {
+              values: Config.bar.rightBarItems
             }
-            onClick: controlCenter.open()
-            ControlCenter {
-              id: controlCenter
-              screen: panelWindow.screen
+            delegate: Item {
+              Layout.minimumWidth: 50
+              implicitWidth: itemLoader.implicitWidth
+
+              Loader {
+                id: itemLoader
+                anchors.centerIn: parent
+                sourceComponent: {
+                  switch(modelData) {
+                    case "systemTray":
+                      return systemTrayComponent
+                    case "battery":
+                      return batteryComponent
+                    case "wifi":
+                      return wifiComponent
+                    case "bluetooth":
+                      return bluetoothComponent
+                    case "search":
+                      return searchComponent
+                    case "controlCenter":
+                      return controlCenterComponent
+                    case "clock":
+                      return clockComponent
+                    default:
+                      return null
+                  }
+                }
+              }
             }
-            
           }
 
-          UIBButton{
-            text: Time.time
+          // Components for each item
+          Component { id: systemTrayComponent; SystemTray {} }
+          Component { id: batteryComponent; UIBButton { Battery { iconSize: barIS } } }
+          Component { id: wifiComponent; UIBButton { Wifi { iconSize: barIS } } }
+          Component {
+            id: bluetoothComponent
+            UIBButton {
+              VectorImage {
+                id: rBBluetooth
+                source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
+                width: barIS * 1.2
+                height: barIS * 1.2
+                preferredRendererType: VectorImage.CurveRenderer
+                anchors.centerIn: parent
+              }
+            }
+          }
+          Component {
+            id: searchComponent
+            UIBButton {
+              VectorImage {
+                id: rBSearch
+                source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/search.svg")
+                width: barIS * 0.7
+                height: barIS * 0.7
+                Layout.preferredWidth: barIS * 0.7
+                Layout.preferredHeight: barIS * 0.7
+                preferredRendererType: VectorImage.CurveRenderer
+                anchors.centerIn: parent
+              }
+            }
+          }
+          Component {
+            id: controlCenterComponent
+            UIBButton {
+              VectorImage {
+                id: rBControlCenter
+                source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/control-center.svg")
+                width: barIS
+                height: barIS
+                Layout.preferredWidth: barIS
+                Layout.preferredHeight: barIS
+                preferredRendererType: VectorImage.CurveRenderer
+                anchors.centerIn: parent
+              }
+              onClick: controlCenter.open()
+              ControlCenter {
+                id: controlCenter
+                screen: panelWindow.screen
+              }
+            }
+          }
+          Component {
+            id: clockComponent
+            UIBButton {
+              text: Time.time
+            }
           }
         }
       }

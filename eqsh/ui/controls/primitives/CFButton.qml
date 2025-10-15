@@ -8,12 +8,13 @@ Button {
     id: button
     height: 30
     property bool primary: false
+    property bool highlightEnabled: !button.primary
     property string color: "#40000000"
     background: BoxExperimental {
         anchors.fill: parent
         color: button.primary ? AccentColor.color : button.color
         glowStrength: 0.5
-        highlightEnabled: !button.primary
+        highlightEnabled: button.highlightEnabled
     }
     palette.buttonText: "white"
     Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }}

@@ -147,6 +147,15 @@ Item {
 		property color  fullscreenColor: "#000"
 		property bool   hideOnLock: true
 		property int    hideDuration: 1000
+		property list<string> rightBarItems: [
+			"systemTray",
+			"wifi",
+			"battery",
+			"search",
+			"bluetooth",
+			"controlCenter",
+			"clock"
+		]
 		property string batteryFormat: "%p%"
 		property string batteryFormatChargin: "*%p%"
   		property string batteryMode: "pill" // pill, percentage, number, number-pill, percentage-pill, bubble

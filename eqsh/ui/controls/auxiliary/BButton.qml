@@ -18,11 +18,17 @@ Button {
   signal hover()
   signal exited()
   palette.buttonText: "#fff"
+  Layout.fillHeight: true
+  Layout.fillWidth: true
+  height: 25
+  Layout.maximumHeight: 25
   Layout.minimumWidth: 50
-  Layout.preferredHeight: 25
+
+  implicitWidth: Math.max(contentItem.implicitWidth + leftPadding + rightPadding, 50)
+  implicitHeight: 25
+
   property color hoverColor: Config.bar.buttonColorMode == 1 ? Qt.darker(AccentColor.color, 2) : Config.bar.buttonColorMode == 2 ? "transparent" : Config.bar.buttonColor
   scale: 1
-  Layout.maximumHeight: Config.bar.height * 1.05
   padding: 10
   background: Box {
     id: bgRect

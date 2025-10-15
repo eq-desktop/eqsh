@@ -19,6 +19,7 @@ import qs.ui.components.popup
 import qs.ui.components.spotlight
 import qs.ui.components.widgets
 import qs.ui.components.settings
+import qs.ui.components.screenshot
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
@@ -129,5 +130,6 @@ Scope {
   Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
   ActivateLinux {}
   Version {}
+  Loader { active: true; asynchronous: true; sourceComponent: Screenshot {}}
   ScreenCorners {}
 }

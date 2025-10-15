@@ -15,7 +15,7 @@ Item {
   property string batteryMode: Config.bar.batteryMode
   property string chargeColor: "#fff"
   property string textColor: "#000"
-  property string borderColor: "#aaa"
+  property string borderColor: "#50ffffff"
   property bool allowZap: true
   readonly property bool batCharging: UPower.onBattery ? (UPower.displayDevice.state == UPowerDeviceState.Charging) : true
   readonly property string batIcon: {
@@ -76,7 +76,7 @@ Item {
           id: rBPill
           width: parent.width - 4
           height: parent.height - 4
-          radius: 3
+          radius: 4
           anchors.centerIn: parent
           color: "transparent"
           Rectangle {

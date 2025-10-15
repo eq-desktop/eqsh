@@ -4,12 +4,13 @@ import QtQuick.VectorImage
 import QtQuick
 import QtQuick.Layouts
 import qs.ui.controls.auxiliary
+import qs.config
 import Quickshell.Services.SystemTray
 
-GlintButton {
+BButton {
   id: root
 
-  height: parent.height
+  height: 25
   implicitWidth: rowLayout.implicitWidth
   property int tempWidth
 
@@ -19,6 +20,7 @@ GlintButton {
     id: rowLayout
 
     anchors.fill: parent
+    Layout.minimumWidth: 50
     spacing: 5
     clip: true
 
@@ -32,21 +34,14 @@ GlintButton {
         Layout.alignment: Qt.AlignCenter
         required property SystemTrayItem modelData
         item: modelData
-        Layout.rightMargin: !opened ? -tempWidth * 3 : 0
-        Behavior on Layout.rightMargin {
-          PropertyAnimation {
-            duration: 1000
-            easing.type: Easing.InOutBack
-            easing.overshoot: 0.5
-          }
-        }
+        Layout.rightMargin: !opened ? -tempWidth*2 : 0
       }
     }
 
     VectorImage {
       id: stToggle
       Layout.rightMargin: 5
-      source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right.svg")
+      source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-left.svg")
       width: 23
       height: 23
       Layout.preferredWidth: 23
