@@ -35,6 +35,7 @@ BaseWidget {
 
                     // Simple battery circle
                     CFCircularProgress {
+                        Layout.alignment: Qt.AlignVCenter
                         id: battery
                         implicitSize: 60
                         lineWidth: 4
@@ -70,7 +71,7 @@ BaseWidget {
                         text: Math.round(modelData.level * 100) + "%"
                         opacity: (modelData.name == "") ? 0 : 1
                         color: Config.general.darkMode ? "#fff" : "#222"
-                        font.pixelSize: 12
+                        font.pixelSize: 20
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
                     }

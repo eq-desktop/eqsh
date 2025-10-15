@@ -21,8 +21,8 @@ Control {
         scale: 2
         rotation: 0
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : "#dfdfdf" }
-            GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : "#dfdfdf" }
+            GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : "#ffffff" }
+            GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : '#ffffff' }
         }
     }
 

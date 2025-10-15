@@ -19,8 +19,8 @@ BaseWidget {
             text: Time.getTime("dddd")
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.leftMargin: 10
-            anchors.topMargin: 10
+            anchors.leftMargin: 15
+            anchors.topMargin: 15
         }
 
         Text {
@@ -32,8 +32,8 @@ BaseWidget {
             text: Time.getTime("dd")
             anchors.top: daylong.bottom
             anchors.left: parent.left
-            anchors.leftMargin: 10
-            anchors.topMargin: 16+10
+            anchors.leftMargin: 15
+            anchors.topMargin: 16+15
         }
 
         Text {
@@ -44,7 +44,7 @@ BaseWidget {
             font.weight: 300
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: 15
             anchors.bottomMargin: 30
         }
     }

@@ -5,9 +5,12 @@ import qs.config
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Effects
+import QtQuick.Shapes
+import QtQuick.VectorImage
 import Quickshell
 import qs
 import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import Quickshell.Io
@@ -92,7 +95,7 @@ FloatingWindow {
                     topMargin: 10
                 }
                 corner: RoundedCorner.CornerEnum.TopRight
-                color: "#ffffff"
+                color: Config.general.darkMode ? "#1e1e1e": "#ffffff"
                 implicitSize: 40
             }
 
@@ -103,7 +106,7 @@ FloatingWindow {
                     bottomMargin: 10
                 }
                 corner: RoundedCorner.CornerEnum.BottomRight
-                color: "#ffffff"
+                color: Config.general.darkMode ? "#1e1e1e": "#ffffff"
                 implicitSize: 40
             }
 
@@ -116,7 +119,7 @@ FloatingWindow {
                 color: Config.general.darkMode ? "#a0111111" : "#a0ffffff"
                 border {
                     width: 10
-                    color: "#ffffff"
+                    color: Config.general.darkMode ? "#1e1e1e": "#ffffff"
                 }
             }
             
@@ -127,14 +130,10 @@ FloatingWindow {
                 clip: true
                 radius: 20
                 color: "transparent"
-                border {
-                    width: 1
-                    color: "#ccc"
-                }
 
                 Item {
                     id: searchBar
-                    height: 30
+                    height: 25
                     width: 220
                     z: 2
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -148,8 +147,8 @@ FloatingWindow {
                         anchors.top: parent.top
                         background: Rectangle {
                             anchors.fill: parent
-                            color: Config.general.darkMode ? "#1e1e1e" : "#dfdfdf"
-                            radius: 10
+                            color: Config.general.darkMode ? "#1e1e1e" : "#ffffff"
+                            radius: 20
                             border {
                                 width: 1
                                 color: "#55aaaaaa"
@@ -201,8 +200,8 @@ FloatingWindow {
                             radius: 10
                             ClippingRectangle {
                                 id: imageContainer
-                                width: modelData == "_Account" ? 34 : 24
-                                height: modelData == "_Account" ? 34 : 24
+                                width: modelData == "_Account" ? 28 : 24
+                                height: modelData == "_Account" ? 28 : 24
                                 radius: modelData == "_Account" ? 50 : 0
                                 color: "transparent"
                                 clip: true
@@ -281,12 +280,64 @@ FloatingWindow {
                 width: parent.width
                 color: Config.general.darkMode ? "#1e1e1e" : "#ffffff"
                 radius: 0
+                RectangularShadow {
+                    anchors.fill: pageControl
+                    color: "#20000000"
+                    radius: 20
+                    blur: 20
+                    spread: 5
+                }
+                Rectangle {
+                    id: pageControl
+                    height: 38
+                    width: 80
+                    radius: 20
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Config.general.darkMode ? "#1e1e1e" : "#ffffff"
+                    Rectangle {
+                        width: 1
+                        height: 20
+                        anchors.centerIn: parent
+                        color: "#10000000"
+                    }
+                    VectorImage {
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-left-bold.svg")
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        opacity: 1
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: Config.general.darkMode ? "#fff" : "#333"
+                        }
+                    }
+                    VectorImage {
+                        source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right-bold.svg")
+                        anchors.right: parent.right
+                        anchors.rightMargin: 5
+                        width: 30
+                        height: 30
+                        anchors.verticalCenter: parent.verticalCenter
+                        opacity: 0.2
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            colorization: 1
+                            colorizationColor: Config.general.darkMode ? "#fff" : "#333"
+                        }
+                    }
+                }
                 Text {
-                    anchors.fill: parent
+                    anchors.left: pageControl.right
+                    anchors.leftMargin: 15
+                    anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     text: contentView.currentIndex == 0 ? "Account" : sidebar.model[contentView.currentIndex]
-                    color: Config.general.darkMode ? "#fff" : "#444"
-                    font.weight: 600
+                    color: Config.general.darkMode ? "#fff" : "#555"
+                    font.weight: 700
                     font.pixelSize: 14
                 }
                 Rectangle {
@@ -330,11 +381,48 @@ FloatingWindow {
                             color: "transparent"
                             clip: true
                             Layout.alignment: Qt.AlignHCenter
-
-                            Image {
+                            FileDialog {
+                                id: fileDialog
+                                selectedFile: Config.account.avatarPath
+                                nameFilters: ["Images (*.jpg *.jpeg *.png)", "All files (*)"]
+                                onSelectedFilesChanged: {
+                                    Config.account.avatarPath = selectedFiles[0]
+                                    profileImage.source = Config.account.avatarPath
+                                }
+                            }
+                            MouseArea {
+                                id: editImageMouse
                                 anchors.fill: parent
-                                source: Config.account.avatarPath
-                                fillMode: Image.PreserveAspectCrop
+                                onClicked: {
+                                    fileDialog.open()
+                                }
+                                hoverEnabled: true
+                                Image {
+                                    id: profileImage
+                                    anchors.fill: parent
+                                    source: Config.account.avatarPath
+                                    fillMode: Image.PreserveAspectCrop
+                                }
+                                RectangularShadow {
+                                    anchors.fill: editImage
+                                    color: "#ffffff"
+                                    radius: 20
+                                    blur: 15
+                                    spread: 10
+                                    opacity: editImageMouse.containsMouse ? 1 : 0
+                                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
+                                }
+                                Text {
+                                    id: editImage
+                                    anchors {
+                                        bottom: parent.bottom
+                                        bottomMargin: 15
+                                        horizontalCenter: parent.horizontalCenter
+                                    }
+                                    opacity: editImageMouse.containsMouse ? 1 : 0
+                                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
+                                    text: Translation.tr("Edit")
+                                }
                             }
                         }
                         UITextField {
@@ -343,19 +431,6 @@ FloatingWindow {
                             onEditingFinished: Config.account.name = text
                             Layout.alignment: Qt.AlignHCenter
                             horizontalAlignment: Text.AlignHCenter
-                        }
-
-                        // Editable Profile Picture Path
-                        ColumnLayout {
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: 4
-
-                            UILabel { text: Translation.tr("Profile Picture Path") }
-                            UITextField {
-                                text: Config.account.avatarPath
-                                onEditingFinished: Config.account.avatarPath = text
-                                Layout.preferredWidth: 300
-                            }
                         }
 
                         // Activation Key

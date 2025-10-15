@@ -87,7 +87,7 @@ BaseWidget {
                     Label {
                         anchors.centerIn: parent
                         text: modelData.day > 0 ? modelData.day : ""
-                        color: modelData.isToday ? (Config.general.darkMode ? "#fff" : "#222") : (Config.general.darkMode ? "#ddd" : "#333")
+                        color: modelData.isToday ? "#fff" : (Config.general.darkMode ? "#ddd" : "#333")
                         font.pixelSize: 10
                         font.bold: modelData.isToday
                     }
