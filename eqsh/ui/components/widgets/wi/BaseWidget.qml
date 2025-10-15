@@ -15,6 +15,7 @@ Control {
     anchors.fill: parent
     padding: 10
     property Component content: null
+    property var widget: null
     property Component bg: Rectangle {
         id: bg
         anchors.fill: parent

@@ -61,8 +61,8 @@ BaseWidget {
             text: root.location
             color: AccentColor.color
             font.pixelSize: 14
-            topPadding: 10
-            leftPadding: 10
+            topPadding: 15
+            leftPadding: 15
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft
         }
@@ -72,7 +72,7 @@ BaseWidget {
             color: "#fff"
             font.pixelSize: 28
             font.weight: 300
-            leftPadding: 10
+            leftPadding: 15
             anchors.top: locationT.bottom
             horizontalAlignment: Text.AlignLeft
         }
@@ -85,7 +85,7 @@ BaseWidget {
             preferredRendererType: VectorImage.CurveRenderer
             anchors.bottom: descriptionT.top
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: 15
             anchors.bottomMargin: 3
         }
 
@@ -95,8 +95,8 @@ BaseWidget {
             text: root.hlVal
             color: "#fff"
             font.pixelSize: 12
-            leftPadding: 10
-            bottomPadding: 10
+            leftPadding: 15
+            bottomPadding: 15
             horizontalAlignment: Text.AlignLeft
             anchors.bottom: parent.bottom
         }
@@ -106,7 +106,7 @@ BaseWidget {
             text: root.description
             color: "#fff"
             font.pixelSize: 12
-            leftPadding: 10
+            leftPadding: 15
             anchors.bottom: hlT.top
         }
     }

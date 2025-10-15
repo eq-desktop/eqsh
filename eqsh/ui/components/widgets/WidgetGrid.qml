@@ -161,6 +161,7 @@ Item {
                 leftMargin: 15
                 topMargin: 5
             }
+            color: "#aaa"
             text: Translation.tr("Close")
             onClicked: {
                 Runtime.widgetEditMode = false
@@ -179,14 +180,15 @@ Item {
         CFButton {
             id: addButton
             width: 100
-            primary: true
+            color: AccentColor.color
             anchors {
                 top: parent.top
                 right: parent.right
                 rightMargin: 15
                 topMargin: 5
             }
-            text: Translation.tr("Add")
+            text: Translation.tr("+")
+            font.pixelSize: 16
             transform: Translate {
                 id: translateAdd
                 x: root.editMode ? 0 : 50
