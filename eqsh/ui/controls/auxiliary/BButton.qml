@@ -30,6 +30,17 @@ Button {
     radius: 20
     highlight: "transparent"
   }
+  contentItem: Text {
+    id: content
+    anchors.fill: parent
+    color: palette.buttonText
+    text: root.text
+    verticalAlignment: Text.AlignVCenter
+    horizontalAlignment: Text.AlignHCenter
+    font: root.font
+    renderType: Text.NativeRendering
+    renderTypeQuality: Text.VeryHighRenderTypeQuality
+  }
   SequentialAnimation {
     id: jumpAnim
     running: false
@@ -39,13 +50,6 @@ Button {
   }
   function jumpUp() {
     if (Config.bar.animateButton) jumpAnim.running = true
-  }
-  layer.enabled: true
-  layer.effect: MultiEffect {
-    shadowEnabled: true
-    shadowBlur: 0.5
-    shadowOpacity: 1
-    shadowColor: "#000000"
   }
   MouseArea {
     anchors.fill: parent

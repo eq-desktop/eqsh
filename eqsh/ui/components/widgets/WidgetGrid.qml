@@ -116,8 +116,6 @@ Item {
 
         DropDownMenu {
             id: rightClickMenu
-            x: 0
-            y: 0
             model: [
                 DropDownItem {
                     kb: "⌃⌘W"

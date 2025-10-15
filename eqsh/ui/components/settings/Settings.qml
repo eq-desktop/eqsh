@@ -18,6 +18,7 @@ FloatingWindow {
     visible: Runtime.settingsOpen
     title: Translation.tr("Equora Settings")
     minimumSize: "675x540"
+    maximumSize: Qt.size(675, 900-Config.bar.height)
     
     onClosed: {
         Runtime.settingsOpen = false
@@ -39,7 +40,7 @@ FloatingWindow {
         }
     }
 
-    color: Config.general.darkMode ? "#1a1a1a" : "#fefefe"
+    color: "transparent"
 
     component UILabel: Text {
         color: Config.general.darkMode ? "#fff" : "#000"
@@ -69,22 +70,66 @@ FloatingWindow {
 
     RowLayout {
         anchors.fill: parent
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            anchors.fill: parent
+            maskEnabled: true
+            maskSource: contentArea
+            maskInverted: true
+        }
 
         Item {
             id: sidebarView
             Layout.fillHeight: true
             height: parent.height
             width: 250
+            Layout.margins: -10
+
+            RoundedCorner {
+                anchors {
+                    right: parent.right
+                    top: parent.top
+                    topMargin: 10
+                }
+                corner: RoundedCorner.CornerEnum.TopRight
+                color: "#ffffff"
+                implicitSize: 40
+            }
+
+            RoundedCorner {
+                anchors {
+                    right: parent.right
+                    bottom: parent.bottom
+                    bottomMargin: 10
+                }
+                corner: RoundedCorner.CornerEnum.BottomRight
+                color: "#ffffff"
+                implicitSize: 40
+            }
+
             Rectangle {
-                id: sidebarBackground
+                id: sidebarBackgroundBorder
                 anchors.fill: parent
                 anchors.margins: 5
                 clip: true
+                radius: 30
+                color: Config.general.darkMode ? "#a0111111" : "#a0ffffff"
+                border {
+                    width: 10
+                    color: "#ffffff"
+                }
+            }
+            
+            Rectangle {
+                id: sidebarBackground
+                anchors.fill: parent
+                anchors.margins: 15
+                clip: true
                 radius: 20
-                color: Config.general.darkMode ? "#20111111" : "#20ffffff"
+                color: "transparent"
                 border {
                     width: 1
-                    color: "#55333333"
+                    color: "#ccc"
                 }
 
                 Item {
@@ -97,12 +142,13 @@ FloatingWindow {
                     anchors.topMargin: 20
                     UITextField {
                         id: searchField
-                        width: 220
+                        width: 200
                         anchors.left: parent.left
+                        anchors.leftMargin: 10
                         anchors.top: parent.top
                         background: Rectangle {
                             anchors.fill: parent
-                            color: Config.general.darkMode ? "#ee1a1a1a" : "#eefefefe"
+                            color: Config.general.darkMode ? "#1e1e1e" : "#dfdfdf"
                             radius: 10
                             border {
                                 width: 1
@@ -111,7 +157,7 @@ FloatingWindow {
                             Text {
                                 anchors.fill: parent
                                 text: searchField.text == "" ? Translation.tr("Search") : ""
-                                color: "#aaa"
+                                color: Config.general.darkMode ? "#aaa" : "#555"
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignLeft
                                 anchors.leftMargin: 10
@@ -149,6 +195,8 @@ FloatingWindow {
                         anchors.topMargin: 20
                         background: Rectangle {
                             anchors.fill: parent
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
                             color: contentView.currentIndex == index ? (modelData == "_Account" ? "transparent" : AccentColor.color) : "transparent"
                             radius: 10
                             ClippingRectangle {
@@ -160,7 +208,7 @@ FloatingWindow {
                                 clip: true
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: modelData == "_Account" ? 0 : 5
+                                anchors.leftMargin: modelData == "_Account" ? 5 : 10
 
                                 property list<string> svgs: [
                                     "",
@@ -186,12 +234,12 @@ FloatingWindow {
                             Text {
                                 anchors.fill: parent
                                 text: modelData == "_Account" ? Config.account.name : modelData
-                                color: Config.general.darkMode ? "#fff" : "#000"
+                                color: Config.general.darkMode ? "#fff" : (contentView.currentIndex == index && modelData != "_Account" ? "#fff" : "#000")
                                 font.pixelSize: 14
                                 font.weight: modelData == "_Account" ? 500 : Font.Normal
                                 verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
                                 horizontalAlignment: Text.AlignLeft
-                                anchors.leftMargin: 40
+                                anchors.leftMargin: modelData == "_Account" ? 50 : 45
                             }
                             Text {
                                 anchors.fill: parent
@@ -202,7 +250,7 @@ FloatingWindow {
                                 font.weight: 400
                                 verticalAlignment: Text.AlignBottom
                                 horizontalAlignment: Text.AlignLeft
-                                anchors.leftMargin: 40
+                                anchors.leftMargin: modelData == "_Account" ? 50 : 45
                             }
                         }
                         onClicked: {
@@ -223,10 +271,15 @@ FloatingWindow {
             Layout.fillHeight: true
 
             Rectangle {
+                anchors.fill: parent
+                color: Config.general.darkMode ? "#1e1e1e" : "#ffffff"
+            }
+
+            Rectangle {
                 id: pageTitle
                 height: 50
                 width: parent.width
-                color: Config.general.darkMode ? "#1a1a1a" : "#fefefe"
+                color: Config.general.darkMode ? "#1e1e1e" : "#ffffff"
                 radius: 0
                 Text {
                     anchors.fill: parent

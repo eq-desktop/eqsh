@@ -20,10 +20,21 @@ Scope {
   property int x: 0
   property int y: 0
   property int minWidth: 200
+  property int verticalOffset: 0
+  property int horizontalOffset: 0
   property int contentWidth: 200
-  property int padding: 8
+  property int padding: 4
   property int spacing: 0
+  property alias opened: pop.opened
+  property bool closeOnClick: true
   property var hoverColor: AccentColor.color
+  property var color: Config.general.darkMode ? "#1e1e1e" : "#dfdfdf" //"#20000000" : "#50ffffff"
+  property var textColor: Config.general.darkMode ? "#ffffff" : "#1e1e1e" //"#20000000" : "#50ffffff"
+  property var hoverTextColor: "#ffffff" //"#20000000" : "#50ffffff"
+  enum AnchorPoint { TopLeft = 0, TopRight = 1, BottomLeft = 2, BottomRight = 3, Auto = 4 }
+  property int anchorPoint: DropDownMenu.AnchorPoint.Auto
+  property bool invertY: [DropDownMenu.AnchorPoint.BottomLeft, DropDownMenu.AnchorPoint.BottomRight].includes(anchorPoint)
+  property bool invertH: [DropDownMenu.AnchorPoint.TopRight, DropDownMenu.AnchorPoint.BottomRight].includes(anchorPoint)
   function open() {
     pop.opened = true
   }
@@ -41,13 +52,13 @@ Scope {
         anchors.fill: parent
         Rectangle {
           anchors {
-            left: parent.left
-            right: parent.right
+            horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
           }
+          width: root.contentWidth - 20
           height: 1
           radius: 2
-          color: "#50ffffff"
+          color: Config.general.darkMode ? "#50ffffff" : "#50000000"
         }
       }
     }
@@ -63,7 +74,7 @@ Scope {
         onClicked: {
           if (modelData.type == "item") {
             modelData.action()
-            pop.opened = false
+            pop.opened = !root.closeOnClick
           }
         }
         property var mDName: dropItem.modelData.name
@@ -74,12 +85,12 @@ Scope {
         }
         Component.onCompleted: {
           // Add icon + margins (100px) to the measured text width
-          const w = metrics.width + (!modelData.kb ? 0 : 100)
+          const w = metrics.width + (!modelData.kb ? 0 : 100) + 44 // 60 = Icon width + right Icon width
           if (w > root.contentWidth)
           root.contentWidth = w
         }
         onMDNameChanged: {
-          const w = metrics.width + (!modelData.kb ? 0 : 100)
+          const w = metrics.width + (!modelData.kb ? 0 : 100) + 44 // 60 = Icon width + right Icon width
           if (w > root.contentWidth)
           root.contentWidth = w
         }
@@ -90,24 +101,24 @@ Scope {
           IconImage {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 5
+            anchors.leftMargin: 2
             height: 15
             width: 15
             source: modelData.icon
             layer.enabled: true
             layer.effect: MultiEffect {
               colorization: 1
-              colorizationColor: modelData.disabled ? "#50ffffff" : "white"
+              colorizationColor: modelData.disabled ? (Config.general.darkMode ? "#50ffffff" : "#50000000") : dropItem.hover ? root.hoverTextColor : Config.general.darkMode ? "#ffffff" : "#1e1e1e"
             }
           }
           Text {
             anchors.fill: parent
-            anchors.leftMargin: 30
+            anchors.leftMargin: 22
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             text: modelData.name
             font.pixelSize: 15
-            color: modelData.disabled ? "#50ffffff" : "white"
+            color: modelData.disabled ? (Config.general.darkMode ? "#50ffffff" : "#50000000") : dropItem.hover ? root.hoverTextColor : Config.general.darkMode ? "#ffffff" : "#1e1e1e"
           }
           Text {
             anchors.right: parent.right
@@ -117,7 +128,7 @@ Scope {
             horizontalAlignment: Text.AlignRight
             text: modelData.kb
             font.pixelSize: 15
-            color: "#50ffffff"
+            color: dropItem.hover ? "#50ffffff" : Config.general.darkMode ? "#50ffffff" : "#50000000"
           }
         }
       }
@@ -125,13 +136,23 @@ Scope {
   }
   Pop {
     id: pop
+    blur: false
     content: Item {
-      BoxExperimental {
-        x: root.x
-        y: root.y
-        radius: 15
+      RectangularShadow {
+        anchors.fill: box
+        radius: 8
+        blur: 1
+        spread: 1
+        color: "#a0000000"
+      }
+      Rectangle {
+        id: box
+        x: root.invertH ? (root.x + (-root.horizontalOffset)) - box.width : root.x + root.horizontalOffset
+        y: root.invertY ? (root.y + (-root.verticalOffset)) - (list.contentHeight+(root.padding*2)) : root.y + root.verticalOffset
+        radius: 8
         width: Math.max(root.contentWidth + root.padding * 2, 200)
         height: list.contentHeight+(root.padding*2)
+        color: root.color
         ListView {
           id: list
           anchors.fill: parent
@@ -139,6 +160,19 @@ Scope {
           delegate: root.delegate
           model: root.model
           spacing: root.spacing
+          property int rootX: root.x
+          property int rootY: root.y
+          Component.onCompleted:   { recalculate() }
+          onRootXChanged:          { recalculate() }
+          onRootYChanged:          { recalculate() }
+          onContentWidthChanged:  { recalculate() }
+          onContentHeightChanged: { recalculate() }
+          function recalculate() {
+            if (root.anchorPoint == DropDownMenu.AnchorPoint.Auto) {
+              if (root.x + box.width > pop.screen.width) { root.invertH = true } else { root.invertH = false }
+              if (root.y + list.contentHeight+(root.padding*2) > pop.screen.height) { root.invertY = true } else { root.invertY = false }
+            }
+          }
         }
       }
     }

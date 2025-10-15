@@ -46,7 +46,7 @@ Item {
             rightMargin: 10
         }
         text: MusicPlayerProvider.title
-        color: "#fff"
+        color: Config.general.darkMode ? "#fff" : "#1e1e1e"
         elide: Text.ElideRight
         font.weight: 600
     }
@@ -60,7 +60,7 @@ Item {
             rightMargin: 10
         }
         text: MusicPlayerProvider.artist
-        color: "#aaffffff"
+        color: Config.general.darkMode ? "#aaffffff" : "#aa1e1e1e"
         elide: Text.ElideRight
         font.weight: 400
     }

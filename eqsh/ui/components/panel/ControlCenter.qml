@@ -46,7 +46,7 @@ Scope {
         component UIText: Text {
             id: uitext
             property bool gray: false
-            color: gray ? (Config.general.darkMode ? "#aaa" : "#555") : Config.general.darkMode ? "#fff" : "#000"
+            color: gray ? (Config.general.darkMode ? "#aaa" : "#333") : Config.general.darkMode ? "#fff" : "#1e1e1e"
         }
         
         component Button1x1: BoxButton {

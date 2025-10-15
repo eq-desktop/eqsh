@@ -5,7 +5,7 @@ Item {
     id: root
 
     enum CornerEnum { TopLeft, TopRight, BottomLeft, BottomRight }
-    property var corner: RoundCorner.CornerEnum.TopLeft
+    property var corner: RoundedCorner.CornerEnum.TopLeft
 
     property int implicitSize: 25
     property color color: "#000000"
@@ -13,10 +13,10 @@ Item {
     implicitWidth: implicitSize
     implicitHeight: implicitSize
 
-    property bool isTopLeft: corner === RoundCorner.CornerEnum.TopLeft
-    property bool isBottomLeft: corner === RoundCorner.CornerEnum.BottomLeft
-    property bool isTopRight: corner === RoundCorner.CornerEnum.TopRight
-    property bool isBottomRight: corner === RoundCorner.CornerEnum.BottomRight
+    property bool isTopLeft: corner === RoundedCorner.CornerEnum.TopLeft
+    property bool isBottomLeft: corner === RoundedCorner.CornerEnum.BottomLeft
+    property bool isTopRight: corner === RoundedCorner.CornerEnum.TopRight
+    property bool isBottomRight: corner === RoundedCorner.CornerEnum.BottomRight
     property bool isTop: isTopLeft || isTopRight
     property bool isBottom: isBottomLeft || isBottomRight
     property bool isLeft: isTopLeft || isBottomLeft
@@ -40,16 +40,16 @@ Item {
             pathHints: ShapePath.PathSolid & ShapePath.PathNonIntersecting
 
             startX: switch (root.corner) {
-                case RoundCorner.CornerEnum.TopLeft: return 0;
-                case RoundCorner.CornerEnum.TopRight: return root.implicitSize;
-                case RoundCorner.CornerEnum.BottomLeft: return 0;
-                case RoundCorner.CornerEnum.BottomRight: return root.implicitSize;
+                case RoundedCorner.CornerEnum.TopLeft: return 0;
+                case RoundedCorner.CornerEnum.TopRight: return root.implicitSize;
+                case RoundedCorner.CornerEnum.BottomLeft: return 0;
+                case RoundedCorner.CornerEnum.BottomRight: return root.implicitSize;
             }
             startY: switch (root.corner) {
-                case RoundCorner.CornerEnum.TopLeft: return 0;
-                case RoundCorner.CornerEnum.TopRight: return 0;
-                case RoundCorner.CornerEnum.BottomLeft: return root.implicitSize;
-                case RoundCorner.CornerEnum.BottomRight: return root.implicitSize;
+                case RoundedCorner.CornerEnum.TopLeft: return 0;
+                case RoundedCorner.CornerEnum.TopRight: return 0;
+                case RoundedCorner.CornerEnum.BottomLeft: return root.implicitSize;
+                case RoundedCorner.CornerEnum.BottomRight: return root.implicitSize;
             }
             PathAngleArc {
                 moveToStart: false
@@ -58,10 +58,10 @@ Item {
                 radiusX: root.implicitSize
                 radiusY: root.implicitSize
                 startAngle: switch (root.corner) {
-                    case RoundCorner.CornerEnum.TopLeft: return 180;
-                    case RoundCorner.CornerEnum.TopRight: return -90;
-                    case RoundCorner.CornerEnum.BottomLeft: return 90;
-                    case RoundCorner.CornerEnum.BottomRight: return 0;
+                    case RoundedCorner.CornerEnum.TopLeft: return 180;
+                    case RoundedCorner.CornerEnum.TopRight: return -90;
+                    case RoundedCorner.CornerEnum.BottomLeft: return 90;
+                    case RoundedCorner.CornerEnum.BottomRight: return 0;
                 }
                 sweepAngle: 90
             }

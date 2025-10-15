@@ -11,12 +11,14 @@ Scope {
     property alias margins: panelWindow.margins
     property bool opened: false
     property bool hiding: false
+    property bool blur: true
+    property alias screen: panelWindow.screen
     property int animationDuration: 100
     required property Component content
     PanelWindow {
-        WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "eqsh:blur"
         id: panelWindow
+        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.namespace: root.blur ? "eqsh:blur" : "eqsh"
         color: "transparent"
         visible: root.opened
         exclusiveZone: -1
