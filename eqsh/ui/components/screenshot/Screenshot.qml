@@ -19,8 +19,12 @@ import QtQuick.VectorImage
 Scope {
   id: root
   property bool showScrn: Runtime.showScrn
+  property bool takingScreenshot: false
   signal requestScreenshot()
-  property string imageSource: ""
+  property var region: Qt.rect(0, 0, 0, 0)
+  property int optionsSaveTo: 0
+  property int optionsTimer: 0
+  property list<bool> optionsOptions: [false, false, false]
   IpcHandler {
     target: "screenshot"
     function toggle() {
@@ -42,14 +46,27 @@ Scope {
     }
   }
 
+  function takeScreenshot() {
+    root.takingScreenshot = true
+    Runtime.showScrn = false
+    console.info(takeScreenshotProcess.command)
+  }
+
   Process {
-    id: takeScreenshot
-    command: ["hyprshot", "-m", "output", "-m", "eDP-1", "--silent", "-o", ".config", "-f", ".tmp_eqsh_screenshot.png"]
+    id: takeScreenshotProcess
+    command: [
+      "grim",
+      "-g",
+      Math.round(root.region.x) + "," + Math.round(root.region.y) + " " + Math.round(root.region.width) + "x" + Math.round(root.region.height),
+      "" + (root.optionsSaveTo == 0 ? "Desktop/" : root.optionsSaveTo == 1 ? "Documents/": "") + Time.getTime("yyyy-MM-dd-HH-mm-ss") + ".png"
+    ]
     running: false
     onExited: {
-      // Reload the image after the file is created
-      root.imageSource = ""
-      root.imageSource = Qt.resolvedUrl("/home/enviction/.config/.tmp_eqsh_screenshot.png")
+      console.info("Screenshot taken")
+      root.takingScreenshot = false
+    }
+    stderr: StdioCollector {
+      onStreamFinished: if (text != "") console.error("taking screenshot:", text)
     }
   }
   onRequestScreenshot: {
@@ -63,7 +80,7 @@ Scope {
       WlrLayershell.layer: WlrLayer.Overlay
       required property var modelData
       screen: modelData
-      WlrLayershell.namespace: "eqsh"
+      WlrLayershell.namespace: "eqsh:lock"
       anchors {
         top: true
         left: true
@@ -94,13 +111,16 @@ Scope {
         Keys.onEscapePressed: {
           Runtime.showScrn = false
         }
+        Keys.onReturnPressed: {
+          root.takeScreenshot()
+        }
         PropertyAnimation {
           id: showAnim
           target: screenshotLoader.item
           property: "opacity"
           to: 1
           running: false
-          duration: 500
+          duration: 200
           easing.type: Easing.InOutQuad
           onStarted: {
             screenshotLoader.focus = true;
@@ -115,7 +135,7 @@ Scope {
           property: "opacity"
           to: 0
           running: false
-          duration: 500
+          duration: 200
           easing.type: Easing.InOutQuad
           onFinished: {
             screenshotLoader.focus = false;
@@ -128,11 +148,29 @@ Scope {
           Behavior on opacity {
             NumberAnimation { duration: 500; easing.type: Easing.InOutQuad}
           }
+          onOpacityChanged: {
+            if (opacity == 0 && root.takingScreenshot) {
+              takeScreenshotProcess.running = true
+            }
+          }
           property int startX: 0
           property int startY: 0
 
           Rectangle {
             id: selectionBox
+            property var rect: Qt.rect(x, y, width, height)
+            property bool showScrn: root.showScrn
+            onRectChanged: {
+              root.region = selectionBox.rect
+            }
+            onShowScrnChanged: {
+              if (!root.optionsOptions[1] && root.showScrn) {
+                selectionBox.x = 0
+                selectionBox.y = 0
+                selectionBox.width = 0
+                selectionBox.height = 0
+              }
+            }
             visible: true
             color: "transparent"
             opacity: 1
@@ -166,13 +204,13 @@ Scope {
               bottomMargin: 40
               horizontalCenter: parent.horizontalCenter
             }
-            width: 250
+            width: rowLayout.width
             height: 40
             z: 3
             RowLayout {
               id: rowLayout
-              anchors.fill: parent
               spacing: 0
+              height: 40
               anchors.margins: 5
               // EXIT
               Item {
@@ -189,12 +227,11 @@ Scope {
                   height: 15
                   radius: 7.5
                   anchors.centerIn: parent
-                  color: "#aaaaaa"
+                  color: "#50aaaaaa"
                   VectorImage {
                     source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/x-bold.svg")
                     width: 12
                     height: 12
-                    transform: Translate { x: -1 }
                     anchors.centerIn: parent
                   }
                 }
@@ -269,9 +306,6 @@ Scope {
                   color: Config.general.darkMode ? "#333333" : "#ffffff"
                 }
               }
-              property int optionsSaveTo: 0
-              property int optionsTimer: 0
-              property list<bool> optionsOptions: [false, false, false]
               // OPTIONS
               DropDownMenu {
                 id: optionsMenu
@@ -279,33 +313,73 @@ Scope {
                 closeOnClick: false
                 model: [
                   DropDownText { name: Translation.tr("Save to") },
-                  DropDownItemToggle { enabled: rowLayout.optionsSaveTo == 0; action: () => {rowLayout.optionsSaveTo = 0}; name: Translation.tr("Desktop") },
-                  DropDownItemToggle { enabled: rowLayout.optionsSaveTo == 1; action: () => {rowLayout.optionsSaveTo = 1}; name: Translation.tr("Documents") },
-                  DropDownItemToggle { enabled: rowLayout.optionsSaveTo == 2; action: () => {rowLayout.optionsSaveTo = 2}; name: Translation.tr("Clipboard") },
-                  DropDownItemToggle { enabled: rowLayout.optionsSaveTo == 3; action: () => {rowLayout.optionsSaveTo = 3}; name: Translation.tr("Preview") },
+                  DropDownItemToggle { enabled: root.optionsSaveTo == 0; action: () => {root.optionsSaveTo = 0}; name: Translation.tr("Desktop") },
+                  DropDownItemToggle { enabled: root.optionsSaveTo == 1; action: () => {root.optionsSaveTo = 1}; name: Translation.tr("Documents") },
+                  DropDownItemToggle { enabled: root.optionsSaveTo == 2; action: () => {root.optionsSaveTo = 2}; name: Translation.tr("Clipboard") },
+                  DropDownItemToggle { enabled: root.optionsSaveTo == 3; action: () => {root.optionsSaveTo = 3}; name: Translation.tr("Preview") },
                   DropDownSpacer {},
                   DropDownText { name: Translation.tr("Timer") },
-                  DropDownItemToggle { enabled: rowLayout.optionsTimer == 0; action: () => {rowLayout.optionsTimer = 0}; name: Translation.tr("None") },
-                  DropDownItemToggle { enabled: rowLayout.optionsTimer == 1; action: () => {rowLayout.optionsTimer = 1}; name: Translation.tr("5 Seconds") },
-                  DropDownItemToggle { enabled: rowLayout.optionsTimer == 2; action: () => {rowLayout.optionsTimer = 2}; name: Translation.tr("10 Seconds") },
+                  DropDownItemToggle { enabled: root.optionsTimer == 0; action: () => {root.optionsTimer = 0}; name: Translation.tr("None") },
+                  DropDownItemToggle { enabled: root.optionsTimer == 1; action: () => {root.optionsTimer = 1}; name: Translation.tr("5 Seconds") },
+                  DropDownItemToggle { enabled: root.optionsTimer == 2; action: () => {root.optionsTimer = 2}; name: Translation.tr("10 Seconds") },
                   DropDownSpacer {},
                   DropDownText { name: Translation.tr("Options") },
-                  DropDownItemToggle { enabled: rowLayout.optionsOptions[0]; action: () => {rowLayout.optionsOptions[0] = !rowLayout.optionsOptions[0]}; name: Translation.tr("Show Floating Thumbnail") },
-                  DropDownItemToggle { enabled: rowLayout.optionsOptions[1]; action: () => {rowLayout.optionsOptions[1] = !rowLayout.optionsOptions[1]}; name: Translation.tr("Remember Last Selection") },
-                  DropDownItemToggle { enabled: rowLayout.optionsOptions[2]; action: () => {rowLayout.optionsOptions[2] = !rowLayout.optionsOptions[2]}; name: Translation.tr("Show Mouse Pointer") }
+                  DropDownItemToggle { enabled: root.optionsOptions[0]; action: () => {root.optionsOptions[0] = !root.optionsOptions[0]}; name: Translation.tr("Show Floating Thumbnail") },
+                  DropDownItemToggle { enabled: root.optionsOptions[1]; action: () => {root.optionsOptions[1] = !root.optionsOptions[1]}; name: Translation.tr("Remember Last Selection") },
+                  DropDownItemToggle { enabled: root.optionsOptions[2]; action: () => {root.optionsOptions[2] = !root.optionsOptions[2]}; name: Translation.tr("Show Mouse Pointer") }
                 ]
               }
               Item {
                 id: optionsBtn
-                width: 60
+                width: 75
                 Layout.fillHeight: true
                 MouseArea {
+                  id: optionsBtnMouse
                   anchors.fill: parent
+                  hoverEnabled: true
                   onClicked: {
                     const pos = optionsBtn.mapToItem(screenshotContainer, 0, optionsBtn.height)
                     optionsMenu.x = pos.x
                     optionsMenu.y = pos.y
                     optionsMenu.open()
+                  }
+                  Rectangle {
+                    width: 75
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    color: optionsMenu.opened || optionsBtnMouse.containsMouse ? "#50555555" : "transparent"
+                    Text {
+                      anchors.left: parent.left
+                      anchors.leftMargin: 5
+                      anchors.verticalCenter: parent.verticalCenter
+                      text: "Options"
+                      color: Config.general.darkMode ? "#dfdfdf" : "#333333"
+                    }
+                    VectorImage {
+                      source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right.svg")
+                      width: 15
+                      height: 15
+                      anchors.right: parent.right
+                      anchors.rightMargin: 5
+                      anchors.verticalCenter: parent.verticalCenter
+                      rotation: 90
+                      layer.enabled: true
+                      layer.effect: MultiEffect {
+                        colorization: 1
+                        colorizationColor: Config.general.darkMode ? "#dfdfdf" : "#333333"
+                      }
+                    }
+                  }
+                }
+              }
+              Item {
+                id: captureBtn
+                width: 60
+                Layout.fillHeight: true
+                MouseArea {
+                  anchors.fill: parent
+                  onClicked: {
+                    root.takeScreenshot()
                   }
                   Rectangle {
                     width: 60
@@ -314,7 +388,7 @@ Scope {
                     color: "transparent"
                     Text {
                       anchors.centerIn: parent
-                      text: "Options"
+                      text: "Capture"
                       color: Config.general.darkMode ? "#dfdfdf" : "#333333"
                     }
                   }

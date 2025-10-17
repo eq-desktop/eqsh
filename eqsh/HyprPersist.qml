@@ -5,6 +5,10 @@ import qs.config
 Item {
     component Proc: Process { running: true }
     Proc {
+        property bool interactiveLockscreen: Config.notch.interactiveLockscreen
+        onInteractiveLockscreenChanged: {
+            running = true
+        }
         command: ["hyprctl", "keyword", "layerrule", "abovelock "+Config.notch.interactiveLockscreen+", ^eqsh:lock\$"]
     }
     Proc {
