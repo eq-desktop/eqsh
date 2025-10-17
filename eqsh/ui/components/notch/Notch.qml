@@ -117,10 +117,10 @@ Scope {
 
   function closeNotchInstance(id) {
     let new_notch_instances = root.runningNotchInstances
-    for (let i = 0; i < new_notch_instances.length; i++) {
+    for (let i = 0; i < root.runningNotchInstances.length; i++) {
       if (new_notch_instances[i] === id) {
         new_notch_instances.splice(i, 1)
-        break;
+        i--;
       }
     }
     root.runningNotchInstances = new_notch_instances
@@ -243,15 +243,6 @@ Scope {
           }
           clip: true
           color: Config.notch.backgroundColor
-          layer.enabled: true
-          property var shadowColor: "#000000"
-          layer.effect: MultiEffect {
-            anchors.fill: notchBg
-            shadowEnabled: true
-            shadowColor: notchBg.shadowColor
-            shadowOpacity: 1
-            shadowBlur: 0.2
-          }
           property var notchCustomCodeObj: null
           property var notchCustomCodeVis: root.customNotchVisible
           onNotchCustomCodeVisChanged: {
@@ -259,7 +250,6 @@ Scope {
               notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
               notchCustomCodeObj.screen = panelWindow
               notchCustomCodeObj.meta.id = root.customNotchId
-              root.customNotchId = null
               const version = notchCustomCodeObj.details.version
               if (notchCustomCodeObj.details.appType == "media") {
                 runningNotchInstances = [notchCustomCodeObj.meta.id];
@@ -269,14 +259,6 @@ Scope {
               if (!root.details.supportedVersions.includes(version)) {
                 console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
               }
-              if (notchCustomCodeObj.details.shadowColor) {
-                notchBg.shadowColor = notchCustomCodeObj.details.shadowColor
-              } else {
-                notchBg.shadowColor = "#000000"
-              }
-            } else {
-              //notchCustomCodeObj.destroy()
-              notchBg.shadowColor = "#000000"
             }
           }
         }

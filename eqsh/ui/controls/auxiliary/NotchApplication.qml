@@ -47,7 +47,7 @@ Item {
 
     component Details: QtObject {
         property string version: "0.1.1"
-        property string shadowColor: "#000000"
+        /*deprecated*/ property string shadowColor: "#000000"
         property string appType: "indicator"
     }
 
