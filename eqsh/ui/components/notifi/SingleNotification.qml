@@ -17,7 +17,7 @@ import qs.core.system
 import "root:/agents/notification_utils.js" as NotificationUtils
 
 
-BoxExperimental {
+BoxGlass {
 	id: singleNotif
 	property bool expanded
 	property bool popup: false
@@ -371,7 +371,7 @@ BoxExperimental {
 			Layout.preferredHeight: 25
 			Layout.leftMargin: 20
 
-			BoxExperimental {
+			BoxGlass {
 				Layout.alignment: Qt.AlignTop
 				id: expandBtn
 				width: 45

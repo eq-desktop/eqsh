@@ -10,6 +10,7 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import qs.ui.controls.advanced
 import qs.ui.controls.windows
+import qs.ui.controls.primitives
 import qs.core.system
 import qs.config
 import qs
@@ -35,7 +36,7 @@ Item {
             mipmap: true
         }
     }
-    Text {
+    CFText {
         id: title
         anchors {
             top: thumbnail.bottom
@@ -46,7 +47,6 @@ Item {
             rightMargin: 10
         }
         text: MusicPlayerProvider.title
-        color: Config.general.darkMode ? "#fff" : "#1e1e1e"
         elide: Text.ElideRight
         font.weight: 600
     }
@@ -74,8 +74,8 @@ Item {
             height: 40
             background: Item {}
             icon {
-                width: 40
-                height: 40
+                width: 35
+                height: 35
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
             }
             onClicked: {
@@ -100,8 +100,8 @@ Item {
             height: 40
             background: Item {}
             icon {
-                width: 40
-                height: 40
+                width: 35
+                height: 35
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
             }
             onClicked: {

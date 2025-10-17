@@ -26,7 +26,7 @@ Scope {
     required property var screen
     Pop {
         id: panelWindow
-        margins.right: 30
+        margins.right: 10
         property int box: 65
         property int boxMargin: 10
         property int gridW: 4
@@ -34,7 +34,7 @@ Scope {
         property int gridImplicitWidth: ((box*gridW)+(boxMargin*gridW)+boxMargin)
         property int gridImplicitHeight: ((box*gridH)+(boxMargin*gridH)+boxMargin)
 
-        component BoxButton: BoxExperimental {
+        component BoxButton: BoxGlass {
             id: boxbutton
             radius: 40
             property bool enabled: false
@@ -43,11 +43,7 @@ Scope {
             shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
         }
 
-        component UIText: Text {
-            id: uitext
-            property bool gray: false
-            color: gray ? (Config.general.darkMode ? "#aaa" : "#333") : Config.general.darkMode ? "#fff" : "#1e1e1e"
-        }
+        component UIText: CFText {}
         
         component Button1x1: BoxButton {
             id: buttonx1
@@ -57,19 +53,6 @@ Scope {
         
         content: Item {
             Rectangle {
-                transform: [
-                    Translate {
-                        y: Config.general.reduceMotion ? 0 : -10
-                    },
-                    Scale {
-                        origin.x: (rect.width/1.5)
-                        origin.y: 0
-                        xScale: Config.general.reduceMotion ? 1 : panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
-                        yScale: Config.general.reduceMotion ? 1 : panelWindow.hiding ? 0.5 : panelWindow.opened ? 1 : 0.5
-                        Behavior on xScale { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
-                        Behavior on yScale { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
-                    }
-                ]
                 id: rect
                 width: panelWindow.gridImplicitWidth
                 height: panelWindow.gridImplicitHeight
@@ -77,7 +60,7 @@ Scope {
                 anchors {
                     top: parent.top
                     right: parent.right
-                    topMargin: Config.bar.height
+                    topMargin: Config.bar.height+5
                 }
                 BoxButton {
                     id: wifiWidget
@@ -310,6 +293,7 @@ Scope {
                             topMargin: 10
                             leftMargin: 15
                         }
+                        font.weight: 600
                         text: Translation.tr("Display")
                     }
                     VectorImage {
@@ -424,6 +408,7 @@ Scope {
                             topMargin: 10
                             leftMargin: 15
                         }
+                        font.weight: 600
                         text: Translation.tr("Volume")
                     }
                     VectorImage {

@@ -151,7 +151,7 @@ Scope {
             }
           }
 
-          BoxExperimental {
+          BoxGlass {
             id: dockBackground
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom

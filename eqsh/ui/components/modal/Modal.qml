@@ -91,7 +91,7 @@ Scope {
         NumberAnimation { duration: 150; easing.type: Easing.InOutQuad }
       }
 
-      BoxExperimental {
+      BoxGlass {
         anchors.fill: parent
         color: Config.general.darkMode ? "#80333333" : "#80ffffff"
         radius: 30

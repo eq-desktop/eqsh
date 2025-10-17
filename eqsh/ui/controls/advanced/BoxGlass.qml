@@ -46,12 +46,12 @@ Item {
 
     // Second inner shadow
     InnerShadow {
-        strength: 3
+        strength: 2
         offsetX: 0
-        offsetY: 3
+        offsetY: 2
         color: box.negLight
         blurMax: 64
-        opacity: 0.7
+        opacity: 1
         visible: box.highlightEnabled
     }
 

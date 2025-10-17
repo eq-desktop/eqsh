@@ -87,7 +87,7 @@ PopupWindow {
     menu: root.menu
   }
 
-  BoxExperimental {
+  BoxGlass {
     anchors.fill: parent
     radius: 20
   }

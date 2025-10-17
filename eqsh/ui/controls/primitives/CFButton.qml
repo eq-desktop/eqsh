@@ -10,7 +10,7 @@ Button {
     property bool primary: false
     property bool highlightEnabled: !button.primary
     property string color: "#40000000"
-    background: BoxExperimental {
+    background: BoxGlass {
         anchors.fill: parent
         color: button.primary ? AccentColor.color : button.color
         glowStrength: 0.5

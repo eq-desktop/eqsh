@@ -32,7 +32,7 @@ Scope {
                 item: Runtime.spotlightOpen && focusedScreen ? background : null
             }
 
-            BoxExperimental {
+            BoxGlass {
                 id: background
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter

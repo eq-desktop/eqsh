@@ -48,7 +48,7 @@ Scope {
         exclusiveZone: 0
         mask: Region {}
 
-        BoxExperimental {
+        BoxGlass {
             id: box
             radius: 30
             implicitWidth: 180

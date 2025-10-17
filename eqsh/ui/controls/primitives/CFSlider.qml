@@ -9,11 +9,11 @@ Slider {
         x: slider.leftPadding
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
         implicitWidth: 200
-        implicitHeight: 8
+        implicitHeight: 4
         width: slider.availableWidth
         height: implicitHeight
         radius: 10
-        color: "#20ffffff"
+        color: "#30000000"
 
         Rectangle {
             width: slider.visualPosition * parent.width
@@ -22,14 +22,15 @@ Slider {
             radius: 10
         }
     }
-    handle: BoxExperimental {
-        x: slider.leftPadding + ((slider.visualPosition * slider.availableWidth) - (width / 2))
+    handle: BoxGlass {
+        x: slider.leftPadding + Math.min(slider.availableWidth - width, Math.max(0, (slider.visualPosition * (slider.availableWidth - (width)))))
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
-        width:  slider.pressed ? 35 : 0
-        height: slider.pressed ? 20 : 8
+        width:  slider.pressed ? 30 : 25
+        height: slider.pressed ? 20 : 15
         Behavior on width { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 2 } }
         Behavior on height { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 2 } }
-        color: "#50ffffff"
+        color: slider.pressed ? "#20ffffff" : "#ffffff"
+        light: slider.pressed ? "#fff" : "transparent"
         negLight: slider.pressed ? "#333" : "#fff"
         Behavior on negLight { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
         radius: 10

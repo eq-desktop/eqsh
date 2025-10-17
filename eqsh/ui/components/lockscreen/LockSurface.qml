@@ -343,7 +343,7 @@ Rectangle {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}
 					}
-					BoxExperimental {
+					BoxGlass {
 						id: passwordBoxContainer
 						width: 200
 						height: 35
