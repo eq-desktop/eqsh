@@ -49,20 +49,12 @@ BaseWidget {
                             id: batteryIcon
                             active: modelData.name != ""
                             anchors.centerIn: parent
-                            VectorImage {
+                            CFVI {
                                 id: bIcon
                                 source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/devices/" + modelData.type + ".svg")
-                                width: bw.textSizeXL
-                                height: bw.textSizeXL
-                                Layout.preferredWidth: bw.textSizeXL
-                                Layout.preferredHeight: bw.textSizeXL
-                                preferredRendererType: VectorImage.CurveRenderer
+                                size: bw.textSizeXL
                                 anchors.centerIn: parent
-                                layer.enabled: true
-                                layer.effect: MultiEffect {
-                                    colorization: 1
-                                    colorizationColor: Config.appearance.multiAccentColor ? "#fff" :AccentColor.color
-                                }
+                                color: Config.appearance.multiAccentColor ? "#fff" :AccentColor.color
                             }
                         }
                     }

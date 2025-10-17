@@ -61,6 +61,7 @@ Item {
 
 	component General: JsonObject {
 		property bool   darkMode: true
+		property bool   autoDarkMode: false
 		property bool   reduceMotion: false
 		property string language: "en_US" // Available languages: "en", "de", "es", "it", "ja"
 	}
@@ -231,7 +232,7 @@ Item {
 	component Wallpaper: JsonObject {
 		property bool   enable: true
 		property color  color: "#000000" // Only applies if path is empty
-		property string path: root.homeDirectory+"/.local/share/equora/wallpapers/Tahoe-city.jpeg"
+		property string path: root.homeDirectory+"/.local/share/equora/wallpapers/Tahoe-City.jpeg"
 		property bool   enableShader: false
 		property string shaderName: "Raining"
 		property string shaderFrag: Quickshell.shellDir + "/media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert

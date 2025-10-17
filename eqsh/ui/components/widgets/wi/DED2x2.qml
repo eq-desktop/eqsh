@@ -4,6 +4,7 @@ import QtQuick.Effects
 import qs
 import qs.config
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 BaseWidget {
     id: bw
@@ -11,7 +12,7 @@ BaseWidget {
         id: root
         property int currentSecond: Time.getSeconds()
 
-        Text {
+        CFText {
             id: daylong
             anchors.fill: parent
             color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color
@@ -23,11 +24,10 @@ BaseWidget {
             anchors.topMargin: 15
         }
 
-        Text {
+        CFText {
             id: day
             anchors.fill: parent
             color: Config.general.darkMode ? "#fff" : "#222"
-            font.family: Fonts.sFProDisplayRegular.family
             font.pixelSize: bw.textSizeXXL
             text: Time.getTime("dd")
             anchors.top: daylong.bottom
@@ -36,7 +36,7 @@ BaseWidget {
             anchors.leftMargin: 15
         }
 
-        Text {
+        CFText {
             id: events
             color: Config.general.darkMode ? "#aaa" : "#555"
             font.pixelSize: bw.textSize

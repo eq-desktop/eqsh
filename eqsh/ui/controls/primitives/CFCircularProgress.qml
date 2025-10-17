@@ -9,6 +9,8 @@ Item {
     property real value: 0
     property color colPrimary: "#33bb55"
     property color colSecondary: "#444444"
+    Behavior on colPrimary { ColorAnimation { duration: 300 } }
+    Behavior on colSecondary { ColorAnimation { duration: 300 } }
     property real gapAngle: 360 / 18
     property bool fill: false
     property int fillOverflow: 2

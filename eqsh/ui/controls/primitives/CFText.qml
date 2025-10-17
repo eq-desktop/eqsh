@@ -11,5 +11,9 @@ Text {
     property string colorLightMode: "#1e1e1e"
     renderType: Text.NativeRendering
     renderTypeQuality: Text.VeryHighRenderTypeQuality
+    font.family: Fonts.sFProDisplayBlack.family
     color: gray ? (Config.general.darkMode ? AccentColor.textColorM : "#a01e1e1e") : Config.general.darkMode ? uitext.colorDarkMode : uitext.colorLightMode
+    Behavior on color {
+        ColorAnimation { duration: 300 }
+    }
 }

@@ -14,7 +14,7 @@ BaseWidget {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 15
-            spacing: -3
+            spacing: -4
 
             CFText {
                 id: month
@@ -50,7 +50,7 @@ BaseWidget {
                 Layout.fillHeight: true
                 delegate: Item {
                     required property var model
-                    Rectangle {
+                    CFRect {
                         anchors {
                             fill: parent
                             margins: -4

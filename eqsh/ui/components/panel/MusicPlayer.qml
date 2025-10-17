@@ -27,7 +27,7 @@ Item {
         width: 40
         height: 40
         radius: 15
-        color: "transparent"
+        color: "#20ffffff"
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop

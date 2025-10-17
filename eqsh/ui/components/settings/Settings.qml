@@ -9,6 +9,7 @@ import QtQuick.Shapes
 import QtQuick.VectorImage
 import Quickshell
 import qs
+import qs.ui.components.settings.pages
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
@@ -21,7 +22,7 @@ FloatingWindow {
     visible: Runtime.settingsOpen
     title: Translation.tr("Equora Settings")
     minimumSize: "675x540"
-    maximumSize: Qt.size(675, 900-Config.bar.height)
+    maximumSize: Qt.size(675, screen.height-Config.bar.height)
     
     onClosed: {
         Runtime.settingsOpen = false
@@ -65,21 +66,11 @@ FloatingWindow {
         }
     }
 
-    component UICheckBox: CheckBox {
-        property string textVal: ""
-        text: `<font color=\"${Config.general.darkMode ? '#fff' : '#000'}\">${textVal}</font>`
-        font.pixelSize: 16
+    component UICheckBox: CFCheckBox {
     }
 
     RowLayout {
         anchors.fill: parent
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            anchors.fill: parent
-            maskEnabled: true
-            maskSource: contentArea
-            maskInverted: true
-        }
 
         Item {
             id: sidebarView
@@ -354,160 +345,20 @@ FloatingWindow {
             StackLayout {
                 id: contentView
                 anchors.top: pageTitle.bottom
-                anchors.topMargin: 10
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
                 width: parent.width - 5
                 height: parent.height - 75
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 currentIndex: 0
 
-                // Account
-                ScrollView {
-                    Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }  
-                    ColumnLayout {
-                        anchors.centerIn: parent
-                        spacing: 20
-                        width: parent.width
-
-                        // Profile Picture
-                        ClippingRectangle {
-                            id: imageContainer
-                            width: 120
-                            height: 120
-                            radius: 99
-                            color: "transparent"
-                            clip: true
-                            Layout.alignment: Qt.AlignHCenter
-                            FileDialog {
-                                id: fileDialog
-                                selectedFile: Config.account.avatarPath
-                                nameFilters: ["Images (*.jpg *.jpeg *.png)", "All files (*)"]
-                                onSelectedFilesChanged: {
-                                    Config.account.avatarPath = selectedFiles[0]
-                                    profileImage.source = Config.account.avatarPath
-                                }
-                            }
-                            MouseArea {
-                                id: editImageMouse
-                                anchors.fill: parent
-                                onClicked: {
-                                    fileDialog.open()
-                                }
-                                hoverEnabled: true
-                                Image {
-                                    id: profileImage
-                                    anchors.fill: parent
-                                    source: Config.account.avatarPath
-                                    fillMode: Image.PreserveAspectCrop
-                                }
-                                RectangularShadow {
-                                    anchors.fill: editImage
-                                    color: "#ffffff"
-                                    radius: 20
-                                    blur: 15
-                                    spread: 10
-                                    opacity: editImageMouse.containsMouse ? 1 : 0
-                                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
-                                }
-                                Text {
-                                    id: editImage
-                                    anchors {
-                                        bottom: parent.bottom
-                                        bottomMargin: 15
-                                        horizontalCenter: parent.horizontalCenter
-                                    }
-                                    opacity: editImageMouse.containsMouse ? 1 : 0
-                                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
-                                    text: Translation.tr("Edit")
-                                }
-                            }
-                        }
-                        UITextField {
-                            background: Rectangle { color: "transparent" }
-                            text: Config.account.name
-                            onEditingFinished: Config.account.name = text
-                            Layout.alignment: Qt.AlignHCenter
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-
-                        // Activation Key
-                        ColumnLayout {
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: 4
-
-                            UILabel { text: Translation.tr("Activation Key") }
-                            UITextField {
-                                Layout.preferredWidth: 300
-                                text: Config.account.activationKey
-                                onEditingFinished: Config.account.activationKey = text
-                                placeholderText: Translation.tr("Activation Key")
-                            }
-                        }
-                    }
-                }
-
-
+                Account {}
                 // Space
                 ScrollView {}
-
-                // General
-                ScrollView {
-                    ColumnLayout {
-                        anchors.fill: parent
-                        UICheckBox {
-                            textVal: Translation.tr("Dark Mode")
-                            checked: Config.general.darkMode
-                            onToggled: Config.general.darkMode = checked
-                        }
-                        UICheckBox {
-                            textVal: Translation.tr("Reduce Motion")
-                            checked: Config.general.reduceMotion
-                            onToggled: Config.general.reduceMotion = checked
-                        }
-                        UILabel { text: Translation.tr("Language") }
-                        ComboBox {
-                            model: Translation.availableLanguages
-                            Component.onCompleted: { // Prevents Binding loop
-                                // set initial index once
-                                currentIndex = model.findIndex(l => l === Config.general.language)
-                            }
-                            onCurrentTextChanged: {
-                                Config.general.language = currentText;
-                            }
-                        }
-                    }
-                }
-
-                // Appearance
-                ScrollView {
-                    ColumnLayout {
-                        anchors.fill: parent
-                        UILabel { text: Translation.tr("Icon Color Type") }
-                        ComboBox {
-                            model: [Translation.tr("Original"), Translation.tr("Monochrome"), Translation.tr("Tinted")]
-                            currentIndex: Config.appearance.iconColorType - 1
-                            onCurrentIndexChanged: Config.appearance.iconColorType = currentIndex + 1
-                        }
-                        UICheckBox {
-                            textVal: Translation.tr("Use Dynamic Accent Color")
-                            checked: Config.appearance.dynamicAccentColor
-                            onToggled: Config.appearance.dynamicAccentColor = checked
-                        }
-                        UILabel { text: Translation.tr("Accent Color") }
-                        Button {
-                            text: Translation.tr("Set Color")
-                            onClicked: colorDialog2.open()
-                        }
-                        ColorDialog {
-                            id: colorDialog2
-                            selectedColor: Config.appearance.accentColor
-                            onAccepted: Config.appearance.accentColor = selectedColor
-                        }
-                    }
-                }
+                General {}
+                Appearance {}
 
                 // Bar
                 ScrollView {
