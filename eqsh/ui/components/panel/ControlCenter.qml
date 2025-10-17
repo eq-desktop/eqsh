@@ -24,6 +24,7 @@ Scope {
     }
     id: root
     required property var screen
+    property alias opened: panelWindow.opened
     Pop {
         id: panelWindow
         margins.right: 10

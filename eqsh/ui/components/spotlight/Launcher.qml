@@ -64,7 +64,7 @@ Scope {
                         focus: true
                         Keys.onPressed: (event) => {
                             if (event.key === Qt.Key_Escape) {
-                                launcher.toggle();
+                                root.toggle();
                             }
                         }
                     }
@@ -129,7 +129,7 @@ Scope {
                                 hoverEnabled: true
                                 onEntered: parent.hovered = true
                                 onExited: parent.hovered = false
-                                onClicked: {modelData.execute(); launcher.toggle();}
+                                onClicked: {modelData.execute(); root.toggle();}
                             }
                         }
                     }

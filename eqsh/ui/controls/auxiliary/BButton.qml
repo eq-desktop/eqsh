@@ -17,6 +17,8 @@ Button {
   signal click()
   signal hover()
   signal exited()
+  property bool selected: false
+  property bool isHovered: false
   palette.buttonText: "#fff"
   Layout.fillHeight: true
   Layout.fillWidth: true
@@ -32,7 +34,7 @@ Button {
   padding: 10
   background: Box {
     id: bgRect
-    color: "transparent"
+    color: root.selected ? root.hoverColor : root.isHovered ? root.hoverColor : "transparent"
     radius: 20
     highlight: "transparent"
   }
@@ -61,12 +63,12 @@ Button {
     anchors.fill: parent
     hoverEnabled: true
     onEntered: {
-      bgRect.color = root.hoverColor;
       root.hover()
+      root.isHovered = true
     }
     onExited: {
-      bgRect.color = "transparent";
       root.exited()
+      root.isHovered = false
     }
     onClicked: {
       root.click()

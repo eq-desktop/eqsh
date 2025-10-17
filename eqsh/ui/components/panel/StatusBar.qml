@@ -296,11 +296,14 @@ Scope {
                 preferredRendererType: VectorImage.CurveRenderer
                 anchors.centerIn: parent
               }
+              selected: Runtime.spotlightOpen
+              onClick: Runtime.spotlightOpen = !Runtime.spotlightOpen
             }
           }
           Component {
             id: controlCenterComponent
             UIBButton {
+              selected: controlCenter.opened
               VectorImage {
                 id: rBControlCenter
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/control-center.svg")
