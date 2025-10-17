@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Hyprland
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.VectorImage
@@ -14,6 +15,16 @@ Control {
     id: root
     anchors.fill: parent
     padding: 10
+    property var screen
+    property var monitor: Hyprland.monitorFor(screen)
+    property real sF: (1+(1-monitor.scale))
+    property int textSize: 16*sF
+    property int textSizeM: 20*sF
+    property int textSizeL: 26*sF
+    property int textSizeXL: 32*sF
+    property int textSizeXXL: 40*sF
+    property int textSizeSL: 64*sF
+    property int textSizeSSL: 86*sF
     property Component content: null
     property var widget: null
     property Component bg: Rectangle {

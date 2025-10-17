@@ -40,7 +40,7 @@ Scope {
             property bool enabled: false
             color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20000000" : "#50ffffff")
             highlightEnabled: !boxbutton.enabled
-            shadowOpacity: Config.appearance.glassMode == 3 ? 0.8 : 0.5
+            shadowOpacity: 0.8
         }
 
         component UIText: CFText {}

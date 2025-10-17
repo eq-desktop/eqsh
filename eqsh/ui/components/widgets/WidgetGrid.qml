@@ -24,6 +24,7 @@ Item {
     property int cellsY: Config.widgets.cellsY || 10
     property color backgroundColor: "#00000000"
     property bool editMode: false
+    property var screen
     property list<var> widgets: []
 
     // Compute usable size (excluding bar)
@@ -47,6 +48,7 @@ Item {
         yPos:  modelData.yPos || 0
         options: modelData.options || {}
         editMode: root.editMode
+        screen: root.screen
         deleteWidget: root.deleteWidget
         onWidgetMoved: {
             root.widgetMoved(this);

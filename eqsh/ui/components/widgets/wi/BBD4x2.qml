@@ -11,6 +11,7 @@ import Quickshell
 import Quickshell.Services.UPower
 
 BaseWidget {
+    id: bw
     content: Item {
         id: root
 
@@ -37,9 +38,9 @@ BaseWidget {
                     CFCircularProgress {
                         Layout.alignment: Qt.AlignVCenter
                         id: battery
-                        implicitSize: 60
+                        implicitSize: 80*bw.sF
                         lineWidth: 4
-                        colPrimary: AccentColor.color
+                        colPrimary: Config.appearance.multiAccentColor ? "#3cc969" : AccentColor.color
                         colSecondary: Config.general.darkMode ? "#444" : "#ddd"
                         gapAngle: 0
                         value: modelData.level
@@ -51,27 +52,27 @@ BaseWidget {
                             VectorImage {
                                 id: bIcon
                                 source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/devices/" + modelData.type + ".svg")
-                                width: 20
-                                height: 20
-                                Layout.preferredWidth: 20
-                                Layout.preferredHeight: 20
+                                width: bw.textSizeXL
+                                height: bw.textSizeXL
+                                Layout.preferredWidth: bw.textSizeXL
+                                Layout.preferredHeight: bw.textSizeXL
                                 preferredRendererType: VectorImage.CurveRenderer
                                 anchors.centerIn: parent
                                 layer.enabled: true
                                 layer.effect: MultiEffect {
                                     colorization: 1
-                                    colorizationColor: AccentColor.color
+                                    colorizationColor: Config.appearance.multiAccentColor ? "#fff" :AccentColor.color
                                 }
                             }
                         }
                     }
 
                     // Label
-                    Text {
+                    CFText {
                         text: Math.round(modelData.level * 100) + "%"
                         opacity: (modelData.name == "") ? 0 : 1
                         color: Config.general.darkMode ? "#fff" : "#222"
-                        font.pixelSize: 20
+                        font.pixelSize: bw.textSizeM
                         horizontalAlignment: Text.AlignHCenter
                         Layout.alignment: Qt.AlignHCenter
                     }

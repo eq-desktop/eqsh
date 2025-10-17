@@ -67,8 +67,8 @@ Item {
 
 	component Appearance: JsonObject {
 		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted | 4=Glass
-		property int   glassMode: 3 // 0=slight, 1=strong, 2=fun, 3=strongest
 		property bool  dynamicAccentColor: true
+		property bool  multiAccentColor: true
 		property color accentColor: "#2369ff"
 	}
 

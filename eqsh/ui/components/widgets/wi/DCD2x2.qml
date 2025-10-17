@@ -4,8 +4,10 @@ import QtQuick.Layouts
 import qs
 import qs.config
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 BaseWidget {
+    id: bw
     content: Item {
         id: root
 
@@ -15,27 +17,27 @@ BaseWidget {
             anchors.topMargin: 15
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 10
-            Text {
+            CFText {
                 id: day
-                color: AccentColor.color
-                font.pixelSize: 20
+                color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color
+                font.pixelSize: bw.textSizeM
                 font.weight: 600
                 text: Time.getTime("ddd").replace(/\.$/, "")
             }
-            Text {
+            CFText {
                 id: mon
                 color: Config.general.darkMode ? "#fff" : "#222"
-                font.pixelSize: 20
+                font.pixelSize: bw.textSizeM
                 font.weight: 600
                 text: Time.getTime("MMM").replace(/\.$/, "")
             }
         }
-        Text {
+        CFText {
             id: daynum
             anchors.centerIn: parent
             color: Config.general.darkMode ? "#fff" : "#222"
             font.family: Fonts.sFProDisplayRegular.family
-            font.pixelSize: 60
+            font.pixelSize: bw.textSizeSSL
             font.weight: 400
             text: Time.getTime("dd")
         }

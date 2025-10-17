@@ -9,16 +9,18 @@ import QtQuick.Effects
 import qs
 import qs.config
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 BaseWidget {
+    id: bw
     bg: Rectangle {
         id: bg
         anchors.fill: parent
         scale: 2
         rotation: -20
         gradient: Gradient {
-            GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : Qt.darker(AccentColor.color, 5) }
-            GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : AccentColor.color }
+            GradientStop { position: 0.0; color: Config.general.darkMode ? "#08427d" : "#08427d" }
+            GradientStop { position: 1.0; color: Config.general.darkMode ? "#5487c0" : "#5487c0" }
         }
     }
     content: Item {
@@ -26,7 +28,7 @@ BaseWidget {
         anchors.fill: parent
         Timer {
             id: notifTimer
-            interval: 10000 // 2 minutes
+            interval: 10000 // 10 minutes
             running: true
             repeat: true
             onTriggered: {
@@ -56,21 +58,21 @@ BaseWidget {
         property string hlVal: "H: --, L: --"
         property url icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/weather/cloud-sun.svg")
 
-        Text {
+        CFText {
             id: locationT
             text: root.location
-            color: AccentColor.color
-            font.pixelSize: 14
+            color: "#fff"
+            font.pixelSize: bw.textSizeM
             topPadding: 15
             leftPadding: 15
             verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft
         }
 
-        Text {
+        CFText {
             text: root.temperature + "°" + Config.widgets.tempUnit
             color: "#fff"
-            font.pixelSize: 28
+            font.pixelSize: bw.textSizeXXL
             font.weight: 300
             leftPadding: 15
             anchors.top: locationT.bottom
@@ -94,7 +96,7 @@ BaseWidget {
             id: hlT
             text: root.hlVal
             color: "#fff"
-            font.pixelSize: 12
+            font.pixelSize: bw.textSize
             leftPadding: 15
             bottomPadding: 15
             horizontalAlignment: Text.AlignLeft
@@ -105,7 +107,7 @@ BaseWidget {
             id: descriptionT
             text: root.description
             color: "#fff"
-            font.pixelSize: 12
+            font.pixelSize: bw.textSize
             leftPadding: 15
             anchors.bottom: hlT.top
         }

@@ -6,7 +6,7 @@ import qs.config
 import qs.ui.controls.providers
 
 BaseWidget {
-    id: rt
+    id: bw
     content: Item {
         id: root
         property int currentSecond: Time.getSeconds()
@@ -14,8 +14,8 @@ BaseWidget {
         Text {
             id: daylong
             anchors.fill: parent
-            color: AccentColor.color
-            font.pixelSize: 16
+            color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color
+            font.pixelSize: bw.textSizeL
             text: Time.getTime("dddd")
             anchors.top: parent.top
             anchors.left: parent.left
@@ -28,18 +28,18 @@ BaseWidget {
             anchors.fill: parent
             color: Config.general.darkMode ? "#fff" : "#222"
             font.family: Fonts.sFProDisplayRegular.family
-            font.pixelSize: 30
+            font.pixelSize: bw.textSizeXXL
             text: Time.getTime("dd")
             anchors.top: daylong.bottom
+            anchors.topMargin: bw.textSizeL+15
             anchors.left: parent.left
             anchors.leftMargin: 15
-            anchors.topMargin: 16+15
         }
 
         Text {
             id: events
             color: Config.general.darkMode ? "#aaa" : "#555"
-            font.pixelSize: 10
+            font.pixelSize: bw.textSize
             text: Translation.tr("No events today")
             font.weight: 300
             anchors.bottom: parent.bottom

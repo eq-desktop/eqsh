@@ -29,9 +29,9 @@ Scope {
     model: Quickshell.screens
 
     PanelWindow {
+      id: panelWindow
       WlrLayershell.layer: WlrLayer.Background
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-      id: panelWindow
       required property var modelData
       screen: modelData
 
@@ -91,6 +91,7 @@ Scope {
           id: grid
           anchors.fill: parent
           editMode: Runtime.widgetEditMode
+          screen: panelWindow.screen
           scale: Runtime.locked ? 0.95 : 1
           Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
           onWidgetMoved: (item) => {

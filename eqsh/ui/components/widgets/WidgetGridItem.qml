@@ -26,6 +26,7 @@ Item {
     property string name: "Widget"
     property string size: "1x1"
     property var gridContainer
+    property var screen
     property bool editMode: false
     property int xPos: 0
     property int yPos: 0
@@ -99,13 +100,13 @@ Item {
         Loader {
             id: loader
             anchors.fill: parent
-            property Component bCD2x2: BCD2x2 { widget: root }
-            property Component bBD4x2: BBD4x2 { widget: root }
-            property Component cLD2x2: CLD2x2 { widget: root }
-            property Component bWD2x2: BWD2x2 { widget: root }
-            property Component dED2x2: DED2x2 { widget: root }
-            property Component dCD2x2: DCD2x2 { widget: root }
-            property Component bID2x2: BID2x2 { widget: root }
+            property Component bCD2x2: BCD2x2 { widget: root; screen: root.screen }
+            property Component bBD4x2: BBD4x2 { widget: root; screen: root.screen }
+            property Component cLD2x2: CLD2x2 { widget: root; screen: root.screen }
+            property Component bWD2x2: BWD2x2 { widget: root; screen: root.screen }
+            property Component dED2x2: DED2x2 { widget: root; screen: root.screen }
+            property Component dCD2x2: DCD2x2 { widget: root; screen: root.screen }
+            property Component bID2x2: BID2x2 { widget: root; screen: root.screen }
             sourceComponent: {
                 root.name == "basic-clock-digital-2x2" ? bCD2x2 :
                 root.name == "battery-bar-display-4x2" ? bBD4x2 :
