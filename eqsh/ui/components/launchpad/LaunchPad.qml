@@ -116,10 +116,14 @@ Scope {
           Behavior on opacity {
             NumberAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad}
           }
-          BackgroundImage {
-            blurEnabled: true
-            blurMax: 64
-            blur: launchpadLoader.blurVal
+          Loader {
+            anchors.fill: parent
+            active: Config.wallpaper.enable
+            sourceComponent: BackgroundImage {
+              blurEnabled: true
+              blurMax: 64
+              blur: launchpadLoader.blurVal
+            }
           }
           Item {
             anchors.fill: parent

@@ -41,6 +41,7 @@ Loader {
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
         asynchronous: true
+        cache: true
 
         layer.enabled: true
         layer.effect: MultiEffect {
