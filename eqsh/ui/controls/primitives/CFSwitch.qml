@@ -6,7 +6,7 @@ import QtQuick.Controls
 
 Switch {
     id: control
-    text: qsTr("Switch")
+    text: ""
 
     indicator: Rectangle {
         id: bg

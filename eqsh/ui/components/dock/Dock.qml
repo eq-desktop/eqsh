@@ -41,6 +41,7 @@ Scope {
         source: launchpad ? Qt.resolvedUrl(Quickshell.shellDir + "/media/pngs/launchpad.png") : settings ? Quickshell.iconPath("org.gnome.Settings") : ""
         fillMode: Image.PreserveAspectFit
         visible: launchpad || settings
+        sourceSize: Qt.size(app.width, app.height)
         width: app.width
         height: app.height
         asynchronous: true
@@ -64,6 +65,7 @@ Scope {
         smooth: true
         mipmap: true
         visible: entry !== null && !(launchpad || settings || spacer)
+        sourceSize: Qt.size(app.width, app.height)
         source: entry ? Quickshell.iconPath(entry.icon) : ""
         layer.enabled: true
       }
