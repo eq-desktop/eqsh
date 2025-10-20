@@ -170,6 +170,8 @@ GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-them
 - [x] Battery & WiFi Indicators  
 - [x] Clock  
 - [x] Full JSON user settings & Settings App
+- [x] Control Center
+- [x] Advanced IPC-powered popup system
 
 ---
 
@@ -177,12 +179,9 @@ GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-them
 
 * Dock with magnification
 * Global Menu
-* Control Center
 * Desktop Icons & Widgets
 * Spotlight Extensions
 * Custom dropdown menus
-* Advanced IPC-powered popup system
-* Layered wallpapers & lockscreen
 
 ---
 
