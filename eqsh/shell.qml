@@ -130,6 +130,6 @@ Scope {
   Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
   ActivateLinux {}
   Version {}
-  Loader { active: true; asynchronous: true; sourceComponent: Screenshot {}}
+  Loader { active: Config.screenshot.enable; asynchronous: true; sourceComponent: Screenshot {}}
   ScreenCorners {}
 }

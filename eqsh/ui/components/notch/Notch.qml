@@ -196,98 +196,96 @@ Scope {
         item: notchBg
       }
 
-      Item {
-        anchors.fill: parent
-
-        Rectangle {
-          id: notchBg
-          anchors {
-            top: parent.top
-            topMargin: inFullscreen ? -(root.height + topMargin + 5) : root.topMargin
-            horizontalCenter: parent.horizontalCenter
-            Behavior on topMargin {
-              NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
-            }
+      Rectangle {
+        id: notchBg
+        anchors {
+          top: parent.top
+          topMargin: inFullscreen ? -(root.height + topMargin + 5) : root.topMargin
+          horizontalCenter: parent.horizontalCenter
+          Behavior on topMargin {
+            NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
           }
-          scale: Config.general.reduceMotion ? 1 : 0
-          Component.onCompleted: {
-            scale = 1;
+        }
+        scale: Config.general.reduceMotion ? 1 : 0
+        Component.onCompleted: {
+          scale = 1;
+        }
+        onScaleChanged: {
+          panelWindow.mask.changed();
+        }
+        Behavior on scale {
+          NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }
+        }
+        implicitWidth: root.width
+        implicitHeight: root.height
+        topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
+        topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
+        bottomLeftRadius: Config.notch.radius
+        bottomRightRadius: Config.notch.radius
+        property bool customResize: root.customResize
+        onImplicitHeightChanged: {
+          Runtime.notchHeight = implicitHeight;
+        }
+        Behavior on implicitHeight {
+          NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.2 }
+        }
+        Behavior on implicitWidth {
+          NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+        }
+        onCustomResizeChanged: {
+          if (root.customResize) {
+            root.height = root.customHeight == -1 ? Config.notch.height : root.customHeight;
+            root.width = root.customWidth == -1 ? minWidth : root.customWidth;
+          } else {
+            root.height = Config.notch.height;
+            root.width = minWidth;
           }
-          Behavior on scale {
-            NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }
-          }
-          implicitWidth: root.width
-          implicitHeight: root.height
-          topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
-          topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
-          bottomLeftRadius: Config.notch.radius
-          bottomRightRadius: Config.notch.radius
-          property bool customResize: root.customResize
-          onImplicitHeightChanged: {
-            Runtime.notchHeight = implicitHeight;
-          }
-          Behavior on implicitHeight {
-            NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.2 }
-          }
-          Behavior on implicitWidth {
-            NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
-          }
-          onCustomResizeChanged: {
-            if (root.customResize) {
-              root.height = root.customHeight == -1 ? Config.notch.height : root.customHeight;
-              root.width = root.customWidth == -1 ? minWidth : root.customWidth;
+        }
+        clip: true
+        color: Config.notch.backgroundColor
+        property var notchCustomCodeObj: null
+        property var notchCustomCodeVis: root.customNotchVisible
+        onNotchCustomCodeVisChanged: {
+          if (notchCustomCodeVis) {
+            notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
+            notchCustomCodeObj.screen = panelWindow
+            notchCustomCodeObj.meta.id = root.customNotchId
+            const version = notchCustomCodeObj.details.version
+            if (notchCustomCodeObj.details.appType == "media") {
+              runningNotchInstances = [notchCustomCodeObj.meta.id];
             } else {
-              root.height = Config.notch.height;
-              root.width = minWidth;
+              runningNotchInstances.push(notchCustomCodeObj.meta.id);
             }
-          }
-          clip: true
-          color: Config.notch.backgroundColor
-          property var notchCustomCodeObj: null
-          property var notchCustomCodeVis: root.customNotchVisible
-          onNotchCustomCodeVisChanged: {
-            if (notchCustomCodeVis) {
-              notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
-              notchCustomCodeObj.screen = panelWindow
-              notchCustomCodeObj.meta.id = root.customNotchId
-              const version = notchCustomCodeObj.details.version
-              if (notchCustomCodeObj.details.appType == "media") {
-                runningNotchInstances = [notchCustomCodeObj.meta.id];
-              } else {
-                runningNotchInstances.push(notchCustomCodeObj.meta.id);
-              }
-              if (!root.details.supportedVersions.includes(version)) {
-                console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
-              }
+            if (!root.details.supportedVersions.includes(version)) {
+              console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
             }
           }
         }
-
-        Corner {
-          visible: Config.notch.fluidEdge && !Config.notch.islandMode
-          orientation: 1
-          width: 20
-          height: 20 * Config.notch.fluidEdgeStrength
-          anchors {
-            top: notchBg.top
-            right: notchBg.left
-            rightMargin: -1
-          }
-          color: Config.notch.backgroundColor
+      }
+      Corner {
+        visible: Config.notch.fluidEdge && !Config.notch.islandMode
+        orientation: 1
+        width: 20
+        height: 20 * Config.notch.fluidEdgeStrength
+        anchors {
+          top: notchBg.top
+          right: notchBg.left
+          rightMargin: -1
         }
-        Corner {
-          visible: Config.notch.fluidEdge && !Config.notch.islandMode
-          orientation: 1
-          invertH: true
-          width: 20
-          height: 20 * Config.notch.fluidEdgeStrength
-          anchors {
-            top: notchBg.top
-            left: notchBg.right
-            leftMargin: -1
-          }
-          color: Config.notch.backgroundColor
+        color: Config.notch.backgroundColor
+      }
+      Corner {
+        visible: Config.notch.fluidEdge && !Config.notch.islandMode
+        orientation: 1
+        invertH: true
+        width: 20
+        height: 20 * Config.notch.fluidEdgeStrength
+        anchors {
+          top: notchBg.top
+          left: notchBg.right
+          leftMargin: -1
         }
+        color: Config.notch.backgroundColor
       }
     }
   }

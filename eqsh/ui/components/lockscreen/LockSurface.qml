@@ -99,27 +99,6 @@ Rectangle {
 		}
 	}
 
-	Loader {
-		active: Config.lockScreen.enableShader
-		sourceComponent: ShaderEffect {
-			id: shader
-			visible: Config.lockScreen.enableShader
-			anchors.fill: parent
-			property vector2d sourceResolution: Qt.vector2d(width, height)
-			property vector2d resolution: Qt.vector2d(width, height)
-			property real time: 0
-			property variant source: backgroundImage
-			FrameAnimation {
-				running: true
-				onTriggered: {
-					shader.time = this.elapsedTime;
-				}
-			}
-			vertexShader: Qt.resolvedUrl(Config.lockScreen.shaderVert)
-			fragmentShader: Qt.resolvedUrl(Config.lockScreen.shaderFrag)
-		}
-	}
-
 	BackgroundImage {
 		id: backgroundImage
 		source: wallpaperImage
@@ -209,7 +188,7 @@ Rectangle {
 
 			renderType: Text.NativeRendering
 			color: "#77ffffff"
-			font.family: Fonts.sFProDisplayBlack.family
+			font.family: Fonts.sFProRoundedRegular.family
 			font.pointSize: 80
 			font.weight: 900
 			layer.enabled: true
@@ -423,7 +402,7 @@ Rectangle {
 				wrapMode: Text.WordWrap
 				font.pointSize: 9
 				font.weight: Font.Normal
-				Layout.topMargin: 10
+				Layout.topMargin: 0
 			}
 		}
 	}

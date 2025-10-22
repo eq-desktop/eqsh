@@ -9,7 +9,7 @@ Slider {
         x: slider.leftPadding
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
         implicitWidth: 200
-        implicitHeight: 4
+        implicitHeight: 6
         width: slider.availableWidth
         height: implicitHeight
         radius: 10
@@ -25,15 +25,15 @@ Slider {
     handle: BoxGlass {
         x: slider.leftPadding + Math.min(slider.availableWidth - width, Math.max(0, (slider.visualPosition * (slider.availableWidth - (width)))))
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
-        width:  slider.pressed ? 30 : 25
-        height: slider.pressed ? 20 : 15
+        width:  slider.pressed ? 40 : 30
+        height: slider.pressed ? 25 : 15
         Behavior on width { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 2 } }
         Behavior on height { PropertyAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 2 } }
         color: slider.pressed ? "#20ffffff" : "#ffffff"
         light: slider.pressed ? "#fff" : "transparent"
         negLight: slider.pressed ? "#333" : "#fff"
         Behavior on negLight { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-        radius: 10
+        radius: 99
         glowStrength: slider.pressed ? 1 : 0.8
     }
     from: 0

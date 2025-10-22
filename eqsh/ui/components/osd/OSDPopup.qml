@@ -14,6 +14,7 @@ Scope {
     id: root
     default required property Component content
     required property var modelData
+    property bool loaded: false
 
     function show() {
         showAnim.start()
@@ -72,6 +73,7 @@ Scope {
                 to: Config.osd.animation == 3 ? 20 : 1
                 easing.type: Easing.OutBack
                 easing.overshoot: 1
+                onStarted: loaded = true
             }
 
             PropertyAnimation {
@@ -82,12 +84,13 @@ Scope {
                 to: Config.osd.animation == 3 ? -180 : 0
                 easing.type: Easing.OutBack
                 easing.overshoot: 1
+                onStopped: loaded = false
             }
 
             Loader {
                 id: loader
                 anchors.fill: parent
-                active: true
+                active: root.loaded
                 sourceComponent: root.content
             }
         }

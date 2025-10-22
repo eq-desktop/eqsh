@@ -19,6 +19,7 @@ Item {
 	property Widgets        widgets: adapter.widgets
 	property Osd            osd: adapter.osd
 	property Account        account: adapter.account
+	property Screenshot     screenshot: adapter.screenshot
 	property string         homeDirectory: SPPathResolver.home
 	property Dock		    dock: adapter.dock
 	property bool           loaded: fileViewer.loaded
@@ -47,6 +48,7 @@ Item {
 			property Osd            osd: Osd {}
 			property Account        account: Account {}
 			property Dock		    dock: Dock {}
+			property Screenshot		screenshot: Screenshot {}
 		}
 	}
 
@@ -219,10 +221,10 @@ Item {
 		property int          zoomDuration: 0
 		property bool         useCustomWallpaper: false
 		property string       customWallpaperPath: root.homeDirectory+"/.local/share/equora/wallpapers/Sequoia-Sunrise.png"
-		property bool         enableShader: false
-		property string       shaderName: "Raining" // Not compatible with Blur or X-Ray
-		property string       shaderFrag: Quickshell.shellDir + "/media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
-		property string       shaderVert: Quickshell.shellDir + "/media/shaders/Raining.vert.qsb"
+	}
+
+	component Screenshot: JsonObject {
+		property bool   enable: true
 	}
 
 	component Misc: JsonObject {
@@ -233,10 +235,7 @@ Item {
 		property bool   enable: true
 		property color  color: "#000000" // Only applies if path is empty
 		property string path: root.homeDirectory+"/.local/share/equora/wallpapers/Tahoe-City.jpeg"
-		property bool   enableShader: false
-		property string shaderName: "Raining"
-		property string shaderFrag: Quickshell.shellDir + "/media/shaders/Raining.frag.qsb" // use `qsb --qt6 -o ./Raining.frag.qsb ./Raining.frag` if you want to convert your own shader. Same goes for Vert
-		property string shaderVert: Quickshell.shellDir + "/media/shaders/Raining.vert.qsb"
+		property bool   desktopEnable: true
 	}
 
 	component Widgets: JsonObject {

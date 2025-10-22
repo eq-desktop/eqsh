@@ -6,11 +6,14 @@ import Quickshell.Io
 import Quickshell
 import QtQuick
 import QtQuick.Effects
+import QtQuick.Shapes
 import QtQuick.VectorImage
 import qs.config
 import qs
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+
+import "root:/agents/args.js" as AArgs
 
 Scope {
   id: root
@@ -19,13 +22,16 @@ Scope {
   property bool showing: false
   signal showPopup(var popup)
 
-  function openPopup(iconPath, title, description, timeout, important) {
+  function openPopup(iconPath, app, title, description, timeout, aargs) {
+    const parsedargs = AArgs.parse(aargs)
     let popup = {
       iconPath: iconPath,
+      app: app,
       title: title,
       description: description,
-      important: important,
-      timeout: (timeout > 0 ? timeout : 3000)
+      timeout: (timeout > 0 ? timeout : 3000),
+      attention: parsedargs?.attention ?? false,
+      banner: parsedargs?.banner ?? false
     }
     popups.push(popup)
     if (!showing) showNextPopup()
@@ -59,14 +65,18 @@ Scope {
       WlrLayershell.layer: WlrLayer.Overlay
       WlrLayershell.namespace: "eqsh:lock"
 
-      anchors.top: true
-      margins.top: (Config.notch.islandMode ? Config.notch.margin : 0)
-      implicitWidth: Config.notch.minWidth*2
-      implicitHeight: 100 + (Config.notch.margin*2) + (Runtime.notchHeight) + 25 // 25 is for bouncing box
+      anchors {
+        top: true
+        left: true
+        right: true
+        bottom: true
+      }
       exclusiveZone: -1
       color: "transparent"
 
-      mask: Region {}
+      mask: Region {
+        item: root.showing ? popupBg : null
+      }
 
       // local popup copy for this window
       property var localPopup: null
@@ -80,10 +90,13 @@ Scope {
         property real opacityV: 0
         property real opacityV2: 0
 
+        property int wWidth: 0
+        property int wHeight: 0
+
         SequentialAnimation {
           id: popupAnim
           running: false
-          onFinished: root._onPopupFinished()
+          onFinished: popupAnimIn.start()
 
           NumberAnimation {
             target: popupContent
@@ -92,125 +105,138 @@ Scope {
             to: 1
             duration: 125
           }
+        }
 
-          // --- POP IN ---
-          ParallelAnimation {
-            NumberAnimation {
-              target: popupBg
-              property: "height"
-              from: (Runtime.notchHeight)
-              to: 100
-              duration: 500
-              easing.type: Easing.OutBack
-            }
-            NumberAnimation {
-              target: popupBg
-              property: "width"
-              from: (Config.notch.minWidth) - 40
-              to: (Config.notch.minWidth*2) - 40
-              duration: 500
-              easing.type: Easing.OutBack
-            }
-
-            NumberAnimation {
-              target: popupBg
-              property: "anchors.topMargin"
-              from: Config.notch.islandMode ? Config.notch.margin : 0
-              to: Config.notch.margin+(Runtime.notchHeight)
-              duration: 300
-              easing.type: Easing.OutBack
-            }
-            NumberAnimation {
-              target: popupContent
-              property: "opacityV"
-              from: 0
-              to: 1
-              duration: 500
-            }
-            NumberAnimation {
-              target: popupContent
-              property: "blur"
-              from: 1
-              to: 0
-              duration: 200
-            }
-          }
-
-          // --- HOLD ---
-          PauseAnimation { duration: localPopup ? localPopup.timeout : 2000 }
-
-          // --- POP OUT ---
-          ParallelAnimation {
-            NumberAnimation {
-              target: popupBg
-              property: "anchors.topMargin"
-              from: Config.notch.margin+(Runtime.notchHeight)
-              to: Config.notch.islandMode ? Config.notch.margin : 0
-              duration: 500
-              easing.type: Easing.InBack
-            }
-
-            NumberAnimation {
-              target: popupBg
-              property: "width"
-              from: (Config.notch.minWidth*2) - 40
-              to: (Config.notch.minWidth) - 40
-              duration: 500
-              easing.type: Easing.InBack
-            }
-
-            NumberAnimation {
-              target: popupBg
-              property: "height"
-              from: 100
-              to: (Runtime.notchHeight)
-              duration: 500
-              easing.type: Easing.InBack
-            }
-            NumberAnimation {
-              target: popupContent
-              property: "opacityV"
-              from: 1
-              to: 0
-              duration: 500
-            }
-            NumberAnimation {
-              target: popupContent
-              property: "blur"
-              from: 0
-              to: 1
-              duration: 500
-            }
+        ParallelAnimation {
+          id: popupAnimIn
+          onFinished: popupAnimTimer.start()
+          NumberAnimation {
+            target: popupBg
+            property: "y"
+            from: Config.notch.islandMode ? Config.notch.margin : 0
+            to: Config.notch.margin+(Runtime.notchHeight) + 5
+            duration: 200
+            easing.type: Easing.OutBack
           }
           NumberAnimation {
             target: popupContent
-            property: "opacityV2"
+            property: "wWidth"
+            to: col.implicitWidth + 32
+            duration: 0
+            easing.type: Easing.OutBack
+          }
+          NumberAnimation {
+            target: popupContent
+            property: "wHeight"
+            to: col.implicitHeight + 32
+            duration: 0
+            easing.type: Easing.OutBack
+          }
+          NumberAnimation {
+            target: popupContent
+            property: "opacityV"
+            from: 0
+            to: 1
+            duration: 500
+          }
+          NumberAnimation {
+            target: popupContent
+            property: "blur"
             from: 1
             to: 0
-            duration: 250
+            duration: 200
           }
         }
 
+        Timer {
+          id: popupAnimTimer
+          interval: localPopup ? localPopup.timeout : 2000
+          onTriggered: {
+            if (localPopup?.banner ?? false) return
+            popupAnimOut.start()
+          }
+        }
+
+        ParallelAnimation {
+          id: popupAnimOut
+          onFinished: root._onPopupFinished()
+          NumberAnimation {
+            target: popupBg
+            property: "y"
+            to: Config.notch.islandMode ? Config.notch.margin : 0
+            duration: 125
+            easing.type: Easing.InOutQuad
+          }
+
+          NumberAnimation {
+            target: popupContent
+            property: "wWidth"
+            to: (Config.notch.minWidth) - 40
+            duration: 0
+            easing.type: Easing.InBack
+          }
+
+          NumberAnimation {
+            target: popupContent
+            property: "wHeight"
+            to: (Runtime.notchHeight)
+            duration: 0
+            easing.type: Easing.InBack
+          }
+
+          NumberAnimation {
+            target: popupContent
+            property: "opacityV"
+            from: 1
+            to: 0
+            duration: 125
+          }
+          NumberAnimation {
+            target: popupContent
+            property: "blur"
+            from: 0
+            to: 1
+            duration: 125
+          }
+        }
+        NumberAnimation {
+          target: popupContent
+          property: "opacityV2"
+          from: 1
+          to: 0
+          duration: 125
+        }
+
+        RectangularShadow {
+          id: shadow
+          anchors.fill: popupBg
+          spread: 0
+          blur: 40
+          color: localPopup?.attention ? "#80ff0000" : "#000000"
+          opacity: root.showing ? 1 : 0
+        }
 
         Rectangle {
           id: popupBg
+          property real wOffset: 0
           anchors {
-            top: parent.top
-            topMargin: 0
             horizontalCenter: parent.horizontalCenter
           }
-          SequentialAnimation {
-            alwaysRunToEnd: true
-            running: root.showing && localPopup ? localPopup.important : false
-            loops: -1
-            NumberAnimation { target: popupBg; property: "rotation"; to: -3; duration: 240; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: popupBg; property: "rotation"; to: 3; duration: 240; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: popupBg; property: "rotation"; to: -1; duration: 180; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: popupBg; property: "rotation"; to: 1; duration: 180; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: popupBg; property: "rotation"; to: 0; duration: 150; easing.type: Easing.InOutQuad }
+          y: Config.notch.margin + (Runtime.notchHeight) + 5
+          property int notchHeight: Runtime.notchHeight
+          onNotchHeightChanged: {
+            if (!showing) return
+            y = Config.notch.margin + (Runtime.notchHeight) + 5
           }
-          width: Config.notch.minWidth-40
-          height: Config.notch.height
+          
+          width: popupContent.wWidth - (64 * wOffset)
+          height: popupContent.wHeight - (32 * wOffset)
+          Behavior on width {
+            NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 2 }
+          }
+          Behavior on height {
+            NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 2 }
+          }
           radius: 25
           opacity: popupContent.opacityV2
           clip: true
@@ -230,48 +256,88 @@ Scope {
                 NumberAnimation { duration: 500; easing.type: Easing.InOutQuad }
               }
             }
-            SequentialAnimation {
-              alwaysRunToEnd: true
-              running: root.showing && localPopup ? localPopup.important : false
-              loops: -1
-              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 3; duration: 240; easing.type: Easing.InOutQuad }
-              NumberAnimation { target: popupNotiContent; property: "rotation"; to: -3; duration: 240; easing.type: Easing.InOutQuad }
-              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 1; duration: 180; easing.type: Easing.InOutQuad }
-              NumberAnimation { target: popupNotiContent; property: "rotation"; to: -1; duration: 180; easing.type: Easing.InOutQuad }
-              NumberAnimation { target: popupNotiContent; property: "rotation"; to: 0; duration: 150; easing.type: Easing.InOutQuad }
-            }
+            rotation: -parent.rotation
             opacity: popupContent.opacityV
             Column {
-              anchors.fill: parent
+              id: col
+              anchors.top: parent.top
+              anchors.left: parent.left
               anchors.margins: 16
+              onImplicitWidthChanged: {
+                if (localPopup == null) return
+                popupContent.wWidth = col.implicitWidth + 32
+              }
+              onImplicitHeightChanged: {
+                if (localPopup == null) return
+                popupContent.wHeight = col.implicitHeight + 32
+              }
               spacing: 8
 
-              Text {
-                text: localPopup ? localPopup.title : ""
-                color: "#ffffff"
+              Image {
+                id: icon
+                source: localPopup ? localPopup.iconPath : ""
+                width: 16
                 height: 16
-                font.family: Fonts.sFProDisplayRegular.family
-                font.weight: 600
-                font.pixelSize: 16
+                Text {
+                  text: localPopup ? `<font color="#555">${localPopup.app}</font> · ${localPopup.title}` : ""
+                  color: "#ffffff"
+                  height: 14
+                  anchors {
+                    left: icon.right
+                    leftMargin: 4
+                  }
+                  font.family: Fonts.sFProDisplayRegular.family
+                  font.weight: 600
+                  font.pixelSize: 14
+                }
               }
               Text {
                 text: localPopup ? localPopup.description : ""
                 color: "#cccccc"
                 font.family: Fonts.sFProDisplayRegular.family
-                font.pixelSize: 13
+                font.pixelSize: 12
                 width: (Config.notch.minWidth*2) - 40
                 wrapMode: Text.WrapAnywhere
               }
             }
           }
+        }
 
-          layer.enabled: true
-          layer.effect: MultiEffect {
-            anchors.fill: popupBg
-            shadowEnabled: true
-            shadowColor: "#000000"
-            shadowOpacity: 0.3
-            shadowBlur: 12
+        MouseArea {
+          property real startY
+          property real dragStartY
+          property bool dragging: false
+          anchors.fill: parent
+          drag.axis: Drag.YAxis
+          drag.minimumY: 0
+          drag.maximumY: 300
+          drag.smoothed: true
+
+          onPressed: (mouse) => {
+            startY = popupBg.y
+            dragStartY = mouse.y
+            dragging = true
+          }
+
+          onPositionChanged: (mouse) => {
+            if (!dragging) return
+            // Distance dragged
+            var dy = mouse.y - dragStartY
+            // Apply "tension" curve: the farther you drag, the less it moves
+            var tension = 0.4
+            var resistance = 1 - Math.exp(-Math.abs(dy) * tension / 100)
+            // Direction-aware resistance
+            var offset = Math.sign(dy) * resistance * 100
+            // Limit drag
+            popupBg.y = Config.notch.margin + (Runtime.notchHeight) + 5 + offset
+            popupBg.wOffset = popupBg.y / 129
+          }
+
+          onReleased: {
+            dragging = false
+            popupAnimTimer.stop()
+            popupAnimOut.start()
+            popupBg.wOffset = 0
           }
         }
       }
@@ -280,7 +346,6 @@ Scope {
       Connections {
         target: root
         function onShowPopup(popup) {
-          // copy popup into this window and start animation
           localPopup = popup
           popupAnim.start()
         }
@@ -290,8 +355,8 @@ Scope {
 
   IpcHandler {
     target: "popup"
-    function openPopup(iconPath: string, title: string, description: string, timeout: int, important: bool) {
-      root.openPopup(iconPath, title, description, timeout, important)
+    function openPopup(iconPath: string, app: string, title: string, description: string, timeout: int, aargs: string) {
+      root.openPopup(iconPath, app, title, description, timeout, aargs)
     }
   }
 }

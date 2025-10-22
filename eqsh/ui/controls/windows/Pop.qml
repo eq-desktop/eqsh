@@ -51,7 +51,7 @@ Scope {
             anchors.fill: parent
             Loader {
                 anchors.fill: parent
-                active: true
+                active: root.opened
                 sourceComponent: content
             }
         }

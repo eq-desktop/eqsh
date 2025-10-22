@@ -280,7 +280,7 @@ Scope {
                     id: displayWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
-                    radius: 25
+                    radius: 30
                     anchors {
                         top: focusWidget.bottom
                         left: parent.left
@@ -395,7 +395,7 @@ Scope {
                     id: volumeWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
-                    radius: 25
+                    radius: 30
                     anchors {
                         top: displayWidget.bottom
                         left: parent.left
@@ -446,6 +446,9 @@ Scope {
                             colorizationColor: "#fff"
                         }
                     }
+                     PwObjectTracker {
+                        objects: [ Pipewire.defaultAudioSink ]
+                    }
                     CFSlider {
                         id: volumeSlider
                         anchors {
@@ -459,9 +462,9 @@ Scope {
                         from: 0
                         to: 1
                         stepSize: 1 / 100.0
-                        value: Pipewire.defaultAudioSink?.audio.volume ?? 0
+                        value: Pipewire.defaultAudioSink?.audio.volume || 0
                         onValueChanged: {
-                            if (Pipewire.defaultAudioSink) {
+                            if (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio) {
                                 Pipewire.defaultAudioSink.audio.volume = volumeSlider.value
                             }
                         }
