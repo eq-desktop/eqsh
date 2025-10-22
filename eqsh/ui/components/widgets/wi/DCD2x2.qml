@@ -20,25 +20,27 @@ BaseWidget {
             CFText {
                 id: day
                 color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color
-                font.pixelSize: bw.textSizeM
+                font.pixelSize: bw.textSizeXL
                 font.weight: 600
                 text: Time.getTime("ddd").replace(/\.$/, "")
             }
             CFText {
                 id: mon
-                color: Config.general.darkMode ? "#fff" : "#222"
-                font.pixelSize: bw.textSizeM
+                color: Config.general.darkMode ? "#666" : "#444"
+                font.pixelSize: bw.textSizeXL
                 font.weight: 600
                 text: Time.getTime("MMM").replace(/\.$/, "")
             }
         }
         CFText {
             id: daynum
-            anchors.centerIn: parent
+            anchors.top: layout.bottom
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
             color: Config.general.darkMode ? "#fff" : "#222"
-            font.family: Fonts.sFProDisplayRegular.family
-            font.pixelSize: bw.textSizeSSL
-            font.weight: 400
+            font.family: Fonts.sFProDisplayBlack.family
+            font.pixelSize: height - 30
+            font.weight: 700
             text: Time.getTime("dd")
         }
     }

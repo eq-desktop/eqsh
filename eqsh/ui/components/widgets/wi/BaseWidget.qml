@@ -17,7 +17,7 @@ Control {
     padding: 10
     property var screen
     property var monitor: Hyprland.monitorFor(screen)
-    property real sF: (1+(1-monitor.scale || 1))
+    property real sF: Math.min(0.7777, (1+(1-monitor.scale || 1)))
     property int textSize: 16*sF
     property int textSizeM: 20*sF
     property int textSizeL: 26*sF
