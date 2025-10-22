@@ -16,6 +16,9 @@ VectorImage {
     Behavior on color { ColorAnimation { duration: 300 }}
     property int size: 16
     property bool colorized: true
+    property string icon: ""
+    property bool useQIcon: false
+    source: useQIcon ? Quickshell.iconPath(icon) : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/" + icon)
     width: size
     height: size
     Layout.preferredWidth: size

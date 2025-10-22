@@ -21,6 +21,7 @@ BaseWidget {
                 text: Qt.locale(Config.general.language).toString(new Date(), "MMMM")
                 font.pixelSize: textSizeM
                 font.weight: 600
+                font.capitalization: Font.AllUppercase
                 color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color
                 height: 10
             }

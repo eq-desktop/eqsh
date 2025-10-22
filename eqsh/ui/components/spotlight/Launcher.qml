@@ -10,6 +10,7 @@ import qs
 import qs.ui.controls.advanced
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 Scope {
     id: root
@@ -18,12 +19,11 @@ Scope {
         model: Quickshell.screens
         PanelWindow {
             id: launcher
-            implicitWidth: 500
+            implicitWidth: 600
             implicitHeight: 600
             required property var modelData
             screen: modelData
             color: "transparent"
-            focusable: true
             WlrLayershell.namespace: "eqsh:blur"
 
             property bool focusedScreen: (modelData.name == (Hyprland.focusedMonitor?.name ?? ""))
@@ -38,26 +38,38 @@ Scope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 visible: Runtime.spotlightOpen && focusedScreen
                 width: parent.width * 0.85
-                implicitHeight: results.height + search.height + 32
+                implicitHeight: results.height + search.height + 8
                 radius: 25
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 16
+                    anchors.margins: 4
                     spacing: 10
 
                     TextField {
                         id: search
                         Layout.fillWidth: true
                         Layout.preferredHeight: 40
-                        font.pixelSize: 16
+                        leftPadding: 34
+                        font.pixelSize: 26
                         color: "white"
+                        CFVI {
+                            id: sicon
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            size: 20
+                            opacity: 0.5
+                            icon: "search.svg"
+                        }
                         background: Text {
                             anchors.fill: parent
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignLeft
-                            anchors.leftMargin: 12
+                            anchors.leftMargin: 34
+                            font.pixelSize: 20
                             color: "#fff"
+                            opacity: 0.5
                             visible: search.text == ""
                             text: "Search..."
                         }
@@ -67,6 +79,12 @@ Scope {
                                 root.toggle();
                             }
                         }
+                    }
+
+                    HyprlandFocusGrab {
+                        id: grab
+                        windows: [ launcher ]
+                        active: Runtime.spotlightOpen
                     }
 
                     ListView {
@@ -96,8 +114,8 @@ Scope {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 12
                                 source: Quickshell.iconPath(modelData.icon)
-                                width: 32
-                                height: 32
+                                width: 24
+                                height: 24
                                 smooth: true
                                 mipmap: true
                                 layer.enabled: true
@@ -117,7 +135,7 @@ Scope {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
-                                anchors.leftMargin: 56
+                                anchors.leftMargin: 40
                                 text: modelData.name
                                 color: "white"
                                 font.pixelSize: 15
