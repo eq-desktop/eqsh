@@ -22,6 +22,7 @@ Scope {
   property bool takingScreenshot: false
   signal requestScreenshot()
   property var region: Qt.rect(0, 0, 0, 0)
+  property var outputMon: Hyprland.focusedMonitor
   property int optionsSaveTo: 0
   property int optionsTimer: 0
   property list<bool> optionsOptions: [false, false, false]
@@ -57,7 +58,7 @@ Scope {
     command: [
       "grim",
       "-g",
-      Math.round(root.region.x) + "," + Math.round(root.region.y) + " " + Math.round(root.region.width) + "x" + Math.round(root.region.height),
+      Math.round(root.region.x + outputMon.x) + "," + Math.round(root.region.y + outputMon.y) + " " + Math.round(root.region.width) + "x" + Math.round(root.region.height),
       "" + (root.optionsSaveTo == 0 ? "Desktop/" : root.optionsSaveTo == 1 ? "Documents/": "") + Time.getTime("yyyy-MM-dd-HH-mm-ss") + ".png"
     ]
     running: false

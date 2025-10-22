@@ -11,6 +11,7 @@ Singleton {
     property int    notchHeight: 0
     property bool   settingsOpen: false
     property bool   spotlightOpen: false
+    property bool   aiOpen: false
     property bool   launchpadOpen: false
     property bool   showScrn: false
     property bool   widgetEditMode: false

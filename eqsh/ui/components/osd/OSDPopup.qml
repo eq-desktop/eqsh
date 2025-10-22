@@ -43,10 +43,12 @@ Scope {
         screen: root.modelData
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "eqsh:blur"
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
         implicitWidth: 180
         implicitHeight: 360
         color: "transparent"
         exclusiveZone: 0
+        focusable: false
         mask: Region {}
 
         BoxGlass {

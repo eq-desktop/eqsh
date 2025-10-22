@@ -1,16 +1,11 @@
 import Quickshell
 import QtQuick
+import QtQuick.Effects
 import qs
 import qs.config
 import qs.ui.controls.providers
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtQuick.Effects
-import QtQuick.Shapes
-import QtQuick.VectorImage
 
-VectorImage {
+Image {
     id: vi
     property color color: "#fff"
     Behavior on color { ColorAnimation { duration: 300 }}
@@ -18,12 +13,11 @@ VectorImage {
     property bool colorized: true
     property string icon: ""
     property bool useQIcon: false
-    source: useQIcon ? Quickshell.iconPath(icon) : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/" + icon)
+    source: useQIcon ? Quickshell.iconPath(icon) : Qt.resolvedUrl(Quickshell.shellDir + "/media/pngs/" + icon)
     width: size
     height: size
-    Layout.preferredWidth: size
-    Layout.preferredHeight: size
-    preferredRendererType: VectorImage.CurveRenderer
+    smooth: true
+    mipmap: true
     layer.enabled: colorized
     layer.effect: MultiEffect {
         colorization: vi.colorized ? 1 : 0

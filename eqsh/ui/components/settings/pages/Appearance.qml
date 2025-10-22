@@ -58,7 +58,7 @@ ScrollView {
                         spacing: 10
 
                         CFText {
-                            text: "Appearance"
+                            text: Translation.tr("Appearance")
                             font.pixelSize: 20
                             Layout.alignment: Qt.AlignTop
                         }
@@ -91,7 +91,7 @@ ScrollView {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 10
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: "Light"
+                                text: Translation.tr("Light")
                                 gray: Config.general.darkMode
                             }
                         }
@@ -121,7 +121,7 @@ ScrollView {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 10
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: "Dark"
+                                text: Translation.tr("Dark")
                                 gray: !Config.general.darkMode
                             }
                         }
@@ -151,7 +151,7 @@ ScrollView {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: 10
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: "Auto"
+                                text: Translation.tr("Auto")
                                 gray: true
                             }
                         }
@@ -183,7 +183,7 @@ ScrollView {
                         spacing: 10
 
                         CFText {
-                            text: "Color"
+                            text: Translation.tr("Color")
                             font.pixelSize: 20
                             Layout.alignment: Qt.AlignTop
                         }
@@ -234,7 +234,7 @@ ScrollView {
                                 }
                             }
                         }
-                        property list<string> colorNames: ["Dynamic", "Blue", "Purple", "Pink", "Red", "Orange", "Yellow", "Green", "Grey"]
+                        property list<string> colorNames: [Translation.tr("Dynamic"), Translation.tr("Blue"), Translation.tr("Purple"), Translation.tr("Pink"), Translation.tr("Red"), Translation.tr("Orange"), Translation.tr("Yellow"), Translation.tr("Green"), Translation.tr("Granite")]
                         Repeater {
                             model: ["#00000000", "#007bfd", "#97399a", "#F5529D", "#E43838", "#FC7E12", "#FEC531", "#63B947", "#969696"]
                             delegate: ColorCircle {}
@@ -258,7 +258,7 @@ ScrollView {
                         spacing: 10
 
                         CFText {
-                            text: "Use Appearance of Application"
+                            text: Translation.tr("Use Appearance of Application")
                             Layout.alignment: Qt.AlignVCenter
                         }
 
@@ -293,7 +293,7 @@ ScrollView {
                         spacing: 10
 
                         CFText {
-                            text: "Icon & widget style"
+                            text: Translation.tr("Icon & widget style")
                             Layout.alignment: Qt.AlignTop
                         }
 
@@ -326,21 +326,12 @@ ScrollView {
                             }
                         }
                         Repeater {
-                            model: ["Default", "Dark", "Clear", "Tinted"]
+                            model: [Translation.tr("Default"), Translation.tr("Dark"), Translation.tr("Clear"), Translation.tr("Tinted")]
                             delegate: IconStyle {}
                         }
                     }
                 }
             }
         }
-        //Button {
-        //    text: Translation.tr("Set Color")
-        //    onClicked: colorDialog2.open()
-        //}
-        //ColorDialog {
-        //    id: colorDialog2
-        //    selectedColor: Config.appearance.accentColor
-        //    onAccepted: Config.appearance.accentColor = selectedColor
-        //}
     }
 }

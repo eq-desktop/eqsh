@@ -1,6 +1,7 @@
 pragma Singleton
 
 import QtQuick
+import qs
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
@@ -9,7 +10,7 @@ Singleton {
     id: mpris
     property var players: Mpris.players.values
     property var activePlayer: mpris.players[mpris.players.length - 1] || null
-    property string title: mpris.activePlayer?.trackTitle ?? "Not Playing"
+    property string title: mpris.activePlayer?.trackTitle ?? Translation.tr("Not Playing")
     property string artist: mpris.activePlayer?.trackArtist ?? ""
     property string album: mpris.activePlayer?.trackAlbum ?? ""
     property url thumbnail: mpris.activePlayer?.trackArtUrl ?? ""

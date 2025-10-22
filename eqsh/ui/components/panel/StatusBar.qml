@@ -10,6 +10,7 @@ import qs
 import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 import qs.ui.controls.windows
 import qs.ui.controls.windows.dropdown
 import QtQuick.Controls.Fusion
@@ -258,6 +259,8 @@ Scope {
                       return controlCenterComponent
                     case "clock":
                       return clockComponent
+                    case "ai":
+                      return aiComponent
                     default:
                       return null
                   }
@@ -298,6 +301,23 @@ Scope {
               }
               selected: Runtime.spotlightOpen
               onClick: Runtime.spotlightOpen = !Runtime.spotlightOpen
+            }
+          }
+          Component {
+            id: aiComponent
+            UIBButton {
+              CFI {
+                id: rBAI
+                icon: "ai.png"
+                width: barIS * 1.2
+                height: barIS * 1.2
+                Layout.preferredWidth: barIS * 1.2
+                Layout.preferredHeight: barIS * 1.2
+                anchors.centerIn: parent
+                colorized: false
+              }
+              selected: Runtime.aiOpen
+              onClick: Runtime.aiOpen = !Runtime.aiOpen
             }
           }
           Component {

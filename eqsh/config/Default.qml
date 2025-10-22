@@ -20,6 +20,7 @@ Item {
 	property Osd            osd: adapter.osd
 	property Account        account: adapter.account
 	property Screenshot     screenshot: adapter.screenshot
+	property Sigrid         sigrid: adapter.sigrid
 	property string         homeDirectory: SPPathResolver.home
 	property Dock		    dock: adapter.dock
 	property bool           loaded: fileViewer.loaded
@@ -49,6 +50,7 @@ Item {
 			property Account        account: Account {}
 			property Dock		    dock: Dock {}
 			property Screenshot		screenshot: Screenshot {}
+			property Sigrid		    sigrid: Sigrid {}
 		}
 	}
 
@@ -157,6 +159,7 @@ Item {
 			"search",
 			"bluetooth",
 			"controlCenter",
+			"ai",
 			"clock"
 		]
 		property string batteryFormat: "%p%"
@@ -210,9 +213,6 @@ Item {
 		property string       usageInfo: "Touch ID or Enter Password" // A small note below the textfield
 		property real         blur: 0
 		property real         blurStrength: 1
-		property bool         liquidBlur: false
-		property bool         liquidBlurMax: false
-		property int          liquidDuration: 7000
 		property real         clockZoom: 1
 		property int          clockZoomDuration: 300
 		property string       dimColor: "#000000"
@@ -229,6 +229,15 @@ Item {
 
 	component Misc: JsonObject {
 		property bool showVersion: false
+	}
+
+	component Sigrid: JsonObject {
+		property string key: ""
+		property string model: "gemini-2.5-flash"
+		property string systemPromptLocation: root.homeDirectory+"/.local/share/equora/eqsh/config/sigrid_system_prompt.txt"
+		property JsonObject options: JsonObject {
+			property string type: "google"
+		}
 	}
 
 	component Wallpaper: JsonObject {

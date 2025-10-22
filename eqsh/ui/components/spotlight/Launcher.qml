@@ -11,155 +11,152 @@ import qs.ui.controls.advanced
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
+import qs.ui.controls.windows
 
 Scope {
     id: root
 
-    Variants {
-        model: Quickshell.screens
-        PanelWindow {
-            id: launcher
-            implicitWidth: 600
-            implicitHeight: 600
-            required property var modelData
-            screen: modelData
-            color: "transparent"
-            WlrLayershell.namespace: "eqsh:blur"
+    FollowingPanelWindow {
+        id: launcher
+        implicitWidth: 600
+        implicitHeight: 600
+        color: "transparent"
+        WlrLayershell.namespace: "eqsh:blur"
 
-            property bool focusedScreen: (modelData.name == (Hyprland.focusedMonitor?.name ?? ""))
+        mask: Region {
+            item: Runtime.spotlightOpen ? background : null
+        }
 
-            mask: Region {
-                item: Runtime.spotlightOpen && focusedScreen ? background : null
+        HyprlandFocusGrab {
+            id: grab
+            windows: [ launcher ]
+            active: Runtime.spotlightOpen
+            onCleared: {
+                Runtime.spotlightOpen = false
             }
+        }
 
-            BoxGlass {
-                id: background
-                anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
-                visible: Runtime.spotlightOpen && focusedScreen
-                width: parent.width * 0.85
-                implicitHeight: results.height + search.height + 8
-                radius: 25
+        BoxGlass {
+            id: background
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: Runtime.spotlightOpen
+            width: parent.width * 0.85
+            implicitHeight: results.height + search.height + 8
+            radius: 25
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 4
-                    spacing: 10
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 4
+                spacing: 10
 
-                    TextField {
-                        id: search
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 40
-                        leftPadding: 34
-                        font.pixelSize: 26
-                        color: "white"
-                        CFVI {
-                            id: sicon
+                TextField {
+                    id: search
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    leftPadding: 34
+                    font.pixelSize: 26
+                    color: "white"
+                    CFVI {
+                        id: sicon
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        size: 20
+                        opacity: 0.5
+                        icon: "search.svg"
+                    }
+                    background: Text {
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignLeft
+                        anchors.leftMargin: 34
+                        font.pixelSize: 20
+                        color: "#fff"
+                        opacity: 0.5
+                        visible: search.text == ""
+                        text: Translation.tr("Search...")
+                    }
+                    focus: true
+                    Keys.onPressed: (event) => {
+                        if (event.key === Qt.Key_Escape) {
+                            root.toggle();
+                        }
+                    }
+                }
+
+                ListView {
+                    id: results
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    height: search.text == "" ? 0 : 400
+                    spacing: 4
+
+                    model: ScriptModel {
+                        values: search.text == "" ? [] : DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(search.text.toLowerCase()))
+                    }
+
+                    delegate: Rectangle {
+                        required property DesktopEntry modelData
+                        width: parent ? parent.width : 0
+                        height: 40
+                        radius: 15
+                        color: hovered ? AccentColor.color : "transparent"
+
+                        property bool hovered: false
+
+                        Image {
+                            id: icon
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.leftMargin: 12
-                            size: 20
-                            opacity: 0.5
-                            icon: "search.svg"
+                            source: Quickshell.iconPath(modelData.icon)
+                            width: 24
+                            height: 24
+                            smooth: true
+                            mipmap: true
+                            layer.enabled: true
+                            scale: 0
+                            Behavior on scale {
+                                NumberAnimation {
+                                    duration: 200
+                                    easing.type: Easing.OutBack
+                                    easing.overshoot: 1
+                                }
+                            }
+                            Component.onCompleted: {
+                                scale = 1
+                            }
                         }
-                        background: Text {
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 40
+                            text: modelData.name
+                            color: "white"
+                            font.pixelSize: 15
+                            elide: Text.ElideRight
+                        }
+
+                        MouseArea {
                             anchors.fill: parent
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignLeft
-                            anchors.leftMargin: 34
-                            font.pixelSize: 20
-                            color: "#fff"
-                            opacity: 0.5
-                            visible: search.text == ""
-                            text: "Search..."
-                        }
-                        focus: true
-                        Keys.onPressed: (event) => {
-                            if (event.key === Qt.Key_Escape) {
-                                root.toggle();
-                            }
-                        }
-                    }
-
-                    HyprlandFocusGrab {
-                        id: grab
-                        windows: [ launcher ]
-                        active: Runtime.spotlightOpen
-                    }
-
-                    ListView {
-                        id: results
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        clip: true
-                        height: search.text == "" ? 0 : 400
-                        spacing: 4
-
-                        model: ScriptModel {
-                            values: search.text == "" ? [] : DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(search.text.toLowerCase()))
-                        }
-
-                        delegate: Rectangle {
-                            required property DesktopEntry modelData
-                            width: parent ? parent.width : 0
-                            height: 40
-                            radius: 15
-                            color: hovered ? AccentColor.color : "transparent"
-
-                            property bool hovered: false
-
-                            Image {
-                                id: icon
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.leftMargin: 12
-                                source: Quickshell.iconPath(modelData.icon)
-                                width: 24
-                                height: 24
-                                smooth: true
-                                mipmap: true
-                                layer.enabled: true
-                                scale: 0
-                                Behavior on scale {
-                                    NumberAnimation {
-                                        duration: 200
-                                        easing.type: Easing.OutBack
-                                        easing.overshoot: 1
-                                    }
-                                }
-                                Component.onCompleted: {
-                                    scale = 1
-                                }
-                            }
-
-                            Text {
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.leftMargin: 40
-                                text: modelData.name
-                                color: "white"
-                                font.pixelSize: 15
-                                elide: Text.ElideRight
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                onEntered: parent.hovered = true
-                                onExited: parent.hovered = false
-                                onClicked: {modelData.execute(); root.toggle();}
-                            }
+                            hoverEnabled: true
+                            onEntered: parent.hovered = true
+                            onExited: parent.hovered = false
+                            onClicked: {modelData.execute(); root.toggle();}
                         }
                     }
                 }
             }
-            property bool spotlightOpen: Runtime.spotlightOpen
-            onSpotlightOpenChanged: {
-                if (spotlightOpen) {
-                    search.focus = true;
-                } else {
-                    search.text = "";
-                }
+        }
+        property bool spotlightOpen: Runtime.spotlightOpen
+        onSpotlightOpenChanged: {
+            if (spotlightOpen) {
+                search.focus = true;
+            } else {
+                search.text = "";
             }
         }
     }
