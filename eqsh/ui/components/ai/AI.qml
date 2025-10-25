@@ -44,7 +44,7 @@ Scope {
     FollowingPanelWindow {
         id: panelWindow
         WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "eqsh:blur"
+        WlrLayershell.namespace: "eqsh:lock-blur"
         anchors {
             top: true
             right: true
@@ -80,26 +80,32 @@ Scope {
         PropertyAnimation {
             id: showAIAnim
             target: contentItem
-            property: "anchors.rightMargin"
-            from: -410
+            properties: "anchors.topMargin"
+            from: -10
             to: 10
             duration: 500
             easing.type: Easing.OutBack
             easing.overshoot: 0.5
             onStarted: {
                 panelWindow.visibleC = true
+                contentItem.opacity = 1
+                contentItem.scale = 1
             }
         }
 
         PropertyAnimation {
             id: hideAIAnim
             target: contentItem
-            property: "anchors.rightMargin"
+            properties: "anchors.topMargin"
             from: 10
-            to: -410
+            to: -10
             duration: 500
             easing.type: Easing.OutBack
             easing.overshoot: 2
+            onStarted: {
+                contentItem.opacity = 0
+                contentItem.scale = 0.9
+            }
             onFinished: {
                 panelWindow.visibleC = false
             }
@@ -118,10 +124,17 @@ Scope {
             anchors {
                 top: parent.top
                 right: parent.right
-                rightMargin: -410
-                topMargin: 10
+                rightMargin: 10
+                topMargin: -10
                 bottom: parent.bottom
             }
+            scale: 0.9
+            Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            onScaleChanged: {
+                panelWindow.mask.changed()
+            }
+            opacity: 0
             visible: panelWindow.visibleC
             width: 300
             BoxGlass {
@@ -131,7 +144,7 @@ Scope {
                     horizontalCenter: parent.horizontalCenter
                     margins: 10
                 }
-                z: 2
+                z: 3
                 width: 300
                 height: 40
                 light: '#380404'
@@ -145,7 +158,7 @@ Scope {
                 TextField {
                     id: inputText
                     anchors.fill: parent
-                    focus: true
+                    focus: Runtime.aiOpen
                     color: "#fff"
                     leftPadding: 38
                     CFI {
@@ -175,7 +188,6 @@ Scope {
                     font.pixelSize: 16
                     onAccepted: {
                         console.info("Request AI Answer To: " + inputText.text)
-                        output.hide()
                         acceptAnim.start()
                         loadingAnim.start()
                         loadingAnim2.start()
@@ -189,9 +201,7 @@ Scope {
                             input.siconScale = 1
                             Runtime.aiOpen = true
                             if (success) {
-                                output.text = response.candidates[0].content.parts[0].text
                                 panelWindow.state = "answer"
-                                output.show()
                                 input.glowStrength = 0
                                 panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
                             } else {
@@ -276,70 +286,96 @@ Scope {
                     ColorAnimation { target: input; property: "light"; to: "#b37aff"; duration: 2000; easing.type: Easing.InOutSine } // Back to Purple
                 }
             }
-            BoxGlass {
-                id: output
+            ListView {
+                id: answers
                 anchors {
                     top: input.bottom
+                    topMargin: 10
                     horizontalCenter: parent.horizontalCenter
-                    margins: 10
-                    topMargin: -40
+                    bottom: parent.bottom
                 }
-                color: '#2a1f0707'
-                light: '#50380404'
-                negLight: '#50380404'
-                z: 1
                 width: 300
-                property string text: ""
-                function hide() {
-                    opacity = 0
-                    scale = 0
-                    text = ""
-                    anchors.topMargin = -40
+                spacing: 10
+                model: ScriptModel {
+                    values: panelWindow.answers
                 }
-                function show() {
-                    opacity = 1
-                    scale = 1
-                    anchors.topMargin = 10
+                add: Transition {
+                    NumberAnimation { properties: "scale"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                    NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
                 }
-                opacity: 0
-                height: content.height + 20
-                scale: 0
-
-                Behavior on height {
-                    NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                remove: Transition {
+                    NumberAnimation { properties: "scale"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                    NumberAnimation { properties: "opacity"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
                 }
-                Behavior on scale {
-                    NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                }
-                Behavior on opacity {
-                    NumberAnimation { duration: 200 }
-                }
-                Behavior on anchors.topMargin {
-                    NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                }
-
-                ScrollView {
-                    id: content
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        top: parent.top
-                        margins: 10
+                header: Item {
+                    height: 40
+                    width: 300
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            panelWindow.answers.splice(0, panelWindow.answers.length)
+                        }
+                        BoxGlass {
+                            id: header
+                            color: '#2a1f0707'
+                            light: '#50380404'
+                            negLight: '#50380404'
+                            z: 1
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottomMargin: 10
+                            width: clearBtnText.implicitWidth + 20
+                            height: 30
+                            scale: 1
+                            opacity: 1
+                            Text {
+                                id: clearBtnText
+                                anchors.fill: parent
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                color: "#fff"
+                                text: Translation.tr("Clear")
+                                font.family: Fonts.sFProDisplayBlack.family
+                            }
+                        }
                     }
-                    contentWidth: 280
-                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                    height: Math.min(500, textO.implicitHeight)
-                    TextEdit {
-                        id: textO
-                        renderType: Text.NativeRendering
-                        font.family: Fonts.sFProDisplayBlack.family
-                        text: output.text
-                        color: "#fff"
-                        selectionColor: "#555"
-                        wrapMode: Text.Wrap
-                        readOnly: true
-                        width: 280
-                        textFormat: TextEdit.MarkdownText
+                }
+                headerPositioning: ListView.PullBackHeader
+                delegate: BoxGlass {
+                    id: output
+                    required property var modelData
+                    color: '#2a1f0707'
+                    light: '#50380404'
+                    negLight: '#50380404'
+                    z: 1
+                    width: 300
+                    property string text: modelData[0] == "user" ? "<font color=\"#aaa\">You: </font>" + modelData[1] : modelData[1]
+                    opacity: 1
+                    height: content.height + 20
+                    scale: 1
+
+                    ScrollView {
+                        id: content
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            top: parent.top
+                            margins: 10
+                        }
+                        contentWidth: 280
+                        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                        height: Math.min(500, textO.implicitHeight)
+                        TextEdit {
+                            id: textO
+                            renderType: Text.NativeRendering
+                            font.family: Fonts.sFProDisplayBlack.family
+                            text: output.text
+                            color: "#fff"
+                            selectionColor: "#555"
+                            wrapMode: Text.Wrap
+                            readOnly: true
+                            width: 280
+                            textFormat: TextEdit.MarkdownText
+                        }
                     }
                 }
             }
