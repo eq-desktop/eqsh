@@ -194,7 +194,7 @@ Scope {
                         input.error = false
                         input.loading = true
                         panelWindow.answers.push(["user", inputText.text])
-                        agent.call(inputText.text, Config.sigrid.key, Config.sigrid.model, {systemPrompt: sigridPrompt.text()}, function(success, response) {
+                        agent.call(inputText.text, Config.sigrid.key, Config.sigrid.model, {systemPrompt: sigridPrompt.text(), previousMessages: panelWindow.answers.map(function(a) { return {role: a[0], content: a[1]} })}, function(success, response) {
                             input.loading = false
                             loadingAnim.stop()
                             loadingAnim2.stop()
@@ -343,6 +343,7 @@ Scope {
                 delegate: BoxGlass {
                     id: output
                     required property var modelData
+                    required property var index
                     color: '#2a1f0707'
                     light: '#50380404'
                     negLight: '#50380404'
@@ -375,6 +376,41 @@ Scope {
                             readOnly: true
                             width: 280
                             textFormat: TextEdit.MarkdownText
+                        }
+                    }
+                    MouseArea {
+                        id: mousearea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                    }
+
+                    Rectangle {
+                        anchors {
+                            top: parent.top
+                            right: parent.right
+                            margins: 10.5
+                        }
+                        width: 15
+                        height: 15
+                        radius: 7.5
+                        color: "#2a1f0707"
+                        border {
+                            width: 1
+                            color: "#80ffffff"
+                        }
+                        scale: mousearea.containsMouse ? 1 : 0
+                        Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                        CFVI {
+                            anchors.centerIn: parent
+                            size: 10
+                            opacity: 1
+                            icon: "x.svg"
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                panelWindow.answers.splice(output.index, 1)
+                            }
                         }
                     }
                 }

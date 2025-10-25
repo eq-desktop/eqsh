@@ -18,10 +18,14 @@ function call(promptText, apiKey, model, options = {}, callback) {
   let url, body, headers;
 
   if (type === "google") {
+    let finalPrompt = `
+      Chat History: ${options.previousMessages ? JSON.stringify(options.previousMessages) : "Empty"}
+      Prompt: ${promptText}
+    `
     url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
     body = {
       contents: [
-        { parts: [ { text: promptText } ] }
+        { parts: [ { text: finalPrompt } ] }
       ],
       systemInstruction: options.systemPrompt
       ? { role: "system", parts: [{ text: options.systemPrompt }] }
