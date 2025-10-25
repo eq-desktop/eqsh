@@ -66,7 +66,7 @@ Scope {
         id: launchpadLoader
         asynchronous: true
         active: true
-        focus: false
+        focus: true
         property real scaleVal: Config.launchpad.zoom
         property real blurVal
         property bool shown: false
@@ -140,7 +140,9 @@ Scope {
               anchors.topMargin: 20
               TextField {
                 id: searchBox
-                anchors.centerIn: parent
+                anchors.fill: parent
+                font.pixelSize: 14
+                leftPadding: 10
                 background: Rectangle {
                   color: "transparent";
                   anchors.fill: parent
@@ -171,10 +173,11 @@ Scope {
 
                 implicitWidth: 250
                 implicitHeight: 30
-                padding: 10
+                padding: 0
 
                 focus: true
               }
+              z: 2
             }
             SwipeView {
               id: swipeView
@@ -182,9 +185,11 @@ Scope {
               interactive: true
               orientation: Qt.Horizontal
 
+              property var apps: DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(searchBox.text.toLowerCase()))
+
               // Split applications into pages of 35
               Repeater {
-                model: Math.ceil(DesktopEntries.applications.values.length / 35)
+                model: Math.ceil(swipeView.apps.length / 35)
                 delegate: Item {
                   Grid {
                     id: appGrid
@@ -199,7 +204,7 @@ Scope {
                     rowSpacing: (height - (rows * itemSize)) / Math.max(rows - 1, 1)
 
                     Repeater {
-                      model: DesktopEntries.applications.values.slice(index * 35, (index + 1) * 35)
+                      model: swipeView.apps.slice(index * 35, (index + 1) * 35)
                       delegate: LargeAppIcon {
                         size: appGrid.itemSize
                         appInfo: modelData

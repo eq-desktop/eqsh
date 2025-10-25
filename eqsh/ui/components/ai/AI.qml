@@ -58,7 +58,7 @@ Scope {
             top: Config.bar.height
         }
         mask: Region {
-            item: contentItem
+            item: Runtime.aiOpen ? contentItem : null
         }
         visible: true
         property string state: "ask" // ask, answer, error
@@ -132,7 +132,7 @@ Scope {
             Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             onScaleChanged: {
-                panelWindow.mask.changed()
+                panelWindow.mask.changed();
             }
             opacity: 0
             visible: panelWindow.visibleC
