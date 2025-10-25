@@ -32,12 +32,15 @@ Item {
     HyprlandFocusGrab {
         id: grab
         windows: [ screen ]
-        onCleared: if (notchState === "active") notchState = "indicative"
+        onCleared: if (notchState === "active" && !root.noMode) notchState = "indicative"
     }
 
     component Meta: QtObject {
         property int  width: notch.defaultWidth
         property int  height: notch.defaultHeight
+        property int  indicativeWidth: notch.defaultWidth
+        property int  indicativeHeight: notch.defaultHeight
+        property int  xOffset: 0
         property real startScale: 1
         property real startOpacity: 0
         property int  animDuration: 200
@@ -74,7 +77,7 @@ Item {
             notch.setSize(meta.width, meta.height)
             if (!root.isActive || !root.onlyActive) grab.active = true
         } else {
-            notch.resetSize()
+            notch.setSize(meta.indicativeWidth, meta.indicativeHeight)
             grab.active = false
         }
     }
@@ -85,7 +88,7 @@ Item {
         if (notchState === "active") {
             notch.setSize(meta.width, meta.height)
         } else {
-            notch.resetSize()
+            notch.setSize(meta.indicativeWidth, meta.indicativeHeight)
         }
     }
 
@@ -141,6 +144,7 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        z: 99
         onClicked: root.activate()
         enabled: (root.notchState === "indicative") && !root.noMode
     }

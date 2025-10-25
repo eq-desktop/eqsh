@@ -16,6 +16,8 @@ NotchApplication {
     details.appType: "media"
     meta.height: 60
     meta.width: 300
+    meta.indicativeWidth: 150
+    meta.xOffset: notchState == "active" ? 0 : 20
 
     property int remainingMs: 5 * 60 * 1000 // default 5 min
     property bool editing: false

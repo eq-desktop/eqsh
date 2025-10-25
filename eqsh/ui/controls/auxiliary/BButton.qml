@@ -36,6 +36,7 @@ Button {
     id: bgRect
     color: root.selected ? root.hoverColor : root.isHovered ? root.hoverColor : "transparent"
     radius: 20
+    opacity: 0.8
     highlight: "transparent"
   }
   contentItem: Text {

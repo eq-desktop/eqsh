@@ -206,7 +206,14 @@ Scope {
             NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
           }
         }
-        scale: Config.general.reduceMotion ? 1 : 0
+        property int xOffset: notchBg.notchCustomCodeObj?.meta.xOffset || 0
+        transform: Translate {
+          x: notchBg.xOffset
+          Behavior on x {
+            NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
+        }
+        scale: 1
         Component.onCompleted: {
           scale = 1;
         }
@@ -262,6 +269,27 @@ Scope {
           }
         }
       }
+      Rectangle { // Camera
+        visible: Config.notch.camera
+        anchors {
+          top: parent.top
+          topMargin: 8.5
+          horizontalCenter: parent.horizontalCenter
+        }
+        width: 13
+        height: 13
+        radius: 6.5
+        color: "#0e0e0e"
+        z: 100
+        Rectangle {
+          visible: Config.notch.camera
+          anchors.centerIn: parent
+          width: 5
+          height: 5
+          radius: 2.5
+          color: "#1e1e1e"
+        }
+      }
       Corner {
         visible: Config.notch.fluidEdge && !Config.notch.islandMode
         orientation: 1
@@ -270,7 +298,10 @@ Scope {
         anchors {
           top: notchBg.top
           right: notchBg.left
-          rightMargin: -1
+          rightMargin: -1 - notchBg.xOffset
+          Behavior on rightMargin {
+            NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
         }
         color: Config.notch.backgroundColor
       }
@@ -283,7 +314,10 @@ Scope {
         anchors {
           top: notchBg.top
           left: notchBg.right
-          leftMargin: -1
+          leftMargin: -1 + notchBg.xOffset
+          Behavior on leftMargin {
+            NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
         }
         color: Config.notch.backgroundColor
       }

@@ -16,6 +16,8 @@ NotchApplication {
     details.appType: "media"
     meta.height: 60
     meta.width: 300
+    meta.indicativeWidth: 200
+    meta.xOffset: notchState == "active" ? -30 : 0
 
     property int pause: 0      // accumulated elapsed time in ms
     property var startTime: 0  // last start timestamp

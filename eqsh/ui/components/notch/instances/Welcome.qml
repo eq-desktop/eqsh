@@ -14,7 +14,7 @@ NotchApplication {
     meta.width: 300
     meta.height: 150
     meta.startScale: 0.8
-    notchState: "active"
+    onlyActive: true
     Item {
         anchors.fill: parent
         VectorImage {

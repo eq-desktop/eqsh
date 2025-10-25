@@ -15,12 +15,12 @@ NotchApplication {
     id: root
     details.version: "0.1.1"
     details.appType: "info"
-    meta.height: 60
-    meta.width: 300
-    meta.closeAfterMs: 1000
-    noMode: true
+    meta.width: 260
+    meta.xOffset: -55
+    meta.closeAfterMs: 2500
+    onlyActive: true
 
-    indicative: Item {
+    active: Item {
         VectorImage {
             id: icon
             width: 16
