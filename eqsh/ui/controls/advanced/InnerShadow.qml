@@ -8,12 +8,12 @@ Item {
     anchors.fill: parent
     property real   radius: parent.radius
     property string color: "black"
-    property int    strength: 1
+    property real   strength: 1
     property real   blur: 0.5
     property real   blurMax: 32
     property real   shadowOpacity: 1
-    property int    offsetX: 0
-    property int    offsetY: 0
+    property real   offsetX: 0
+    property real   offsetY: 0
     ClippingRectangle {
         anchors.fill: parent
         radius: root.radius

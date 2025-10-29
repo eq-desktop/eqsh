@@ -18,6 +18,7 @@ import "root:/agents/ai.js" as AIAgent
 Scope {
     id: root
     property var agent: AIAgent
+    property var statusbar: null
 
     FileView {
         id: sigridPrompt
@@ -113,7 +114,7 @@ Scope {
 
         HyprlandFocusGrab {
             id: grab
-            windows: [ panelWindow ]
+            windows: [ panelWindow, statusbar ]
             onCleared: {
                 Runtime.aiOpen = false
             }
@@ -186,6 +187,10 @@ Scope {
                     renderType: Text.NativeRendering
                     font.family: Fonts.sFProDisplayRegular.family
                     font.pixelSize: 16
+                    Process {
+                        id: actionProcess
+                        running: false
+                    }
                     onAccepted: {
                         console.info("Request AI Answer To: " + inputText.text)
                         acceptAnim.start()
@@ -203,7 +208,31 @@ Scope {
                             if (success) {
                                 panelWindow.state = "answer"
                                 input.glowStrength = 0
-                                panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
+                                // check if it can be parsed as json
+                                try {
+                                    let result = JSON.parse(response.candidates[0].content.parts[0].text)
+                                    if (result) {
+                                        switch (result.action) {
+                                            case "run_command":
+                                                result.command = result.command.replace(/"/g, '\\"').replace(/'/g, "\\'")
+                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + result.command])
+                                                console.info(`qs -p ~/.local/share/equora/eqsh/ ipc call modal instance "Sigrid" "Let Sigrid Run A Command?" "${result.command}" '"Okay.primary"="${result.command}", "Cancel"=""'`)
+                                                actionProcess.exec([
+                                                    "sh", "-c", `qs -p ~/.local/share/equora/eqsh/ ipc call modal instance "Sigrid" "Let Sigrid Run A Command?" "${result.command}" '"Okay.primary"="${result.command}", "Cancel"=""'`
+                                                ])
+                                                break;
+                                            case "open_settings":
+                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
+                                                Runtime.settingsOpen = true
+                                                break;
+                                            default:
+                                                console.error("Unknown action: " + result.action)
+                                        }
+
+                                    }
+                                } catch (e) {
+                                    panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
+                                }
                             } else {
                                 panelWindow.state = "error"
                                 wiggleAnim.start()
@@ -354,34 +383,34 @@ Scope {
                     height: content.height + 20
                     scale: 1
 
-                    ScrollView {
-                        id: content
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: 10
-                        }
-                        contentWidth: 280
-                        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                        height: Math.min(500, textO.implicitHeight)
-                        TextEdit {
-                            id: textO
-                            renderType: Text.NativeRendering
-                            font.family: Fonts.sFProDisplayBlack.family
-                            text: output.text
-                            color: "#fff"
-                            selectionColor: "#555"
-                            wrapMode: Text.Wrap
-                            readOnly: true
-                            width: 280
-                            textFormat: TextEdit.MarkdownText
-                        }
-                    }
                     MouseArea {
                         id: mousearea
                         anchors.fill: parent
                         hoverEnabled: true
+                        ScrollView {
+                            id: content
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                top: parent.top
+                                margins: 10
+                            }
+                            contentWidth: 280
+                            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                            height: Math.min(500, textO.implicitHeight)
+                            TextEdit {
+                                id: textO
+                                renderType: Text.NativeRendering
+                                font.family: Fonts.sFProDisplayBlack.family
+                                text: output.text
+                                color: "#fff"
+                                selectionColor: "#555"
+                                wrapMode: Text.Wrap
+                                readOnly: true
+                                width: 280
+                                textFormat: TextEdit.MarkdownText
+                            }
+                        }
                     }
 
                     Rectangle {

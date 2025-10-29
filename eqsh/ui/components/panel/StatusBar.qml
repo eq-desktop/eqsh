@@ -23,6 +23,14 @@ Scope {
   property bool   appInFullscreen: HyprlandExt.appInFullscreen
   property bool   forceHide: Config.bar.autohide
   property bool   inFullscreen: shown ? forceHide : appInFullscreen || forceHide
+  property var    focusedscreen: null
+  property var    focusedwindow: null
+  Connections {
+      target: Hyprland
+      function onFocusedMonitorChanged() {
+          root.focusedscreen = Quickshell.screens.filter(screen => screen.name == Hyprland.focusedMonitor.name)[0];
+      }
+  }
 
   Variants {
     model: Quickshell.screens
@@ -33,6 +41,13 @@ Scope {
       required property var modelData
       screen: modelData
       WlrLayershell.namespace: Config.bar.useBlur ? "eqsh:blur" : "eqsh"
+
+      property var focscreen: root.focusedscreen
+      onFocscreenChanged: {
+        if (panelWindow.screen == root.focusedscreen) {
+          root.focusedwindow = panelWindow;
+        }
+      }
 
       property string applicationName: HyprlandExt.applicationName != "" ? HyprlandExt.applicationName : Config.bar.defaultAppName
 

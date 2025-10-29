@@ -29,7 +29,10 @@ import qs.core.foundation
 
 Scope {
   id: root
-  AI {}
+  property var statusbar: bar.focusedwindow
+  AI {
+    statusbar: root.statusbar
+  }
   Settings {}
   HyprPersist {}
   ReloadPopup {}

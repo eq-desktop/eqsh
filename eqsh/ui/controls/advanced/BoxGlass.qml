@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import QtQuick.Controls
 import qs.config
 import qs.ui.controls.auxiliary
@@ -43,7 +44,7 @@ Item {
         blurMax: 40
         visible: box.highlightEnabled
     }
-
+    
     // Second inner shadow
     InnerShadow {
         strength: 2
@@ -51,6 +52,17 @@ Item {
         offsetY: 2
         color: box.negLight
         blurMax: 64
+        opacity: 1
+        visible: box.highlightEnabled
+    }
+
+    InnerShadow {
+        strength: 0.5
+        offsetX: 0
+        offsetY: 0.8
+        color: "#fff"
+        blurMax: 1
+        blur: 0.1
         opacity: 1
         visible: box.highlightEnabled
     }
