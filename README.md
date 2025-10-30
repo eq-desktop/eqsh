@@ -133,13 +133,13 @@ git clone https://github.com/eq-desktop/wallpapers.git ~/eqSh/wallpapers
 </summary>
 
 ```bash
-qs -c eqsh
+equora run
 ```
 
 Or make it permanent by adding this to `~/.config/hypr/hyprland.conf`:
 
 ```bash
-exec-once = qs -c eqsh
+exec-once = equora run
 ```
 
 </details>
@@ -160,17 +160,25 @@ GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-them
 ## ✨ Features
 
 - [x] Top Panel  
-- [x] Notch (Dynamic Island + Spotlight-like Runner)  
+- [x] Notch  
+- [x] Notch Applications  
 - [x] Notifications  
-- [x] Dialogs with IPC integration
+- [x] Modals with IPC integration
 - [x] App Drawer / Launchpad 
 - [x] Lockscreen  
 - [x] Wallpaper Engine  
 - [x] System Tray  
 - [x] Battery & WiFi Indicators  
 - [x] Clock  
+- [x] On-Screen-Displays for Volume and Brightness
+- [x] Polkit  
+- [x] Control Center  
+- [x] Dock  
+- [x] Sigrid AI Chatbot  
+- [x] Desktop Widgets  
+- [x] Screenshot tool  
 - [x] Full JSON user settings & Settings App
-- [x] Control Center
+- [x] Control Center  
 - [x] Advanced IPC-powered popup system
 
 ---
@@ -179,7 +187,7 @@ GTK theme: [MacTahoe GTK Theme](https://github.com/vinceliuice/MacTahoe-gtk-them
 
 * Dock with magnification
 * Global Menu
-* Desktop Icons & Widgets
+* Desktop Files
 * Spotlight Extensions
 * Custom dropdown menus
 

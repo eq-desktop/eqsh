@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Widgets
 import qs.config
 import qs
 import qs.core.foundation
@@ -321,15 +322,19 @@ Scope {
           Component {
             id: aiComponent
             UIBButton {
-              CFI {
-                id: rBAI
-                icon: "ai.png"
-                width: barIS * 1.2
-                height: barIS * 1.2
-                Layout.preferredWidth: barIS * 1.2
-                Layout.preferredHeight: barIS * 1.2
+              ClippingRectangle {
                 anchors.centerIn: parent
-                colorized: false
+                width: barIS * 0.8
+                height: barIS * 0.8
+                radius: 100
+                color: "transparent"
+                CFI {
+                  id: rBAI
+                  icon: "ai-full.png"
+                  size: barIS * 0.8
+                  anchors.centerIn: parent
+                  colorized: false
+                }
               }
               selected: Runtime.aiOpen
               onClick: Runtime.aiOpen = !Runtime.aiOpen
