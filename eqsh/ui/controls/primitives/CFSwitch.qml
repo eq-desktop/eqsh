@@ -45,7 +45,7 @@ Switch {
                 id: turnOnAnim
                 target: handle
                 property: "x"
-                from: 0
+                from: 2
                 to: bg.width - 32
                 duration: 200
                 easing.type: Easing.InOutQuad
@@ -59,7 +59,7 @@ Switch {
                 target: handle
                 property: "x"
                 from: bg.width - 32
-                to: 0
+                to: 2
                 duration: 200
                 easing.type: Easing.InOutQuad
                 onStopped: {

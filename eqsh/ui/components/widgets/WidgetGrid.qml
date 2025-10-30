@@ -164,6 +164,7 @@ Item {
                 topMargin: 5
             }
             color: "#aaa"
+            hoverColor: "#888"
             text: Translation.tr("Close")
             onClicked: {
                 Runtime.widgetEditMode = false
@@ -182,7 +183,6 @@ Item {
         CFButton {
             id: addButton
             width: 100
-            color: AccentColor.color
             anchors {
                 top: parent.top
                 right: parent.right
@@ -190,6 +190,7 @@ Item {
                 topMargin: 5
             }
             text: Translation.tr("+")
+            primary: true
             font.pixelSize: 16
             transform: Translate {
                 id: translateAdd

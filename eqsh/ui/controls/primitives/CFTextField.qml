@@ -21,6 +21,7 @@ TextField {
             width: 1
             color: "#aaa"
         }
-        radius: 10
+        radius: 15
     }
+    placeholderTextColor: Config.general.darkMode ? "#777" : "#888"
 }

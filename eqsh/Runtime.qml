@@ -15,6 +15,39 @@ Singleton {
     property bool   launchpadOpen: false
     property bool   showScrn: false
     property bool   widgetEditMode: false
+    // ---- Function subscription system ----
+    property var subscribers: ({}) // map of name -> function
+
+    /**
+     * Register a function under a name.
+     * Example: Global.subscribe("openSettings", () => settingsOpen = true)
+     */
+    function subscribe(name, func) {
+        if (typeof func === "function") {
+            subscribers[name] = func
+        } else {
+            console.warn("Global.subscribe: Tried to subscribe non-function:", name)
+        }
+    }
+
+    /**
+     * Unregister a function
+     */
+    function unsubscribe(name) {
+        delete subscribers[name]
+    }
+
+    /**
+     * Run a subscribed function by name, with optional arguments
+     * Example: Global.run("openSettings", true)
+     */
+    function run(name, ...args) {
+        if (subscribers[name]) {
+            return subscribers[name].apply(this, args)
+        } else {
+            console.warn("Global.run: No subscriber found for", name)
+        }
+    }
     Process {
         command: ["ls", Directories.runtimeDir + "/config.json"]
         running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/config.json"]); }
