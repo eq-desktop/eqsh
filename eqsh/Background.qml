@@ -49,7 +49,7 @@ Scope {
 
       ClippingRectangle {
         anchors.fill: parent
-        radius: Config.screenEdges.enable ? Config.screenEdges.radius : 0
+        radius: 0
         color: Config.wallpaper.color
         BackgroundImage {
           id: backgroundImage

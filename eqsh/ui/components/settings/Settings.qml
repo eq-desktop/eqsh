@@ -120,7 +120,11 @@ FloatingWindow {
                 anchors.margins: 15
                 clip: true
                 radius: 20
-                color: "transparent"
+                color: Config.general.darkMode ? "#aa2a2a2a" : "#aafefefe"
+                border {
+                    width: 2
+                    color: Config.general.darkMode ? "#aa2a2a2a" : "#aafefefe"
+                }
 
                 Item {
                     id: searchBar
@@ -346,9 +350,11 @@ FloatingWindow {
                 id: contentView
                 anchors.top: pageTitle.bottom
                 anchors.left: parent.left
+                anchors.leftMargin: -10
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                width: parent.width - 5
+                anchors.margins: 0
+                width: parent.width
                 height: parent.height - 75
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -391,58 +397,7 @@ FloatingWindow {
                 }
 
                 // Wallpaper
-                ScrollView {
-                    ColumnLayout {
-                        anchors.fill: parent
-                        UICheckBox {
-                            textVal: Translation.tr("Enable Wallpaper")
-                            checked: Config.wallpaper.enable
-                            onToggled: Config.wallpaper.enable = checked
-                        }
-                        UITextField {
-                            Layout.fillWidth: true
-                            text: Config.wallpaper.path
-                            onEditingFinished: Config.wallpaper.path = text
-                            placeholderText: Translation.tr("Wallpaper path")
-                        }
-                        ComboBox {
-                            id: colorCombo
-                            Layout.fillWidth: true
-
-                            model: AccentColor.colors
-
-                            // Display text as the color name
-                            textRole: "name"
-
-                            // Use a custom delegate so each option is shown with its color
-                            delegate: ItemDelegate {
-                                contentItem: RowLayout {
-                                    spacing: 8
-                                    Label {
-                                        text: modelData
-                                        color: "#fff"
-                                        verticalAlignment: Text.AlignVCenter
-                                        background: Rectangle {
-                                            anchors.fill: parent
-                                            color: modelData
-                                        }
-                                    }
-                                }
-                            }
-
-                            // keep ComboBox selection in sync with AccentColor.color
-                            Component.onCompleted: {
-                                let index = AccentColor.colors.findIndex(c => c === AccentColor.color)
-                                if (index >= 0) currentIndex = index
-                            }
-
-                            onActivated: (index) => {
-                                Config.appearance.accentColor = AccentColor.colors[index]
-                            }
-                        }
-
-                    }
-                }
+                Wallpaper {}
 
                 // Notifications
                 ScrollView {

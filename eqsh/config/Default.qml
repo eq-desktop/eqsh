@@ -245,7 +245,30 @@ Item {
 		property bool   enable: true
 		property color  color: "#000000" // Only applies if path is empty
 		property string path: root.homeDirectory+"/.local/share/equora/wallpapers/Tahoe-City.jpeg"
+		property string folder: root.homeDirectory+"/.local/share/equora/wallpapers/"
 		property bool   desktopEnable: true
+		property list<string> colors: [
+			"add",
+			"#000000",
+			"#6967B0",
+			"#19AFD2",
+			"#E26E7B",
+			"#4253D7",
+			"#FBDACB",
+			"#F4DEC7",
+			"#D4A658",
+			"#CD4B93",
+			"#E93E22",
+			"#F6D3CF",
+			"#E3E4E6",
+			"#FCDDE3",
+			"#7A7B80",
+			"#BEBFC4",
+			"#555555",
+			"#007972",
+			"#6CC3A3",
+			"#FDBA13",
+		]
 	}
 
 	component Widgets: JsonObject {
