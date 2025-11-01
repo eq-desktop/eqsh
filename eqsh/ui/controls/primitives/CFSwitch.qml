@@ -10,7 +10,7 @@ Switch {
 
     indicator: Rectangle {
         id: bg
-        implicitWidth: 48
+        implicitWidth: 54
         implicitHeight: 22
         x: control.leftPadding
         y: parent.height / 2 - height / 2
@@ -46,7 +46,7 @@ Switch {
                 target: handle
                 property: "x"
                 from: 2
-                to: bg.width - 32
+                to: bg.width - 36
                 duration: 200
                 easing.type: Easing.InOutQuad
                 onStopped: {
@@ -58,7 +58,7 @@ Switch {
                 id: turnOffAnim
                 target: handle
                 property: "x"
-                from: bg.width - 32
+                from: bg.width - 36
                 to: 2
                 duration: 200
                 easing.type: Easing.InOutQuad
@@ -68,12 +68,12 @@ Switch {
                 }
             }
             anchors.verticalCenter: parent.verticalCenter
-            width:  animating ? 44 : 30
+            width:  animating ? 48 : 34
             height: animating ? 28 : 18
             radius: 99
             scale: 1
             transform: Translate {
-                x: handle.animating ? -7 : 0
+                x: handle.animating ? -9 : 0
                 Behavior on x { PropertyAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 3 } }
             }
             Behavior on width { PropertyAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 3 } }

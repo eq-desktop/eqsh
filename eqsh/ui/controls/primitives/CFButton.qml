@@ -12,7 +12,7 @@ Button {
     property string color: "#40000000"
     property string hoverColor: "#40FFFFFF"
     property string primaryColor: AccentColor.color
-    property string primaryHoverColor: Qt.darker(primaryColor)
+    property string primaryHoverColor: Qt.lighter(primaryColor, 1.3)
     background: BoxGlass {
         anchors.fill: parent
         color: button.primary ? (mouseArea.containsMouse ? button.primaryHoverColor : button.primaryColor) : (mouseArea.containsMouse ? button.hoverColor : button.color)

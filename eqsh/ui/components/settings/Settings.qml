@@ -228,7 +228,7 @@ FloatingWindow {
                             Text {
                                 anchors.fill: parent
                                 text: modelData == "_Account" ? Config.account.name : modelData
-                                color: Config.general.darkMode ? "#fff" : (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#000")
+                                color: Config.general.darkMode ? (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#fff") : (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#000")
                                 font.pixelSize: 14
                                 font.weight: modelData == "_Account" ? 500 : Font.Normal
                                 verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter
@@ -366,35 +366,7 @@ FloatingWindow {
                 General {}
                 Appearance {}
 
-                // Bar
-                ScrollView {
-                    ColumnLayout {
-                        anchors.fill: parent
-                        UICheckBox {
-                            textVal: Translation.tr("Enable Bar")
-                            checked: Config.bar.enable
-                            onToggled: Config.bar.enable = checked
-                        }
-                        UILabel { text: Translation.tr("Default App") }
-                        UITextField {
-                            Layout.fillWidth: true
-                            text: Config.bar.defaultAppName
-                            onEditingFinished: Config.bar.defaultAppName = text
-                        }
-                        UILabel { text: Translation.tr("Date Format") }
-                        UITextField {
-                            Layout.fillWidth: true
-                            text: Config.bar.dateFormat
-                            onEditingFinished: Config.bar.dateFormat = text
-                        }
-                        UILabel { text: Translation.tr("Auto hide") }
-                        ComboBox {
-                            model: [Translation.tr("No"), Translation.tr("Yes")]
-                            currentIndex: Config.bar.autohide ? 1 : 0
-                            onCurrentIndexChanged: Config.bar.autohide = currentIndex == 1
-                        }
-                    }
-                }
+                MenuBar {}
 
                 // Wallpaper
                 Wallpaper {}

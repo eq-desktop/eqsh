@@ -67,7 +67,7 @@ BaseWidget {
                         font.pixelSize: bw.textSize
                         height: parent.height
                         width: parent.width
-                        colorLightMode: model.today ? AccentColor.textColor : "#1e1e1e"
+                        colorLightMode: model.today ? (Config.appearance.multiAccentColor ? "white" : AccentColor.textColor) : "#1e1e1e"
                         visible: model.month === grid.month
                         text: grid.locale.toString(model.date, "d")
                     }
