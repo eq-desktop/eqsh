@@ -135,7 +135,7 @@ Scope {
                             anchors.left: parent.left
                             anchors.leftMargin: 40
                             text: modelData.name
-                            color: "white"
+                            color: Config.general.darkMode ? "#fff" : hovered ? AccentColor.textColor : "#222"
                             font.pixelSize: 15
                             elide: Text.ElideRight
                         }

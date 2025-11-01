@@ -122,8 +122,8 @@ FloatingWindow {
                 radius: 20
                 color: Config.general.darkMode ? "#aa2a2a2a" : "#aafefefe"
                 border {
-                    width: 2
-                    color: Config.general.darkMode ? "#aa2a2a2a" : "#aafefefe"
+                    width: 1
+                    color: Config.general.darkMode ? "#aa3a3a3a" : "#aaffffff"
                 }
 
                 Item {
@@ -228,7 +228,7 @@ FloatingWindow {
                             Text {
                                 anchors.fill: parent
                                 text: modelData == "_Account" ? Config.account.name : modelData
-                                color: Config.general.darkMode ? "#fff" : (contentView.currentIndex == index && modelData != "_Account" ? "#fff" : "#000")
+                                color: Config.general.darkMode ? "#fff" : (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#000")
                                 font.pixelSize: 14
                                 font.weight: modelData == "_Account" ? 500 : Font.Normal
                                 verticalAlignment: modelData == "_Account" ? Text.AlignTop : Text.AlignVCenter

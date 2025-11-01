@@ -49,7 +49,7 @@ BaseWidget {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.bottomMargin: -bw.textSize*2
+                Layout.bottomMargin: -bw.textSize + 10
                 delegate: Item {
                     required property var model
                     CFRect {
@@ -67,7 +67,7 @@ BaseWidget {
                         font.pixelSize: bw.textSize
                         height: parent.height
                         width: parent.width
-                        colorLightMode: model.today ? "#fff" : "#1e1e1e"
+                        colorLightMode: model.today ? AccentColor.textColor : "#1e1e1e"
                         visible: model.month === grid.month
                         text: grid.locale.toString(model.date, "d")
                     }

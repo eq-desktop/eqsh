@@ -60,4 +60,19 @@ Singleton {
         const a = color.a
         return Qt.hsla(h, s, l, a)
     }
+    function tintBlackWith(color, amount) {
+        // amount ∈ [0,1], how strong the tint is (0 = black, 1 = full color)
+        const h = color.hslHue
+        const s = color.hslSaturation * amount
+        const l = color.hslLightness * amount
+        const a = color.a
+        return Qt.hsla(h, s, l, a)
+    }
+    function getTextColor(color) {
+        const r = color.r*255
+        const g = color.g*255
+        const b = color.b*255
+        const luminance = 0.299*r + 0.587*g + 0.114*b
+        return luminance > 186 ? 'black' : 'white'
+    }
 }

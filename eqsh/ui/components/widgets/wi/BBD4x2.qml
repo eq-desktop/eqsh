@@ -54,7 +54,7 @@ BaseWidget {
                                 source: modelData.name == "" ? "" :  Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/devices/" + modelData.type + ".svg")
                                 size: bw.textSizeXL
                                 anchors.centerIn: parent
-                                color: Config.appearance.multiAccentColor ? "#fff" :AccentColor.color
+                                color: Config.appearance.multiAccentColor ? (Config.general.darkMode ? '#fff' : "#222") : AccentColor.color
                             }
                         }
                     }
