@@ -205,6 +205,9 @@ Scope {
           Behavior on topMargin {
             NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
           }
+          onTopMarginChanged: {
+            panelWindow.mask.changed();
+          }
         }
         property int xOffset: notchBg.notchCustomCodeObj?.meta.xOffset || 0
         transform: Translate {
@@ -214,10 +217,10 @@ Scope {
           }
         }
         scale: 1
-        Component.onCompleted: {
-          scale = 1;
-        }
         onScaleChanged: {
+          panelWindow.mask.changed();
+        }
+        onXOffsetChanged: {
           panelWindow.mask.changed();
         }
         Behavior on scale {
@@ -247,6 +250,7 @@ Scope {
             root.height = Config.notch.height;
             root.width = minWidth;
           }
+          panelWindow.mask.changed();
         }
         clip: true
         color: Config.notch.backgroundColor
@@ -267,6 +271,7 @@ Scope {
               console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
             }
           }
+          panelWindow.mask.changed();
         }
       }
       Rectangle { // Camera

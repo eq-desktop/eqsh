@@ -18,6 +18,7 @@ Item {
     property bool   noMode: onlyActive
     property Component indicative: null
     property Component active: null
+    z: 99
 
     Rectangle {
         id: notchBg

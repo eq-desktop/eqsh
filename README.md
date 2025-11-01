@@ -41,6 +41,20 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 
 ---
 
+## Preview
+
+![Preview of eqSh](Media/preview.png)
+
+![Preview of eqSh Settings app](Media/preview2.png)
+
+![Preview of eqSh AI Sigrid](Media/preview3.png)
+
+![Preview of eqSh Lockscreen](Media/preview4.png)
+
+![Preview of eqSh Notch App](Media/preview5.png)
+
+---
+
 ## 🚀 Quickstart
 
 <a name="install-guide">Install Guide</a>

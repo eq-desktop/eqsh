@@ -68,6 +68,7 @@ BaseWidget {
                         height: parent.height
                         width: parent.width
                         colorLightMode: model.today ? (Config.appearance.multiAccentColor ? "white" : AccentColor.textColor) : "#1e1e1e"
+                        colorDarkMode: model.today ? (Config.appearance.multiAccentColor ? "white" : AccentColor.textColor) : "#fff"
                         visible: model.month === grid.month
                         text: grid.locale.toString(model.date, "d")
                     }
