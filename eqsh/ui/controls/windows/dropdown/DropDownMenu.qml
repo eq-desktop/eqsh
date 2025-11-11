@@ -25,7 +25,10 @@ Scope {
   property int contentWidth: 200
   property int padding: 4
   property int spacing: 0
+  property var margins: [0, 0, 0, 0]
   property alias opened: pop.opened
+  property bool new_Focus_Method: false
+  property var windows: []
   property bool closeOnClick: true
   property var hoverColor: AccentColor.color
   property var color: Config.general.darkMode ? "#1e1e1e" : "#dfdfdf" //"#20000000" : "#50ffffff"
@@ -38,6 +41,7 @@ Scope {
   function open() {
     pop.opened = true
   }
+  signal cleared()
   property list<DropDownItem> model // ⌘, ⌃, ⌥, ⇧
   default property Component delegate: Item {
     id: dropItem
@@ -136,23 +140,35 @@ Scope {
   }
   Pop {
     id: pop
-    blur: false
+    blur: true
+    windows: root.windows
+    margins {
+      left: root.margins[0]
+      top: root.margins[1]
+      right: root.margins[2]
+      bottom: root.margins[3]
+    }
+    new_Focus_Method: root.new_Focus_Method
+    new_Focus_Method_X: pop.contentItem ? pop.contentItem.xV : 0
+    new_Focus_Method_Y: pop.contentItem ? pop.contentItem.yV : 0
+    implicitWidth: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.widthV : 0) : width
+    implicitHeight: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.heightV : 0) : height
+    onCleared: {
+      root.cleared()
+    }
     content: Item {
-      RectangularShadow {
-        anchors.fill: box
-        radius: 8
-        blur: 1
-        spread: 1
-        color: "#a0000000"
-      }
-      Rectangle {
+      property int xV: box.x
+      property int yV: box.y
+      property int widthV: box.width
+      property int heightV: box.height
+      Box {
         id: box
+        radius: 15
         x: root.invertH ? (root.x + (-root.horizontalOffset)) - box.width : root.x + root.horizontalOffset
         y: root.invertY ? (root.y + (-root.verticalOffset)) - (list.contentHeight+(root.padding*2)) : root.y + root.verticalOffset
-        radius: 8
         width: Math.max(root.contentWidth + root.padding * 2, 200)
         height: list.contentHeight+(root.padding*2)
-        color: root.color
+        color: Qt.alpha(root.color, 0.7)
         ListView {
           id: list
           anchors.fill: parent

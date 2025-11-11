@@ -197,43 +197,56 @@ Scope {
                     NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
                   }
                 }
-                UIBButton {
-                  text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName)
-                  font.weight: 700
-                }
-
-                UIBButton {
-                  text: Translation.tr("File")
-                  id: globalMenuFileButton
-                  DropDownMenu {
-                    id: globalMenuFile
-                    x: 0
-                    y: Config.bar.height
+                DropDownMenu {
+                  id: globalMenuDrop
+                  x: globalMenuRepeater.selectedItemX+globalMenu.x
+                  Connections {
+                    target: globalMenuRepeater
+                    function onSelectedItemXChanged() {
+                      globalMenuDrop.x = globalMenuRepeater.selectedItemX+globalMenu.x
+                    }
                   }
-                  onClick: {
-                    globalMenuFile.open()
+                  y: 0
+                  windows: [ panelWindow ]
+                  margins: [ 0, Config.bar.height, 0, 0 ]
+                  onCleared: {
+                    globalMenuRepeater.isOpened = false
                   }
                 }
 
-                UIBButton {
-                  text: Translation.tr("Edit")
-                }
+                Repeater {
+                  id: globalMenuRepeater
+                  property bool isOpened: false
+                  property int selectedItemX: 0
+                  property int selectedItem: -1
+                  model: [
+                    { text: customAppName != "" ? customAppName : (applicationName == "" ? Config.bar.defaultAppName : applicationName), app: true },
+                    { text: "File" },
+                    { text: "Edit" },
+                    { text: "View" },
+                    { text: "Window" },
+                    { text: "Help" }
+                  ]
+                  onIsOpenedChanged: {
+                    globalMenuDrop.opened = globalMenuRepeater.isOpened
+                  }
+                  delegate: UIBButton {
+                    required property var modelData
+                    required property var index
+                    text: modelData.text
+                    id: globalMenuButton
+                    selected: index == globalMenuRepeater.selectedItem && globalMenuRepeater.isOpened
+                    font.weight: modelData.app ? 700 : 500
 
-                UIBButton {
-                  text: Translation.tr("View")
-                }
+                    onHover: {
+                      globalMenuRepeater.selectedItemX = globalMenuButton.x
+                      globalMenuRepeater.selectedItem = index
+                    }
 
-                UIBButton {
-                  text: Translation.tr("Go")
-                }
-
-                UIBButton {
-                  text: Translation.tr("Window")
-                  
-                }
-
-                UIBButton {
-                  text: Translation.tr("Help")
+                    onClick: {
+                      globalMenuRepeater.isOpened = !globalMenuRepeater.isOpened
+                    }
+                  }
                 }
               }
             }

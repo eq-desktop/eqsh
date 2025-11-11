@@ -17,6 +17,8 @@ Button {
   signal click()
   signal hover()
   signal exited()
+  property bool blockHoverColor: false
+  property bool blockHoverColorSelected: false
   property bool selected: false
   property bool isHovered: false
   palette.buttonText: "#fff"
@@ -34,7 +36,7 @@ Button {
   padding: 10
   background: Box {
     id: bgRect
-    color: root.selected ? root.hoverColor : root.isHovered ? root.hoverColor : "transparent"
+    color: (root.selected && !root.blockHoverColorSelected ? root.hoverColor : (root.isHovered && !root.blockHoverColor ? root.hoverColor : "transparent"))
     radius: 20
     opacity: 0.8
     highlight: "transparent"
