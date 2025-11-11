@@ -246,7 +246,7 @@ Scope {
                     Layout.preferredHeight: 30
                     primary: modelData.primary || false
                     primaryColor: modelData.primaryColor ? modelData.primaryColor : "#007cff"
-                    primaryHoverColor: modelData.primaryColor ? Qt.darker(modelData.primaryColor) : "#005fab"
+                    primaryHoverColor: modelData.primaryColor ? Qt.lighter(modelData.primaryColor, 1.3) : '#2f93ff'
                     text: modelData.label || "Button"
                     icon {
                       source: modelData.iconPath || ""

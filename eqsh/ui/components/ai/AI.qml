@@ -160,7 +160,7 @@ Scope {
                     id: inputText
                     anchors.fill: parent
                     focus: Runtime.aiOpen
-                    color: "#fff"
+                    color: Config.general.darkMode ? "#fff" : "#000"
                     leftPadding: 38
                     CFI {
                         id: sicon
@@ -187,10 +187,6 @@ Scope {
                     renderType: Text.NativeRendering
                     font.family: Fonts.sFProDisplayRegular.family
                     font.pixelSize: 16
-                    Process {
-                        id: actionProcess
-                        running: false
-                    }
                     onAccepted: {
                         console.info("Request AI Answer To: " + inputText.text)
                         acceptAnim.start()
@@ -216,10 +212,30 @@ Scope {
                                             case "run_command":
                                                 result.command = result.command.replace(/"/g, '\\"').replace(/'/g, "\\'")
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + result.command])
-                                                console.info(`qs -p ~/.local/share/equora/eqsh/ ipc call modal instance "Sigrid" "Let Sigrid Run A Command?" "${result.command}" '"Okay.primary"="${result.command}", "Cancel"=""'`)
-                                                actionProcess.exec([
-                                                    "sh", "-c", `qs -p ~/.local/share/equora/eqsh/ ipc call modal instance "Sigrid" "Let Sigrid Run A Command?" "${result.command}" '"Okay.primary"="${result.command}", "Cancel"=""'`
-                                                ])
+                                                Runtime.run("modal", {
+                                                    appName: "Sigrid",
+                                                    title: Translation.tr("Let Sigrid Run A Command?"),
+                                                    description: result.command,
+                                                    actions: [
+                                                        [
+                                                            {
+                                                                type: "button",
+                                                                label: Translation.tr("Okay"),
+                                                                primary: true,
+                                                                command: result.command
+                                                            }
+                                                        ],
+                                                        [
+                                                            {
+                                                                type: "button",
+                                                                label: Translation.tr("Cancel"),
+                                                                primary: false
+                                                            }
+                                                        ]
+                                                    ],
+                                                    iconPath: "",
+                                                    useIcon: false
+                                                })
                                                 break;
                                             case "open_settings":
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
