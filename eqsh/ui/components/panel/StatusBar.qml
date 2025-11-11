@@ -140,6 +140,9 @@ Scope {
           Rectangle {
             id: globalMenu
             height: Config.bar.height
+            implicitHeight: Config.bar.height
+            Layout.fillHeight: true
+            Layout.margins: 0
             width: globalMenuLayout.implicitWidth
             color: "transparent"
             property real dragOffset: -Config.bar.height
@@ -237,6 +240,7 @@ Scope {
                     id: globalMenuButton
                     selected: index == globalMenuRepeater.selectedItem && globalMenuRepeater.isOpened
                     font.weight: modelData.app ? 700 : 500
+                    Layout.alignment: Qt.AlignVCenter
 
                     onHover: {
                       globalMenuRepeater.selectedItemX = globalMenuButton.x
@@ -300,16 +304,16 @@ Scope {
 
           // Components for each item
           Component { id: systemTrayComponent; SystemTray {} }
-          Component { id: batteryComponent; UIBButton { Battery { iconSize: barIS } } }
-          Component { id: wifiComponent; UIBButton { Wifi { iconSize: barIS } } }
+          Component { id: batteryComponent; UIBButton { Battery { iconSize: 25 } } }
+          Component { id: wifiComponent; UIBButton { Wifi { iconSize: 25 } } }
           Component {
             id: bluetoothComponent
             UIBButton {
               VectorImage {
                 id: rBBluetooth
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
-                width: barIS * 1.2
-                height: barIS * 1.2
+                width: 25 * 1.2
+                height: 25 * 1.2
                 preferredRendererType: VectorImage.CurveRenderer
                 anchors.centerIn: parent
               }
@@ -321,10 +325,10 @@ Scope {
               VectorImage {
                 id: rBSearch
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/search.svg")
-                width: barIS * 0.7
-                height: barIS * 0.7
-                Layout.preferredWidth: barIS * 0.7
-                Layout.preferredHeight: barIS * 0.7
+                width: 25 * 0.7
+                height: 25 * 0.7
+                Layout.preferredWidth: 25 * 0.7
+                Layout.preferredHeight: 25 * 0.7
                 preferredRendererType: VectorImage.CurveRenderer
                 anchors.centerIn: parent
               }
@@ -337,14 +341,14 @@ Scope {
             UIBButton {
               ClippingRectangle {
                 anchors.centerIn: parent
-                width: barIS * 0.8
-                height: barIS * 0.8
+                width: 25 * 0.8
+                height: 25 * 0.8
                 radius: 100
                 color: "transparent"
                 CFI {
                   id: rBAI
                   icon: "ai-full.png"
-                  size: barIS * 0.8
+                  size: 25 * 0.8
                   anchors.centerIn: parent
                   colorized: false
                 }
@@ -360,10 +364,10 @@ Scope {
               VectorImage {
                 id: rBControlCenter
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/control-center.svg")
-                width: barIS
-                height: barIS
-                Layout.preferredWidth: barIS
-                Layout.preferredHeight: barIS
+                width: 25
+                height: 25
+                Layout.preferredWidth: 25
+                Layout.preferredHeight: 25
                 preferredRendererType: VectorImage.CurveRenderer
                 anchors.centerIn: parent
               }
