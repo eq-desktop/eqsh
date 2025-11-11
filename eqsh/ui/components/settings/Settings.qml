@@ -120,10 +120,10 @@ FloatingWindow {
                 anchors.margins: 15
                 clip: true
                 radius: 20
-                color: Config.general.darkMode ? "#aa2a2a2a" : "#aafefefe"
+                color: Config.general.darkMode ? "#ee2a2a2a" : "#ccfefefe"
                 border {
                     width: 1
-                    color: Config.general.darkMode ? "#aa3a3a3a" : "#aaffffff"
+                    color: Config.general.darkMode ? "#ee3a3a3a" : "#ccffffff"
                 }
 
                 Item {
