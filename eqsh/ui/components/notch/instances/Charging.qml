@@ -10,10 +10,11 @@ import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.1"
+    details.version: "0.1.2"
     meta.height: notch.defaultHeight+10
     meta.width: 300
     meta.closeAfterMs: 2000
+    meta.shadowOpacity: 0.5
     onlyActive: true
     active: Item {
         Battery {

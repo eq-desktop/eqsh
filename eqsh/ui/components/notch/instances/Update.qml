@@ -13,10 +13,9 @@ import Qt5Compat.GraphicalEffects
 
 NotchApplication {
     id: root
-    details.version: "0.1.1"
+    details.version: "0.1.2"
     details.appType: "info"
-    meta.width: 260
-    meta.xOffset: -55
+    meta.width: 375
     meta.closeAfterMs: 2500
     onlyActive: true
 

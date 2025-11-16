@@ -1,0 +1,295 @@
+import QtQuick
+import Quickshell
+import Quickshell.Widgets
+import qs.config
+import qs
+import qs.core.system
+import qs.ui.controls.providers
+import qs.ui.controls.primitives
+import qs.ui.controls.auxiliary
+import qs.ui.components.panel
+import QtQuick.VectorImage
+import QtQuick.Controls
+import QtQuick.Effects
+
+NotchApplication {
+    id: root
+    details.version: "0.1.2"
+    details.appType: "media"
+    meta.height: 200
+    meta.width: 400
+    ColorQuantizer {
+        id: quantizer
+        depth: 3
+        rescaleSize: 64
+        source: MusicPlayerProvider.thumbnail
+    }
+
+    indicative: Item {
+        ClippingRectangle {
+            anchors {
+                left: parent.left
+                leftMargin: 10
+                verticalCenter: parent.verticalCenter
+            }
+            radius: 7
+            width: 20
+            height: 20
+            CFI {
+                id: thumbnail
+                anchors.fill: parent
+                colorized: false
+                source: MusicPlayerProvider.thumbnail
+            }
+        }
+        Item {
+            anchors {
+                right: parent.right
+                rightMargin: 10
+                verticalCenter: parent.verticalCenter
+            }
+            width: 20
+            height: 20
+            Repeater {
+                id: barRepeater
+                model: 3
+
+                Rectangle {
+                    id: bar
+                    width: 2
+                    radius: 2
+                    anchors {
+                        left: index === 0 ? parent.left : barRepeater.itemAt(index - 1).right
+                        verticalCenter: parent.verticalCenter
+                    }
+                    color: quantizer?.colors[quantizer.colors.length - 1] || "#ffffff"
+
+                    // Animate the height like an equalizer bar
+                    property real baseHeight: 5
+                    property real maxBoost: 5
+
+                    SequentialAnimation on height {
+                        loops: Animation.Infinite
+
+                        // small offset so each bar moves differently
+                        PauseAnimation { duration: index * 120 }
+
+                        NumberAnimation {
+                            from: baseHeight
+                            to: baseHeight + maxBoost
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                        NumberAnimation {
+                            from: baseHeight + maxBoost
+                            to: baseHeight
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    active: Item {
+        ClippingRectangle {
+            id: thumbnail
+            anchors.bottom: time.top
+            anchors.left: parent.left
+            anchors.margins: 10
+            anchors.bottomMargin: 20
+            width: 60
+            height: 60
+            radius: 15
+            color: "#20ffffff"
+            Image {
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                source: MusicPlayerProvider.thumbnail
+                smooth: true
+                mipmap: true
+            }
+        }
+        CFText {
+            id: title
+            anchors {
+                top: thumbnail.top
+                left: thumbnail.right
+                right: parent.right
+                topMargin: 10
+                leftMargin: 10
+                rightMargin: 10
+            }
+            text: MusicPlayerProvider.title
+            elide: Text.ElideRight
+            font.weight: 600
+        }
+        Item {
+            anchors {
+                left: title.right
+                leftMargin: -20
+                top: title.top
+            }
+            width: 20
+            height: 20
+            Repeater {
+                id: barRepeater
+                model: 3
+                property real baseHeight: 5
+                property real maxBoost: 5
+
+                Rectangle {
+                    id: bar
+                    width: 2
+                    radius: 2
+                    anchors {
+                        left: index === 0 ? parent.left : barRepeater.itemAt(index - 1).right
+                        verticalCenter: parent.verticalCenter
+                    }
+                    color: quantizer?.colors[quantizer.colors.length - 1] || "#ffffff"
+
+                    // Animate the height like an equalizer bar
+                    property real baseHeight: 5
+                    property real maxBoost: 5
+
+                    SequentialAnimation on height {
+                        loops: Animation.Infinite
+
+                        // small offset so each bar moves differently
+                        PauseAnimation { duration: index * 120 }
+
+                        NumberAnimation {
+                            from: baseHeight
+                            to: baseHeight + maxBoost
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                        NumberAnimation {
+                            from: baseHeight + maxBoost
+                            to: baseHeight
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
+                }
+            }
+        }
+        Text {
+            id: artist
+            anchors {
+                top: title.bottom
+                left: thumbnail.right
+                right: parent.right
+                leftMargin: 10
+                rightMargin: 10
+            }
+            text: MusicPlayerProvider.artist
+            color: "#aaffffff"
+            elide: Text.ElideRight
+            font.weight: 400
+        }
+        // Progress Bar
+        CFText {
+            id: time
+            anchors {
+                left: parent.left
+                leftMargin: 10
+                bottom: controls.top
+                bottomMargin: 10
+            }
+            // position is in seconds
+            text: Qt.formatTime(new Date(MusicPlayerProvider.position * 1000), "mm:ss")
+            color: "#aaffffff"
+            elide: Text.ElideRight
+        }
+        ProgressBar {
+            id: control
+            anchors {
+                left: time.right
+                leftMargin: 10
+                right: remainingTime.left
+                rightMargin: 10
+                verticalCenter: time.verticalCenter
+            }
+            height: 5
+            value: MusicPlayerProvider.position / MusicPlayerProvider.duration
+            background: Rectangle {
+                implicitHeight: 5
+                color: '#323232'
+                radius: 5
+            }
+            contentItem: Item {
+                implicitHeight: 5
+
+                // Progress indicator for determinate state.
+                Rectangle {
+                    width: control.visualPosition * parent.width
+                    height: parent.height
+                    radius: 5
+                    color: '#ffffff'
+                    visible: !control.indeterminate
+                }
+            }
+        }
+        CFText {
+            id: remainingTime
+            anchors {
+                right: parent.right
+                rightMargin: 10
+                bottom: controls.top
+                bottomMargin: 10
+            }
+            // position is in seconds
+            text: Qt.formatTime(new Date((MusicPlayerProvider.duration-MusicPlayerProvider.position) * 1000), "-mm:ss")
+            color: "#aaffffff"
+            elide: Text.ElideLeft
+        }
+        Row {
+            id: controls
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 0
+            Button {
+                width: 50
+                height: 50
+                background: Item {}
+                icon {
+                    width: 35
+                    height: 35
+                    source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
+                }
+                onClicked: {
+                    MusicPlayerProvider.previous()
+                }
+            }
+            Button {
+                width: 50
+                height: 50
+                background: Item {}
+                icon {
+                    width: 50
+                    height: 50
+                    source: MusicPlayerProvider.isPlaying ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
+                }
+                onClicked: {
+                    MusicPlayerProvider.togglePlay()
+                }
+            }
+            Button {
+                width: 50
+                height: 50
+                background: Item {}
+                icon {
+                    width: 35
+                    height: 35
+                    source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
+                }
+                onClicked: {
+                    MusicPlayerProvider.next()
+                }
+            }
+        }
+    }
+}

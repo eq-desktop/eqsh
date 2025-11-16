@@ -8,7 +8,7 @@ import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.1"
+    details.version: "0.1.2"
     meta.width: notch.defaultWidth + 40
     meta.height: notch.defaultHeight + 20
     meta.animDuration: 1000

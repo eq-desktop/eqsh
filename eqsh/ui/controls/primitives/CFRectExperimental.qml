@@ -18,6 +18,7 @@ Item {
     Shape {
         id: shape
         anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
         fillMode: Shape.PreserveAspectFit
         ShapePath {
             fillColor: root.color

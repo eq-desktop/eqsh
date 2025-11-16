@@ -115,17 +115,19 @@ Item {
 
 	component Notch: JsonObject {
 		property bool   enable: true
-		property bool   camera: true // A fake camera inside the notch
+		property bool   camera: true // A falinuxke camera inside the notch
 		property bool   islandMode: false // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
 		property int    radius: 30
 		property int    height: 25
 		property int    margin: 2
-		property int    minWidth: 200
+		property int    minWidth: 250
 		property int    maxWidth: 400
 		property bool   onlyVisual: false
-		property int    hideDuration: 1000
+		property bool   openOnHover: false
+		property int    openHoverMs: 125
+		property int    hideDuration: 125
 		property bool   fluidEdge: true // Cutout corners
 		property real   fluidEdgeStrength: 0.6 // can be 0-1
 		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
@@ -152,7 +154,7 @@ Item {
 		property bool   useBlur: false
 		property color  fullscreenColor: "#000"
 		property bool   hideOnLock: true
-		property int    hideDuration: 1000
+		property int    hideDuration: 125
 		property list<string> rightBarItems: [
 			"systemTray",
 			"wifi",

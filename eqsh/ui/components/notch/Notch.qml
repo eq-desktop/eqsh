@@ -13,6 +13,7 @@ import qs
 import qs.core.system
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 Scope {
   id: root
@@ -48,8 +49,8 @@ Scope {
 
 
   property var details: QtObject {
-    property list<string> supportedVersions: ["0.1.0", "0.1.1"]
-    property string currentVersion: "0.1.1"
+    property list<string> supportedVersions: ["0.1.0", "0.1.1", "0.1.2"]
+    property string currentVersion: "0.1.2"
   }
 
   property var notchRegistry: {
@@ -79,6 +80,9 @@ Scope {
       }
     }
   }
+
+  signal activateInstance()
+
   onDndModeChanged: launchById("dnd")
 
   onBatChargingChanged: if (batCharging) launchById("charging")
@@ -142,9 +146,9 @@ Scope {
     root.resetSize()
   }
 
-  function setSize(width=-1, height=-1) {
+  function setSize(width=-1, height=-1, temp=false) {
     root.customResize = false
-    root.customSizes.push([width, height])
+    if (!temp) root.customSizes.push([width, height])
     root.customWidth = width
     root.customHeight = height
     root.customResize = true
@@ -169,6 +173,9 @@ Scope {
     root.customResize = true
   }
 
+  function setWto(width, dur=300, ov=3, temp=false, easing=Easing.OutBack) {}
+  function setHto(height, dur=300, ov=3, temp=false, easing=Easing.OutBack) {}
+
   Variants {
     model: Quickshell.screens
 
@@ -188,22 +195,41 @@ Scope {
       exclusiveZone: -1
       visible: Config.notch.enable
       color: "transparent"
+      focusable: true
 
       property int minWidth: Config.notch.minWidth
       property int maxWidth: Config.notch.maxWidth
+      property real shadowOpacity: 0
 
       mask: Region {
         item: notchBg
       }
 
-      Rectangle {
+      RectangularShadow {
+        anchors.fill: notchBg
+        radius: 30
+        blur: 40
+        spread: 10
+        opacity: shadowOpacity
+        transform: Translate {
+          x: notchBg.xOffset
+          Behavior on x {
+            NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
+        }
+        Behavior on opacity {
+          NumberAnimation { duration: 200 }
+        }
+      }
+
+      CFRectExperimental {
         id: notchBg
         anchors {
           top: parent.top
           topMargin: inFullscreen ? -(root.height + topMargin + 5) : root.topMargin
           horizontalCenter: parent.horizontalCenter
           Behavior on topMargin {
-            NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutQuad }
+            NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
           }
           onTopMarginChanged: {
             panelWindow.mask.changed();
@@ -224,7 +250,7 @@ Scope {
           panelWindow.mask.changed();
         }
         Behavior on scale {
-          NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
         }
         implicitWidth: root.width
         implicitHeight: root.height
@@ -233,22 +259,122 @@ Scope {
         bottomLeftRadius: Config.notch.radius
         bottomRightRadius: Config.notch.radius
         property bool customResize: root.customResize
+
+        onImplicitWidthChanged: {
+          panelWindow.mask.changed();
+        }
         onImplicitHeightChanged: {
-          Runtime.notchHeight = implicitHeight;
+          panelWindow.mask.changed();
         }
-        Behavior on implicitHeight {
-          NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.2 }
+
+        PropertyAnimation {
+          id: animW
+          target: root
+          property: "width"
+          from: root.width
+          to: root.width
+          duration: 300
+          easing.type: Easing.OutBack
+          easing.overshoot: 0
         }
-        Behavior on implicitWidth {
-          NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }
+
+        PropertyAnimation {
+          id: animH
+          target: root
+          property: "height"
+          from: root.height
+          to: root.height
+          duration: 300
+          easing.type: Easing.OutBack
+          easing.overshoot: 0
         }
+
+        function decideOv(width=null, height=null) {
+          if (width) {
+            if (width > notchBg.implicitWidth) {
+              return 3
+            } else { return 1 }
+          } else if (height) {
+            if (height > notchBg.implicitHeight) {
+              return 3
+            } else { return 1 }
+          }
+        }
+
+        function setHto(height, dur=300, ov=3, temp=false, easing=Easing.OutBack) {
+          animH.from = implicitHeight
+          animH.to = height
+          animH.duration = dur
+          animH.easing.overshoot = ov
+          animH.easing.type = easing
+          if (temp) {
+            animH.target = notchBg
+            animH.property = "implicitHeight"
+          } else {
+            animH.target = root
+            animH.property = "height"
+          }
+          animH.restart()
+        }
+
+        function setWto(width, dur=300, ov=3, temp=false, easing=Easing.OutBack) {
+          animW.from = implicitWidth
+          animW.to = width
+          animW.duration = dur
+          animW.easing.overshoot = ov
+          animW.easing.type = easing
+          if (temp) {
+            animW.target = notchBg
+            animW.property = "implicitWidth"
+          } else {
+            animW.target = root
+            animW.property = "width"
+          }
+          animW.restart()
+        }
+
+        property int _pullHeight: 0
+        
+        MouseArea {
+          anchors.fill: parent
+          hoverEnabled: true
+          scrollGestureEnabled: true
+          onEntered: {
+            notchBg.setWto(root.width+10, 500, 5, true)
+            notchBg.setHto(root.height+5, 500, 5, true)
+            shadowOpacity = 0.5
+          }
+          onExited: {
+            if (notchBg.notchCustomCodeObj === null) {
+              notchBg.setWto(minWidth, 300, 2)
+              notchBg.setHto(Config.notch.height, 300, 2)
+              shadowOpacity = 0
+            }
+          }
+          onWheel: (wheel) => {
+            let delta = Math.min(50, Math.round(wheel.angleDelta.y/50))
+            notchBg._pullHeight = Math.min(20, Math.max(0, notchBg._pullHeight + delta))
+            if (wheel.angleDelta.y === 0) {
+              notchBg._pullHeight = 0
+            }
+            notchBg.setHto(30+5+notchBg._pullHeight, 300, 2, true)
+          }
+          enabled: notchBg.notchCustomCodeObj === null
+        }
+
         onCustomResizeChanged: {
           if (root.customResize) {
-            root.height = root.customHeight == -1 ? Config.notch.height : root.customHeight;
-            root.width = root.customWidth == -1 ? minWidth : root.customWidth;
+            let newH = root.customHeight == -1 ? Config.notch.height : root.customHeight;
+            let newW = root.customWidth == -1 ? minWidth : root.customWidth;
+            let ovW = decideOv(root.customWidth)
+            let ovH = decideOv(null, root.customHeight)
+            setHto(newH, 300, ovH)
+            setWto(newW, 300, ovW)
           } else {
-            root.height = Config.notch.height;
-            root.width = minWidth;
+            let ovW = decideOv(minWidth)
+            let ovH = decideOv(null, Config.notch.height)
+            setHto(Config.notch.height, 300, ovH)
+            setWto(minWidth, 300, ovW)
           }
           panelWindow.mask.changed();
         }
@@ -256,19 +382,34 @@ Scope {
         color: Config.notch.backgroundColor
         property var notchCustomCodeObj: null
         property var notchCustomCodeVis: root.customNotchVisible
+        Connections {
+          target: root
+          function onActivateInstance() {
+            if (notchBg.notchCustomCodeObj === null) return
+            if (notchBg.notchCustomCodeObj.noMode) return
+            if (notchBg.notchCustomCodeObj.notchState === "active") {
+              notchBg.notchCustomCodeObj.setIndicative();
+              return
+            }
+            if (notchBg.notchCustomCodeObj.notchState === "indicative") notchBg.notchCustomCodeObj.activate();
+          }
+        }
         onNotchCustomCodeVisChanged: {
           if (notchCustomCodeVis) {
-            notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
-            notchCustomCodeObj.screen = panelWindow
-            notchCustomCodeObj.meta.id = root.customNotchId
-            const version = notchCustomCodeObj.details.version
-            if (notchCustomCodeObj.details.appType == "media") {
-              runningNotchInstances = [notchCustomCodeObj.meta.id];
+            notchBg.notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
+            notchBg.notchCustomCodeObj.screen = panelWindow
+            notchBg.notchCustomCodeObj.meta.id = root.customNotchId
+            const version = notchBg.notchCustomCodeObj.details.version
+            if (notchBg.notchCustomCodeObj.details.appType == "media") {
+              runningNotchInstances = [notchBg.notchCustomCodeObj.meta.id];
             } else {
-              runningNotchInstances.push(notchCustomCodeObj.meta.id);
+              runningNotchInstances.push(notchBg.notchCustomCodeObj.meta.id);
             }
             if (!root.details.supportedVersions.includes(version)) {
               console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
+            }
+            if (notchBg.notchCustomCodeObj.details.shadowOpacity !== undefined) {
+              panelWindow.shadowOpacity = notchBg.notchCustomCodeObj.details.shadowOpacity
             }
           }
           panelWindow.mask.changed();
@@ -328,6 +469,20 @@ Scope {
       }
     }
   }
+  CustomShortcut {
+    name: "toggleNotchActiveInstance"
+    description: "Toggle notch active instance"
+    onPressed: {
+      root.activateInstance();
+    }
+  }
+  CustomShortcut {
+    name: "toggleNotchInfo"
+    description: "Toggle notch info panel"
+    onPressed: {
+      return
+    }
+  }
   IpcHandler {
     target: "notch"
     function setSize(width: int, height: int) {
@@ -338,6 +493,9 @@ Scope {
     }
     function instance(code: string) {
       root.notchInstance(code);
+    }
+    function activateInstance() {
+      root.activateInstance();
     }
     function closeInstance() {
       root.closeNotchInstance(root.runningNotchInstances[root.runningNotchInstances.length - 1]);

@@ -15,8 +15,16 @@ Singleton {
     property string album: mpris.activePlayer?.trackAlbum ?? ""
     property url thumbnail: mpris.activePlayer?.trackArtUrl ?? ""
     property bool isPlaying: mpris.activePlayer?.isPlaying ?? false
-    property int duration: 0
-    property int position: 0
+    property int duration: mpris.activePlayer?.length ?? 0
+    property int position: mpris.activePlayer?.position ?? 0
+    Timer {
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered: {
+            mpris.position = mpris.activePlayer?.position ?? 0
+        }
+    }
     property bool available: false
     function togglePlay() {
         if (mpris.activePlayer) {

@@ -12,12 +12,10 @@ import QtQuick.Effects
 
 NotchApplication {
     id: root
-    details.version: "0.1.1"
+    details.version: "0.1.2"
     details.appType: "media"
     meta.height: 60
-    meta.width: 300
-    meta.indicativeWidth: 200
-    meta.xOffset: notchState == "active" ? -30 : 0
+    meta.width: 350
 
     property int pause: 0      // accumulated elapsed time in ms
     property var startTime: 0  // last start timestamp

@@ -10,7 +10,7 @@ import QtQuick.Effects
 
 NotchApplication {
     id: root
-    details.version: "0.1.1"
+    details.version: "0.1.2"
     meta.height: notch.defaultHeight+10
     meta.width: notch.defaultWidth-50
     indicative: Item {

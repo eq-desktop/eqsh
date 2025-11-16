@@ -24,6 +24,7 @@ import qs.ui.components.screenshot
 import qs.ui.components.ai
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
+import qs.ui.controls.primitives
 import qs.ui.controls.providers
 import qs.config
 import qs.core.foundation
