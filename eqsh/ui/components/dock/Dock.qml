@@ -11,6 +11,7 @@ import qs
 import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
+import qs.ui.controls.primitives
 import qs.ui.controls.providers
 import QtQuick.Controls.Fusion
 
@@ -153,13 +154,18 @@ Scope {
             }
           }
 
-          BoxGlass {
+          CFRect {
             id: dockBackground
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             implicitWidth: dockRow.implicitWidth + 20
             implicitHeight: 65
-            radius: 20
+            radius: Config.dock.radius
+            color: Config.dock.color
+            border {
+              width: 1
+              color: Config.dock.border
+            }
             anchors.bottomMargin: 6
           }
 

@@ -20,6 +20,7 @@ BaseWidget {
         scale: 2
         rotation: -20
         gradient: LinearGradient {
+            y2: bw.height
             GradientStop { position: 0.0; color: Config.general.darkMode ? "#08427d" : "#08427d" }
             GradientStop { position: 1.0; color: Config.general.darkMode ? "#5487c0" : "#5487c0" }
         }

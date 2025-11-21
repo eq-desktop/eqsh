@@ -26,6 +26,12 @@ Scope {
       Runtime.widgetEditMode = !Runtime.widgetEditMode
     }
   }
+  IpcHandler {
+    target: "wallpaper"
+    function change(path: string) {
+      Config.wallpaper.path = path
+    }
+  }
   Variants {
     model: Quickshell.screens
 

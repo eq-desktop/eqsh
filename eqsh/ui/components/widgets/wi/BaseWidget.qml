@@ -35,6 +35,7 @@ Control {
         scale: 2
         rotation: 0
         gradient: LinearGradient {
+            y2: bg.height
             GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : "#ffffff" }
             GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : '#ffffff' }
         }

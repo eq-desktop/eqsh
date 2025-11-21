@@ -101,6 +101,9 @@ Item {
 		property bool   autohide: false
 		property int    autohideDelay: 2000
 		property int    scale: 1
+		property int    radius: 25
+		property string color: '#634a4a4a'
+		property string border: '#ff4a4a4a'
 		property string position: "bottom" // bottom | left | right
 		property list<string> apps: [
 			"org.gnome.Nautilus",
