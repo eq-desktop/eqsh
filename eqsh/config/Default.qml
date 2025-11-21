@@ -275,12 +275,13 @@ Item {
 
 	component Widgets: JsonObject {
 		property bool   enable: true
-		property int    radius: 20
+		property int    radius: 25
 		property int    cellsX: 16
 		property int    cellsY: 10
 		property string location: "Berlin"
 		property bool   useLocationInUI: true
 		property string tempUnit: "C"
+		property bool   wobbleOnEdit: false
 	}
 
 	component ControlCenter: JsonObject {

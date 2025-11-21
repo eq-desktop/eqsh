@@ -11,6 +11,7 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell
 import qs.ui.controls.auxiliary
+import qs.ui.controls.primitives
 import qs.ui.controls.windows
 import qs.ui.controls.windows.dropdown
 import qs.config
@@ -87,7 +88,7 @@ Item {
         SequentialAnimation on rotation {
             id: wobbleAnim
             loops: Animation.Infinite
-            running: root.editMode
+            running: root.editMode && Config.widgets.wobbleOnEdit
             NumberAnimation { to: draggableRect.wobbleAmp * draggableRect.wobbleDir; duration: draggableRect.wobbleSpeed; easing.type: Easing.InOutQuad }
             NumberAnimation { to: -draggableRect.wobbleAmp * draggableRect.wobbleDir; duration: draggableRect.wobbleSpeed * 2; easing.type: Easing.InOutQuad }
             NumberAnimation { to: 0; duration: draggableRect.wobbleSpeed; easing.type: Easing.InOutQuad }

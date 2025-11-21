@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick.Controls
+import QtQuick.Shapes
 import QtQuick.Layouts
 import QtQuick.VectorImage
 import QtQuick.Effects
@@ -13,12 +14,12 @@ import qs.ui.controls.primitives
 
 BaseWidget {
     id: bw
-    bg: Rectangle {
+    bg: CFRectExperimental {
         id: bg
         anchors.fill: parent
         scale: 2
         rotation: -20
-        gradient: Gradient {
+        gradient: LinearGradient {
             GradientStop { position: 0.0; color: Config.general.darkMode ? "#08427d" : "#08427d" }
             GradientStop { position: 1.0; color: Config.general.darkMode ? "#5487c0" : "#5487c0" }
         }

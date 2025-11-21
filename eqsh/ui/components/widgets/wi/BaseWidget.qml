@@ -5,11 +5,13 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Shapes
 import QtQuick.VectorImage
 import QtQuick.Effects
 import qs
 import qs.config
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 
 Control {
     id: root
@@ -27,12 +29,12 @@ Control {
     property int textSizeSSL: 86*sF
     property Component content: null
     property var widget: null
-    property Component bg: Rectangle {
+    property Component bg: CFRectExperimental {
         id: bg
         anchors.fill: parent
         scale: 2
         rotation: 0
-        gradient: Gradient {
+        gradient: LinearGradient {
             GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : "#ffffff" }
             GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : '#ffffff' }
         }

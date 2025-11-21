@@ -12,6 +12,7 @@ Item {
     property real bottomLeftRadius:  root.radius
     property real bottomRightRadius: root.radius
     property color color: "#000000"
+    property var gradient: undefined
     property color strokeColor: "black"
     property real strokeWidth: 1
 
@@ -21,8 +22,9 @@ Item {
         preferredRendererType: Shape.CurveRenderer
         fillMode: Shape.PreserveAspectFit
         ShapePath {
-            fillColor: root.color
+            fillColor: root.gradient ? "transparent" : root.color
             strokeWidth: 0
+            fillGradient: root.gradient
 
             startX: radius
             startY: 0
