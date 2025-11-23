@@ -225,7 +225,7 @@ ScrollView {
                                             color: colorCircle.selected ? Config.appearance.accentColor : "transparent"
                                         }
                                     }
-                                    color: colorCircle.color == "#00000000" ? AccentColor.dynamicColor : colorCircle.color
+                                    color: colorCircle.color == "#00000000" ? (AccentColor?.dynamicColor || "#00000000") : colorCircle.color
                                     CFText {
                                         anchors {
                                             top: parent.bottom

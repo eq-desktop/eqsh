@@ -222,7 +222,7 @@ Scope {
         }
       }
 
-      CFRectExperimental {
+      CFRect {
         id: notchBg
         anchors {
           top: parent.top
@@ -460,7 +460,7 @@ Scope {
         anchors {
           top: notchBg.top
           left: notchBg.right
-          leftMargin: -1 + notchBg.xOffset
+          leftMargin: -1+notchBg.xOffset
           Behavior on leftMargin {
             NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
           }

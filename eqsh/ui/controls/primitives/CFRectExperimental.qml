@@ -21,58 +21,69 @@ Item {
         anchors.fill: parent
         preferredRendererType: Shape.CurveRenderer
         fillMode: Shape.PreserveAspectFit
+
         ShapePath {
             fillColor: root.gradient ? "transparent" : root.color
-            strokeWidth: 0
             fillGradient: root.gradient
+            strokeColor: root.strokeColor
+            strokeWidth: root.strokeWidth
 
-            startX: radius
+            // Start at top-left corner arc end
+            startX: topLeftRadius
             startY: 0
+
+            // Top edge → until before top-right corner
             PathLine {
                 x: shape.width - topRightRadius
                 y: 0
             }
-            PathCubic {
-                control1X: shape.width
-                control2X: shape.width
-                control1Y: 0
-                control2Y: 0
+
+            // Top-right corner (quadratic arc)
+            PathQuad {
+                controlX: shape.width
+                controlY: 0
                 x: shape.width
                 y: topRightRadius
             }
+
+            // Right edge
             PathLine {
                 x: shape.width
                 y: shape.height - bottomRightRadius
             }
-            PathCubic {
-                control1X: shape.width
-                control2X: shape.width
-                control1Y: shape.height
-                control2Y: shape.height
+
+            // Bottom-right corner
+            PathQuad {
+                controlX: shape.width
+                controlY: shape.height
                 x: shape.width - bottomRightRadius
                 y: shape.height
             }
+
+            // Bottom edge
             PathLine {
                 x: bottomLeftRadius
                 y: shape.height
             }
-            PathCubic {
-                control1X: 0
-                control2X: 0
-                control1Y: shape.height
-                control2Y: shape.height
+
+            // Bottom-left corner
+            PathQuad {
+                controlX: 0
+                controlY: shape.height
                 x: 0
                 y: shape.height - bottomLeftRadius
             }
+
+            // Left edge
             PathLine {
                 x: 0
                 y: topLeftRadius
             }
-            PathCubic {
-                control1X: 0
-                control2X: 0
-                control1Y: 0
-                control2Y: 0
+
+            // Top-left corner
+            PathQuad {
+                controlX: 0
+                controlY: 0
                 x: topLeftRadius
                 y: 0
             }

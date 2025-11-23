@@ -236,7 +236,7 @@ Scope {
                   delegate: UIBButton {
                     required property var modelData
                     required property var index
-                    text: modelData.text
+                    text: modelData.app ? modelData.text : Translation.tr(modelData.text)
                     id: globalMenuButton
                     selected: index == globalMenuRepeater.selectedItem && globalMenuRepeater.isOpened
                     font.weight: modelData.app ? 700 : 500

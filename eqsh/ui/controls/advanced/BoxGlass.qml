@@ -9,10 +9,11 @@ import QtQuick.Effects
 Item {
     id: box
 
-    property color color: Config.general.darkMode ? "#20000000" : "#50ffffff"
+    property color color: Config.general.darkMode ? (transparent ? "#20000000" : "#20000000") : (transparent ? "#30ffffff" : "#50ffffff")
     property int borderSize: 1
     property real shadowOpacity: 0.5
     property bool highlightEnabled: true
+    property bool transparent: false
     
     property color light: '#a0ffffff'
     property real  glowStrength: 0.8

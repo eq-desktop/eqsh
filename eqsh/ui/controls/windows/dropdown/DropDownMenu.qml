@@ -33,7 +33,7 @@ Scope {
   property var hoverColor: AccentColor.color
   property var color: Config.general.darkMode ? "#1e1e1e" : "#dfdfdf" //"#20000000" : "#50ffffff"
   property var textColor: Config.general.darkMode ? "#ffffff" : "#1e1e1e" //"#20000000" : "#50ffffff"
-  property var hoverTextColor: "#ffffff" //"#20000000" : "#50ffffff"
+  property var hoverTextColor: AccentColor.textColor //"#20000000" : "#50ffffff"
   enum AnchorPoint { TopLeft = 0, TopRight = 1, BottomLeft = 2, BottomRight = 3, Auto = 4 }
   property int anchorPoint: DropDownMenu.AnchorPoint.Auto
   property bool invertY: [DropDownMenu.AnchorPoint.BottomLeft, DropDownMenu.AnchorPoint.BottomRight].includes(anchorPoint)
@@ -132,7 +132,7 @@ Scope {
             horizontalAlignment: Text.AlignRight
             text: modelData.kb
             font.pixelSize: 15
-            color: dropItem.hover ? "#50ffffff" : Config.general.darkMode ? "#50ffffff" : "#50000000"
+            color: dropItem.hover ? AccentColor.textColor : Config.general.darkMode ? "#50ffffff" : "#50000000"
           }
         }
       }

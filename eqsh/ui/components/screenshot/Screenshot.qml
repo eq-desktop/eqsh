@@ -12,6 +12,7 @@ import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.apps
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 import qs.ui.controls.windows.dropdown
 import QtQuick.Controls.Fusion
 import QtQuick.VectorImage
@@ -20,31 +21,47 @@ Scope {
   id: root
   property bool showScrn: Runtime.showScrn
   property bool takingScreenshot: false
-  signal requestScreenshot()
+  signal requestScreenshot(quick: bool)
   property var region: Qt.rect(0, 0, 0, 0)
   property var outputMon: Hyprland.focusedMonitor
   property int optionsSaveTo: 0
   property int optionsTimer: 0
+  property int mode: 1 // 0 = monitor, 1 = region, 2 = window
+  property bool isQuick: false
   property list<bool> optionsOptions: [false, false, false]
   IpcHandler {
     target: "screenshot"
     function toggle() {
-      requestScreenshot()
+      requestScreenshot(false)
     }
   }
   CustomShortcut {
     name: "screenshot"
     description: "Take Screenshot"
     onPressed: {
-      requestScreenshot()
+      requestScreenshot(false)
+    }
+  }
+  CustomShortcut {
+    name: "screenshotRegion"
+    description: "Take Screenshot Region"
+    onPressed: {
+      root.mode = 1
+      requestScreenshot(true)
     }
   }
   CustomShortcut {
     name: "screenshotEntireScreen"
-    description: "Take Screenshot"
+    description: "Take Screenshot of Screen"
     onPressed: {
-      requestScreenshot()
+      root.mode = 0
+      takeScreenshotEntireProcess.running = true
     }
+  }
+
+  function roundEven(v) {
+    const r = Math.round(v);
+    return (r % 2 === 1) ? r + 1 : r;
   }
 
   function takeScreenshot() {
@@ -54,12 +71,27 @@ Scope {
   }
 
   Process {
+    id: takeScreenshotEntireProcess
+    command: [
+      "sh",
+      "-c",
+      `grim -o ${outputMon.name} ${root.optionsSaveTo == 2 ? "- | wl-copy" : ((root.optionsSaveTo == 0 ? "Desktop/" : root.optionsSaveTo == 1 ? "Documents/": "") + Time.getTime("yyyy-MM-dd-HH-mm-ss") + ".png")}`
+    ]
+    running: false
+    onExited: {
+      root.takingScreenshot = false
+    }
+    stderr: StdioCollector {
+      onStreamFinished: if (text != "") console.error("taking screenshot:", text)
+    }
+  }
+
+  Process {
     id: takeScreenshotProcess
     command: [
-      "grim",
-      "-g",
-      Math.round(root.region.x + outputMon.x) + "," + Math.round(root.region.y + outputMon.y) + " " + Math.round(root.region.width) + "x" + Math.round(root.region.height),
-      "" + (root.optionsSaveTo == 0 ? "Desktop/" : root.optionsSaveTo == 1 ? "Documents/": "") + Time.getTime("yyyy-MM-dd-HH-mm-ss") + ".png"
+      "sh",
+      "-c",
+      `grim -g '${Math.round(root.region.x + outputMon.x) + "," + Math.round(root.region.y + outputMon.y) + " " + Math.round(root.region.width) + "x" + Math.round(root.region.height)}' ${root.optionsSaveTo == 2 ? "- | wl-copy" : ((root.optionsSaveTo == 0 ? "Desktop/" : root.optionsSaveTo == 1 ? "Documents/": "") + Time.getTime("yyyy-MM-dd-HH-mm-ss") + ".png")}`
     ]
     running: false
     onExited: {
@@ -70,7 +102,8 @@ Scope {
       onStreamFinished: if (text != "") console.error("taking screenshot:", text)
     }
   }
-  onRequestScreenshot: {
+  onRequestScreenshot: (quick) => {
+    root.isQuick = quick
     Runtime.showScrn = !Runtime.showScrn
   }
   Variants {
@@ -151,7 +184,15 @@ Scope {
           }
           onOpacityChanged: {
             if (opacity == 0 && root.takingScreenshot) {
-              takeScreenshotProcess.running = true
+              if (root.mode == 0) {
+                takeScreenshotEntireProcess.running = true
+              }
+              if (root.mode == 1) {
+                takeScreenshotProcess.running = true
+              }
+              if (root.mode == 2) {
+                takeScreenshotProcess.running = true
+              }
             }
           }
           property int startX: 0
@@ -159,7 +200,7 @@ Scope {
 
           Rectangle {
             id: selectionBox
-            property var rect: Qt.rect(x, y, width, height)
+            property var rect: Qt.rect(x-1, y-1, width+2, height+2)
             property bool showScrn: root.showScrn
             onRectChanged: {
               root.region = selectionBox.rect
@@ -172,7 +213,7 @@ Scope {
                 selectionBox.height = 0
               }
             }
-            visible: true
+            visible: root.mode != 0
             color: "transparent"
             opacity: 1
             border.color: "#80333333"
@@ -183,7 +224,7 @@ Scope {
           Text {
             id: title
             property bool offScreen: selectionBox.y + selectionBox.height > (screenshotContainer.height-40)
-            text: "X: " + Math.round(selectionBox.x) + " Y: " + Math.round(selectionBox.y) + " W: " + Math.round(selectionBox.width) + " H: " + Math.round(selectionBox.height)
+            text: "X: " + Math.round(selectionBox.x-1) + " Y: " + Math.round(selectionBox.y-1) + " W: " + Math.round(selectionBox.width+2) + " H: " + Math.round(selectionBox.height+2)
             anchors {
               top: selectionBox.bottom
               left: selectionBox.left
@@ -194,11 +235,12 @@ Scope {
             }
             z: 2
             color: "#fff"
-            visible: selectionBox.width != 0 || selectionBox.height != 0
+            visible: (selectionBox.width != 0 || selectionBox.height != 0) && root.mode != 0
           }
 
           Rectangle {
             id: toolBar
+            visible: !root.isQuick
             radius: 15
             anchors {
               bottom: parent.bottom
@@ -229,10 +271,10 @@ Scope {
                   radius: 7.5
                   anchors.centerIn: parent
                   color: "#50aaaaaa"
-                  VectorImage {
+                  CFVI {
                     source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/x-bold.svg")
-                    width: 12
-                    height: 12
+                    size: 12
+                    transform: Translate { x: -0.5; y: -0.5 }
                     anchors.centerIn: parent
                   }
                 }
@@ -241,36 +283,78 @@ Scope {
               Item {
                 width: 30
                 height: 30
-                Rectangle {
-                  width: 25
-                  height: 25
-                  radius: 5
-                  anchors.centerIn: parent
-                  color: "#aaaaaa"
+                MouseArea {
+                  anchors.fill: parent
+                  onClicked: {
+                    root.mode = 0
+                  }
+                  CFRect {
+                    width: 25
+                    height: 25
+                    radius: 5
+                    anchors.centerIn: parent
+                    color: "#aaaaaa"
+                    visible: root.mode == 0
+                  }
+                  CFVI {
+                    icon: "screenshot/monitor.svg"
+                    size: 30
+                    transform: Translate { x: -0.5; y: -0.5 }
+                    anchors.centerIn: parent
+                    color: root.mode == 0 ? "#1e1e1e" : "#ffffff"
+                  }
                 }
               }
               // WINDOW
               Item {
                 width: 30
                 height: 30
-                Rectangle {
-                  width: 25
-                  height: 25
-                  radius: 5
-                  anchors.centerIn: parent
-                  color: "#aaaaaa"
+                MouseArea {
+                  anchors.fill: parent
+                  onClicked: {
+                    root.mode = 2
+                  }
+                  CFRect {
+                    width: 25
+                    height: 25
+                    radius: 5
+                    anchors.centerIn: parent
+                    color: "#aaaaaa"
+                    visible: root.mode == 2
+                  }
+                  CFVI {
+                    icon: "screenshot/window.svg"
+                    size: 30
+                    transform: Translate { x: -0.5; y: -0.5 }
+                    anchors.centerIn: parent
+                    color: root.mode == 2 ? "#1e1e1e" : "#ffffff"
+                  }
                 }
               }
-              // SELECTION
+              // REGION
               Item {
                 width: 30
                 height: 30
-                Rectangle {
-                  width: 25
-                  height: 25
-                  radius: 5
-                  anchors.centerIn: parent
-                  color: "#aaaaaa"
+                MouseArea {
+                  anchors.fill: parent
+                  onClicked: {
+                    root.mode = 1
+                  }
+                  CFRect {
+                    width: 25
+                    height: 25
+                    radius: 5
+                    anchors.centerIn: parent
+                    color: "#aaaaaa"
+                    visible: root.mode == 1
+                  }
+                  CFVI {
+                    icon: "screenshot/region.svg"
+                    size: 30
+                    transform: Translate { x: -0.5; y: -0.5 }
+                    anchors.centerIn: parent
+                    color: root.mode == 1 ? "#1e1e1e" : "#ffffff"
+                  }
                 }
               }
               // SPACER
@@ -404,8 +488,19 @@ Scope {
             anchors.margins: -5
             radius: 15
             color: "#c0000000"
-            opacity: title.offScreen ? 1: 0
+            opacity: title.offScreen ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 500; easing.type: Easing.InOutQuad} }
+          }
+
+          Rectangle { // Monitor Overlay
+            anchors.fill: parent
+            color: "transparent"
+            radius: Config.screenEdges.radius
+            border {
+              width: 2
+              color: "#ff0000"
+            }
+            visible: root.mode == 0 && root.outputMon.name == Hyprland.monitorFor(panelWindow.screen).name
           }
 
           Rectangle { // Top overlay
@@ -414,7 +509,7 @@ Scope {
             anchors.top: parent.top
             height: selectionBox.y
             color: "#c0000000"
-            visible: selectionBox.opacity > 0
+            visible: selectionBox.opacity > 0 && root.mode != 0
           }
 
           Rectangle { // Left overlay
@@ -423,7 +518,7 @@ Scope {
             anchors.top: selectionBox.top
             anchors.bottom: selectionBox.bottom
             color: "#c0000000"
-            visible: selectionBox.opacity > 0
+            visible: selectionBox.opacity > 0 && root.mode != 0
           }
 
           Rectangle { // Right overlay
@@ -432,7 +527,7 @@ Scope {
             anchors.top: selectionBox.top
             anchors.bottom: selectionBox.bottom
             color: "#c0000000"
-            visible: selectionBox.opacity > 0
+            visible: selectionBox.opacity > 0 && root.mode != 0
           }
 
           Rectangle { // Bottom overlay
@@ -441,7 +536,7 @@ Scope {
             anchors.bottom: parent.bottom
             height: parent.height - (selectionBox.y + selectionBox.height)
             color: "#c0000000"
-            visible: selectionBox.opacity > 0
+            visible: selectionBox.opacity > 0 && root.mode != 0
           }
 
           MouseArea {
@@ -464,6 +559,12 @@ Scope {
               selectionBox.y = Math.min(mouse.y, screenshotContainer.startY)
               selectionBox.width = Math.abs(mouse.x - screenshotContainer.startX)
               selectionBox.height = Math.abs(mouse.y - screenshotContainer.startY)
+            }
+
+            onReleased: (mouse) => {
+              if (root.isQuick) {
+                root.takeScreenshot()
+              }
             }
           }
         }

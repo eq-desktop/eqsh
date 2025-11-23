@@ -14,12 +14,12 @@ BaseWidget {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 15
-            spacing: -4
+            spacing: 4
 
             CFText {
                 id: month
                 text: Qt.locale(Config.general.language).toString(new Date(), "MMMM")
-                font.pixelSize: textSizeM
+                font.pixelSize: textSize
                 font.weight: 600
                 font.capitalization: Font.AllUppercase
                 color: Config.appearance.multiAccentColor ? '#ff3838' : AccentColor.color

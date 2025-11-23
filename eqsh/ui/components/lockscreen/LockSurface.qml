@@ -11,6 +11,7 @@ import Quickshell
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
+import qs.ui.controls.primitives
 import qs.config
 import qs.ui.components.panel
 import qs
@@ -151,12 +152,14 @@ Rectangle {
 			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 
-		ShaderEffectSource {
+		Backdrop {
 			id: clockBlurSource
 			sourceItem: backgroundImage
+			sourceX: clock.x
+			sourceY: clock.y
+			sourceW: clock.width
+			sourceH: clock.height
 			sourceRect: Qt.rect(clock.x, clock.y, clock.width, clock.height)
-			hideSource: false
-			live: true
 		}
 
 		MultiEffect {
@@ -187,7 +190,7 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#77ffffff"
+			color: "#30ffffff"
 			font.family: Fonts.sFProRoundedRegular.family
 			font.pointSize: 80
 			font.weight: 900
@@ -303,6 +306,7 @@ Rectangle {
 			}
 
 			RowLayout {
+				id: passwordBoxLayout
 				Layout.alignment: Qt.AlignHCenter
 				Item {
 					Layout.alignment: Qt.AlignHCenter
@@ -322,11 +326,28 @@ Rectangle {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}
 					}
+					BackdropBlur {
+						anchors.centerIn: passwordBoxContainer
+						width: passwordBoxContainer.width
+						height: passwordBoxContainer.height
+						clipRadius: 100
+						opacity: passwordBoxContainer.opacity
+						brightness: 0.07
+						Backdrop {
+							sourceItem: backgroundImage
+							sourceX: inputArea.x+passwordBoxLayout.x+passwordBoxContainer.x
+							sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y
+							sourceW: passwordBoxContainer.width
+							sourceH: passwordBoxContainer.height
+						}
+					}
 					BoxGlass {
 						id: passwordBoxContainer
 						width: 200
 						height: 35
+						highlightEnabled: false
 						opacity: 0
+						transparent: true
 						Behavior on opacity {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}
@@ -342,25 +363,32 @@ Rectangle {
 						}
 						TextField {
 							id: passwordBox
-							anchors.horizontalCenter: parent.horizontalCenter
+							anchors.left: parent.left
+							anchors.verticalCenter: parent.verticalCenter
 
 							background: Rectangle {
 								color: "transparent"
 								anchors.fill: parent
-								Text {
+								CFText {
 									anchors.fill: parent
 									verticalAlignment: Text.AlignVCenter
 									text: passwordBox.text == "" ? root.context.showFailure ? Translation.tr("Incorrect Password") : Translation.tr("Enter Password") : ""
-									color: root.context.showFailure ? "#ffffff" : "#bbffffff"
+									color: root.context.showFailure ? '#cccccc' : '#bbdedede'
 									anchors.leftMargin: 10
-									font.weight: 500
+									font.weight: 600
 								}
 							}
-							color: "#fff";
+							color: "#a0ffffff";
 
-							implicitWidth: 200
+							implicitWidth: 170
 							implicitHeight: 35
 							padding: 10
+							font.pixelSize: 12
+							font.family: Fonts.sFProDisplayRegular.family
+							renderType: Text.NativeRendering
+
+							selectionColor: '#50ffffff'
+							selectedTextColor: '#a0ffffff'
 
 							focus: true
 							enabled: !root.context.unlockInProgress
@@ -388,11 +416,29 @@ Rectangle {
 								}
 							}
 						}
+						CFRing {
+							id: ring
+							anchors {
+								right: parent.right
+								rightMargin: 4
+								verticalCenter: parent.verticalCenter
+							}
+							size: 27
+							lineWidth: 2
+							opacity: passwordBox.text == "" ? 0 : 1
+							color: "#50ffffff"
+							CFVI {
+								anchors.centerIn: parent
+								size: 15
+								opacity: 0.5
+								icon: "arrow-right.svg"
+							}
+						}
 					}
 				}
 			}
 
-			Text {
+			CFText {
 				Layout.alignment: Qt.AlignHCenter
 				horizontalAlignment: Text.AlignHCenter
 				text: Config.lockScreen.usageInfo
@@ -401,7 +447,7 @@ Rectangle {
 				Layout.preferredWidth: 180
 				wrapMode: Text.WordWrap
 				font.pointSize: 9
-				font.weight: Font.Normal
+				font.weight: 600
 				Layout.topMargin: 0
 			}
 		}

@@ -16,4 +16,3 @@ ShaderEffect {
 
     fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/glassrim.frag.qsb")
 }
-2
