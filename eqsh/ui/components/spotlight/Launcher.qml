@@ -7,6 +7,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Effects
 import qs
+import qs.config
 import qs.ui.controls.advanced
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
@@ -44,6 +45,8 @@ Scope {
             width: parent.width * 0.85
             implicitHeight: results.height + search.height + 8
             radius: 25
+            rimStrength: search.text == "" ? 0.2 : 1.7
+            lightDir: Qt.point(1, -0.05)
 
             ColumnLayout {
                 anchors.fill: parent

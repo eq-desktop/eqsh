@@ -345,9 +345,10 @@ Rectangle {
 						id: passwordBoxContainer
 						width: 200
 						height: 35
-						highlightEnabled: false
 						opacity: 0
-						transparent: true
+						rimStrength: 0.2
+						lightDir: Qt.point(1, -0.05)
+						color: "#20ffffff"
 						Behavior on opacity {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}

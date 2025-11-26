@@ -1,78 +1,41 @@
 import QtQuick
 import Quickshell
 import QtQuick.Controls
-import qs.config
-import qs.ui.controls.auxiliary
-import qs.ui.controls.providers
 import QtQuick.Effects
+import qs.ui.controls.advanced
 
 Item {
     id: box
 
-    property color color: Config.general.darkMode ? (transparent ? "#20000000" : "#20000000") : (transparent ? "#30ffffff" : "#50ffffff")
-    property int borderSize: 1
-    property real shadowOpacity: 0.5
+    property color color: "#10ffffff"
     property bool highlightEnabled: true
     property bool transparent: false
     
-    property color light: '#a0ffffff'
-    property real  glowStrength: 0.8
-    property color negLight: '#80000000'
+    property color light: '#40ffffff'
+    property var   lightDir: Qt.point(1, -0.2)
+    property real  rimSize: 0.8
+    property real  rimStrength: 1.0
+
+    property var negLight: ""
+    property var highlight: ""
+    property var shadowOpacity: ""
 
     // Individual corner radii
-    property int radius: 20
+    property real radius: 50
 
     property int animationSpeed: 16
     property int animationSpeed2: 16
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
     
-    Box {
+    GlassRim {
         id: boxContainer
         anchors.fill: parent
-        color: box.color
+        color: box.transparent ? "transparent" : box.color
         radius: box.radius
-        highlight: "transparent"
-    }
-
-    // First inner shadow
-    InnerShadow {
-        strength: box.glowStrength*2.5 // 0.8*
-        offsetX: 0
-        offsetY: -box.glowStrength*2.5
-        color: box.light
-        opacity: box.glowStrength
-        blurMax: 40
-        visible: box.highlightEnabled
-    }
-    
-    // Second inner shadow
-    InnerShadow {
-        strength: 2
-        offsetX: 0
-        offsetY: 2
-        color: box.negLight
-        blurMax: 64
-        opacity: 1
-        visible: box.highlightEnabled
-    }
-
-    InnerShadow {
-        strength: 0.5
-        offsetX: 0
-        offsetY: 0.8
-        color: "#fff"
-        blurMax: 1
-        blur: 0.1
-        opacity: 1
-        visible: box.highlightEnabled
-    }
-
-    Box {
-        id: boxContainer2
-        anchors.fill: parent
-        color: "transparent"
-        radius: box.radius
-        highlight: highlightEnabled ? "#20ffffff" : "transparent"
+        glowColor: box.highlightEnabled ? box.light : Qt.rgba(0,0,0,0)
+        lightDir: box.lightDir
+        glowEdgeBand: box.rimSize
+        glowAngWidth: box.rimStrength
     }
 }

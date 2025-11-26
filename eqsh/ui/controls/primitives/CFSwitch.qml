@@ -83,7 +83,7 @@ Switch {
             light: animating ? "#fff" : "transparent"
             negLight: animating ? "#333" : "#fff"
             Behavior on negLight { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
-            glowStrength: animating ? 1 : 0.8
+            rimStrength: animating ? 1 : 0.8
         }
     }
 

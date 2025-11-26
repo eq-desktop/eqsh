@@ -53,6 +53,8 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 
 ![Preview of eqSh Notch App](Media/preview5.png)
 
+![Preview of eqSh Lockscreen with Password](Media/preview6.png)
+
 ---
 
 ## 🚀 Quickstart

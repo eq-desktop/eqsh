@@ -34,7 +34,7 @@ Slider {
         negLight: slider.pressed ? "#333" : "#fff"
         Behavior on negLight { ColorAnimation { duration: 200; easing.type: Easing.InOutQuad } }
         radius: 99
-        glowStrength: slider.pressed ? 1 : 0.8
+        rimStrength: slider.pressed ? 1 : 0.8
     }
     from: 0
     to: 1

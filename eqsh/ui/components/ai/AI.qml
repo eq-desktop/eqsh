@@ -148,9 +148,6 @@ Scope {
                 z: 3
                 width: 300
                 height: 40
-                light: '#380404'
-                glowStrength: 0.2
-                negLight: '#50380404'
                 property real siconScale: 1
                 property real xOffset: 0
                 property bool error: false
@@ -190,20 +187,17 @@ Scope {
                     onAccepted: {
                         console.info("Request AI Answer To: " + inputText.text)
                         acceptAnim.start()
-                        loadingAnim.start()
                         loadingAnim2.start()
                         input.error = false
                         input.loading = true
                         panelWindow.answers.push(["user", inputText.text])
                         agent.call(inputText.text, Config.sigrid.key, Config.sigrid.model, {systemPrompt: sigridPrompt.text(), previousMessages: panelWindow.answers.map(function(a) { return {role: a[0], content: a[1]} })}, function(success, response) {
                             input.loading = false
-                            loadingAnim.stop()
                             loadingAnim2.stop()
                             input.siconScale = 1
                             Runtime.aiOpen = true
                             if (success) {
                                 panelWindow.state = "answer"
-                                input.glowStrength = 0
                                 // check if it can be parsed as json
                                 try {
                                     let result = JSON.parse(response.candidates[0].content.parts[0].text)
@@ -309,27 +303,6 @@ Scope {
                         easing.overshoot: 2
                     }
                 }
-                SequentialAnimation {
-                    id: loadingAnim
-                    running: false
-                    loops: -1
-
-                    // Soft initial glow rise
-                    PropertyAnimation {
-                        target: input
-                        property: "glowStrength"
-                        to: 0.6
-                        duration: 300
-                        easing.type: Easing.OutQuad
-                    }
-
-                    // Gentle color cycle
-                    ColorAnimation { target: input; property: "light"; to: "#b37aff"; duration: 2000; easing.type: Easing.InOutSine } // Purple
-                    ColorAnimation { target: input; property: "light"; to: "#6699ff"; duration: 2000; easing.type: Easing.InOutSine } // Blue
-                    ColorAnimation { target: input; property: "light"; to: "#ff5f5f"; duration: 2000; easing.type: Easing.InOutSine } // Red
-                    ColorAnimation { target: input; property: "light"; to: "#ffd97a"; duration: 2000; easing.type: Easing.InOutSine } // Yellow
-                    ColorAnimation { target: input; property: "light"; to: "#b37aff"; duration: 2000; easing.type: Easing.InOutSine } // Back to Purple
-                }
             }
             ListView {
                 id: answers
@@ -362,9 +335,8 @@ Scope {
                         }
                         BoxGlass {
                             id: header
-                            color: '#2a1f0707'
-                            light: '#50380404'
-                            negLight: '#50380404'
+                            color: '#10ffffff'
+                            light: '#50ffffff'
                             z: 1
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottomMargin: 10
@@ -389,9 +361,10 @@ Scope {
                     id: output
                     required property var modelData
                     required property var index
-                    color: '#2a1f0707'
-                    light: '#50380404'
-                    negLight: '#50380404'
+                    color: '#20ffffff'
+                    light: '#50ffffff'
+                    rimStrength: 0.2
+                    lightDir: Qt.point(1, -0.05)
                     z: 1
                     width: 300
                     property string text: modelData[0] == "user" ? "<font color=\"#aaa\">You: </font>" + modelData[1] : modelData[1]
@@ -429,7 +402,7 @@ Scope {
                         }
                     }
 
-                    Rectangle {
+                    BoxGlass {
                         anchors {
                             top: parent.top
                             right: parent.right
@@ -438,11 +411,7 @@ Scope {
                         width: 15
                         height: 15
                         radius: 7.5
-                        color: "#2a1f0707"
-                        border {
-                            width: 1
-                            color: "#80ffffff"
-                        }
+                        color: "#20ffffff"
                         scale: mousearea.containsMouse ? 1 : 0
                         Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                         CFVI {

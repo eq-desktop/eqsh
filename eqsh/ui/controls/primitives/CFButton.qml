@@ -16,7 +16,6 @@ Button {
     background: BoxGlass {
         anchors.fill: parent
         color: button.primary ? (mouseArea.containsMouse ? button.primaryHoverColor : button.primaryColor) : (mouseArea.containsMouse ? button.hoverColor : button.color)
-        glowStrength: 0.5
         highlightEnabled: button.highlightEnabled
     }
     MouseArea {

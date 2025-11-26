@@ -97,7 +97,7 @@ Scope {
 
       BoxGlass {
         anchors.fill: parent
-        color: Config.general.darkMode ? "#a0333333" : "#efefef"
+        color: Config.general.darkMode ? "#20333333" : "#20ffffff"
         radius: 30
       }
 

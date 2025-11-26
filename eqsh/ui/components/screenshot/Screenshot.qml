@@ -10,6 +10,7 @@ import qs.config
 import qs
 import qs.core.foundation
 import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
 import qs.ui.controls.apps
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
@@ -198,13 +199,14 @@ Scope {
           property int startX: 0
           property int startY: 0
 
-          Rectangle {
+          BoxGlass {
             id: selectionBox
             property var rect: Qt.rect(x-1, y-1, width+2, height+2)
             property bool showScrn: root.showScrn
             onRectChanged: {
               root.region = selectionBox.rect
             }
+            light: "#fff"
             onShowScrnChanged: {
               if (!root.optionsOptions[1] && root.showScrn) {
                 selectionBox.x = 0
@@ -213,11 +215,17 @@ Scope {
                 selectionBox.height = 0
               }
             }
+            rimStrength: {
+              // Prevent division by zero
+              if (width === 0) return 1.7
+              let r = height / width
+
+              r = Math.max(0, Math.min(r, 1))
+              return 0.5 + r * 1.2
+            }
             visible: root.mode != 0
             color: "transparent"
             opacity: 1
-            border.color: "#80333333"
-            border.width: 1
             radius: 0
           }
 

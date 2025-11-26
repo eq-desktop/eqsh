@@ -39,9 +39,8 @@ Scope {
             id: boxbutton
             radius: 40
             property bool enabled: false
-            color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20000000" : "#50ffffff")
+            color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
             highlightEnabled: !boxbutton.enabled
-            shadowOpacity: 0.8
         }
 
         component UIText: CFText {}
