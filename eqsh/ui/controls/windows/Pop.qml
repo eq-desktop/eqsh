@@ -17,16 +17,21 @@ Scope {
     property int  new_Focus_Method_X: 0
     property int  new_Focus_Method_Y: 0
     property bool blur: true
+    property var keyboardFocus: WlrKeyboardFocus.None
     property var windows: []
     property alias screen: panelWindow.screen
     property int animationDuration: 100
     required property Component content
     signal loaded()
     signal cleared()
+
+    signal escapePressed()
     PanelWindow {
         id: panelWindow
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: root.blur ? "eqsh:blur" : "eqsh"
+        WlrLayershell.keyboardFocus: root.keyboardFocus
+        focusable: true
         color: "transparent"
         visible: root.opened
         exclusiveZone: -1
@@ -40,6 +45,15 @@ Scope {
             top: root.new_Focus_Method ? root.new_Focus_Method_Y : 0
             left: root.new_Focus_Method ? root.new_Focus_Method_X : 0
         }
+        Timer {
+            id: hideAnim
+            running: false
+            interval: root.animationDuration
+            onTriggered: {
+                root.opened = false;
+                root.hiding = false;
+            }
+        }
         HyprlandFocusGrab {
             id: grab
             windows: [ panelWindow, ...root.windows ]
@@ -48,15 +62,6 @@ Scope {
                 root.hiding = true
                 hideAnim.start();
                 root.cleared();
-            }
-        }
-        Timer {
-            id: hideAnim
-            running: false
-            interval: root.animationDuration
-            onTriggered: {
-                root.opened = false;
-                root.hiding = false;
             }
         }
         MouseArea {
@@ -72,6 +77,10 @@ Scope {
             id: background
             color: "transparent"
             anchors.fill: parent
+            focus: true
+            Keys.onEscapePressed: {
+                root.escapePressed();
+            }
             Loader {
                 anchors.fill: parent
                 active: root.opened

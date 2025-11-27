@@ -114,17 +114,14 @@ FloatingWindow {
                 }
             }
             
-            Rectangle {
+            BoxGlass {
                 id: sidebarBackground
                 anchors.fill: parent
                 anchors.margins: 15
                 clip: true
                 radius: 20
+                rimStrength: 1.8
                 color: Config.general.darkMode ? "#ee2a2a2a" : "#ccfefefe"
-                border {
-                    width: 1
-                    color: Config.general.darkMode ? "#ee3a3a3a" : "#ccffffff"
-                }
 
                 Item {
                     id: searchBar

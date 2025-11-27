@@ -360,6 +360,7 @@ Scope {
           Component {
             id: controlCenterComponent
             UIBButton {
+              id: controlCenterButton
               selected: controlCenter.opened
               VectorImage {
                 id: rBControlCenter
@@ -369,7 +370,58 @@ Scope {
                 Layout.preferredWidth: 25
                 Layout.preferredHeight: 25
                 preferredRendererType: VectorImage.CurveRenderer
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.leftMargin: Runtime.activeCCSW.length == 0 ? 12.5 : 6.25
+                Behavior on anchors.leftMargin {
+                  NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
+                }
+              }
+              Item {
+                id: listWrapper
+                width: 10
+                height: Runtime.activeCCSW.length * (5 + 2)
+                Behavior on height {
+                  NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+                }
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: rBControlCenter.right
+                ColumnLayout {
+                  id: column
+                  anchors.fill: parent
+                  spacing: 2
+
+                  Repeater {
+                    model: ScriptModel { values: Runtime.activeCCSW }
+                    delegate: Rectangle {
+                      required property var modelData
+                      width: 5
+                      height: 5
+                      radius: 3
+                      color: {
+                        switch (modelData) {
+                          case "camera": return "#47C55E"
+                          case "microphone": return "#FC9526"
+                          case "audio": return "#AF53DE"
+                          default: return "#ffffff"
+                        }
+                      }
+
+                      scale: 0
+
+                      Component.onCompleted: {
+                        scale = 1
+                      }
+
+                      Behavior on scale {
+                        NumberAnimation { duration: 800; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
+                      }
+
+                      Behavior on y {
+                        NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 }
+                      }
+                    }
+                  }
+                }
               }
               onClick: controlCenter.open()
               ControlCenter {

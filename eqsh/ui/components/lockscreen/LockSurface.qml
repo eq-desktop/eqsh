@@ -350,7 +350,7 @@ Rectangle {
 						lightDir: Qt.point(1, -0.05)
 						color: "#20ffffff"
 						Behavior on opacity {
-							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
+							NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
 						}
 						SequentialAnimation {
 							id: wiggleAnim

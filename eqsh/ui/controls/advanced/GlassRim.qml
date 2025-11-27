@@ -6,6 +6,7 @@ Item {
     id: box
     property real radius: 20.0
     property var color: "#fff"
+    property var gradient: null
     property var source: null
     property real smallerVal: Math.min(width, height)
     property var cornerRadii: Qt.vector4d(Math.min(smallerVal/2, radius), Math.min(smallerVal/2, radius), Math.min(smallerVal/2, radius), Math.min(smallerVal/2, radius))
@@ -22,6 +23,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: box.color
+        gradient: box.gradient
         radius: box.radius
     }
     ShaderEffect {

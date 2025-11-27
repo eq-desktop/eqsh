@@ -6,6 +6,8 @@ import qs.config
 import Quickshell.Io
 
 Singleton {
+    property list<string> activeCCSW: []
+
     property string customAppName: ""
     property bool   locked: false
     property int    notchHeight: 0

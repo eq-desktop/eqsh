@@ -12,6 +12,7 @@ Item {
     property bool transparent: false
     
     property color light: '#40ffffff'
+    property var gradient: null
     property var   lightDir: Qt.point(1, -0.2)
     property real  rimSize: 0.8
     property real  rimStrength: 1.0
@@ -33,6 +34,7 @@ Item {
         anchors.fill: parent
         color: box.transparent ? "transparent" : box.color
         radius: box.radius
+        gradient: box.gradient
         glowColor: box.highlightEnabled ? box.light : Qt.rgba(0,0,0,0)
         lightDir: box.lightDir
         glowEdgeBand: box.rimSize

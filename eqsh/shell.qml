@@ -77,67 +77,67 @@ Scope {
       }
     }
   }
-  NotificationList {}
-  Loader { active: Config.launchpad.enable; asynchronous: true; sourceComponent: LaunchPad {} }
-  Dock {
-    id: dock
-    EdgeTrigger {
-      id: triggerDock
-      position: "blr"
-      height: 1
-      onHovered: (monitor) => {
-        if (triggerDock.active) {
-          triggerDock.active = false
-          triggerDock.height = 2
-          dock.shown = false
-          triggerDock.bottomMargin = 0
-          return;
-        }
-        triggerDock.active = true
-        triggerDock.height = monitor.height - 120
-        dock.shown = true
-        triggerDock.bottomMargin = 120
-      }
-    }
-  }
-  Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: VolumeOSD {} }
-  Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: BrightnessOSD {} }
-  Launcher {}
-  Popup {}
-  Notch {
-    id: notch
-    EdgeTrigger {
-      id: triggerNotch
-      position: "tlr"
-      height: 2
-      function toggle(monitor) {
-        if (triggerNotch.active && !notch.expanded) {
-          triggerNotch.active = false
-          triggerNotch.height = 2
-          notch.shown = false
-          triggerNotch.topMargin = 0
-          if (Config.notch.autohide) {
-            notch.forceHide = true
-          }
-          return;
-        }
-        triggerNotch.active = true
-        triggerNotch.height = monitor.height - (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
-        notch.shown = true
-        triggerNotch.topMargin = (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
-        if (Config.notch.autohide) {
-          notch.forceHide = false
-        }
-      }
-      onClicked: (monitor) => toggle(monitor);
-      onHovered: (monitor) => toggle(monitor);
-    }
-  }
-  Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Dialog {}}
-  Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
-  Polkit {}
-  ActivateLinux {}
-  Version {}
-  Loader { active: Config.screenshot.enable; asynchronous: true; sourceComponent: Screenshot {}}
-  ScreenCorners {}
+  //NotificationList {}
+  //Loader { active: Config.launchpad.enable; asynchronous: true; sourceComponent: LaunchPad {} }
+  //Dock {
+  //  id: dock
+  //  EdgeTrigger {
+  //    id: triggerDock
+  //    position: "blr"
+  //    height: 1
+  //    onHovered: (monitor) => {
+  //      if (triggerDock.active) {
+  //        triggerDock.active = false
+  //        triggerDock.height = 2
+  //        dock.shown = false
+  //        triggerDock.bottomMargin = 0
+  //        return;
+  //      }
+  //      triggerDock.active = true
+  //      triggerDock.height = monitor.height - 120
+  //      dock.shown = true
+  //      triggerDock.bottomMargin = 120
+  //    }
+  //  }
+  //}
+  //Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: VolumeOSD {} }
+  //Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: BrightnessOSD {} }
+  //Launcher {}
+  //Popup {}
+  //Notch {
+  //  id: notch
+  //  EdgeTrigger {
+  //    id: triggerNotch
+  //    position: "tlr"
+  //    height: 2
+  //    function toggle(monitor) {
+  //      if (triggerNotch.active && !notch.expanded) {
+  //        triggerNotch.active = false
+  //        triggerNotch.height = 2
+  //        notch.shown = false
+  //        triggerNotch.topMargin = 0
+  //        if (Config.notch.autohide) {
+  //          notch.forceHide = true
+  //        }
+  //        return;
+  //      }
+  //      triggerNotch.active = true
+  //      triggerNotch.height = monitor.height - (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
+  //      notch.shown = true
+  //      triggerNotch.topMargin = (Config.notch.height+(Config.notch.islandMode ? 8 : 3))
+  //      if (Config.notch.autohide) {
+  //        notch.forceHide = false
+  //      }
+  //    }
+  //    onClicked: (monitor) => toggle(monitor);
+  //    onHovered: (monitor) => toggle(monitor);
+  //  }
+  //}
+  //Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Dialog {}}
+  //Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
+  //Polkit {}
+  //ActivateLinux {}
+  //Version {}
+  //Loader { active: Config.screenshot.enable; asynchronous: true; sourceComponent: Screenshot {}}
+  //ScreenCorners {}
 }

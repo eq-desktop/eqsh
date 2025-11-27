@@ -11,6 +11,7 @@ import QtQuick.Effects
 import qs
 import qs.config
 import qs.ui.controls.providers
+import qs.ui.controls.advanced
 import qs.ui.controls.primitives
 
 Control {
@@ -29,10 +30,11 @@ Control {
     property int textSizeSSL: 86*sF
     property Component content: null
     property var widget: null
-    property Component bg: CFRectExperimental {
+    property Component bg: BoxGlass {
         id: bg
         anchors.fill: parent
-        scale: 2
+        scale: 1
+        radius: 25
         rotation: 0
         gradient: LinearGradient {
             y2: bg.height

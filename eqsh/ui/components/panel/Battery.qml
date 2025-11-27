@@ -65,7 +65,7 @@ Item {
         id: rBPillBorder
         width: parent.width - 4
         height: parent.height - 17
-        radius: 5
+        radius: 3
         color: "transparent"
         border {
           width: 1
@@ -76,7 +76,7 @@ Item {
           id: rBPill
           width: parent.width - 4
           height: parent.height - 4
-          radius: 4
+          radius: 2
           anchors.centerIn: parent
           color: "transparent"
           Rectangle {
@@ -117,7 +117,7 @@ Item {
         id: rBPill
         width: parent.width - 4
         height: parent.height - 16
-        radius: 5
+        radius: 3
         anchors.centerIn: parent
         color: "#80ffffff"
         Rectangle {

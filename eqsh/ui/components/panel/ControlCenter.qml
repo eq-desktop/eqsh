@@ -5,6 +5,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Widgets
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 import QtQuick.Layouts
 import Quickshell.Wayland
@@ -20,14 +21,38 @@ import QtQuick.Controls.Fusion
 
 Scope {
     function open() {
+        root.bluetoothOpened = false;
         panelWindow.opened = true;
     }
     id: root
     required property var screen
     property alias opened: panelWindow.opened
+    signal openBluetooth()
+    property bool bluetoothOpened: false
+    CustomShortcut {
+        name: "controlCenter"
+        description: "Open Control Center"
+        onPressed: {
+            root.open()
+        }
+    }
+    IpcHandler {
+        target: "controlCenter"
+        function open() {
+            root.open()
+        }
+        function openBluetooth() {
+            root.open()
+            root.bluetoothOpened = true;
+        }
+        function close() {
+            panelWindow.opened = false;
+        }
+    }
     Pop {
         id: panelWindow
         margins.right: 10
+        keyboardFocus: WlrKeyboardFocus.Exclusive
         property int box: 65
         property int boxMargin: 10
         property int gridW: 4
@@ -39,6 +64,16 @@ Scope {
             id: boxbutton
             radius: 40
             property bool enabled: false
+            property bool hideCause: root.bluetoothOpened
+            opacity: boxbutton.hideCause ? 0 : 1
+            scale: boxbutton.hideCause ? 0.5 : 1
+            transform: Translate {
+                y: boxbutton.hideCause ? -20 : 0
+                Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            }
+            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            light: "#80ffffff"
             color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
             highlightEnabled: !boxbutton.enabled
         }
@@ -50,8 +85,18 @@ Scope {
             width: panelWindow.box
             height: panelWindow.box
         }
+
+        onEscapePressed: () => {
+            if (root.bluetoothOpened) {
+                root.bluetoothOpened = false;
+                return;
+            }
+            panelWindow.opened = false;
+        }
         
         content: Item {
+            id: contentRoot
+            focus: true
             Rectangle {
                 id: rect
                 width: panelWindow.gridImplicitWidth
@@ -100,7 +145,7 @@ Scope {
                     }
                     UIText {
                         text: Translation.tr("Wi-Fi")
-                        font.weight: 600
+                        font.weight: 700
                         anchors {
                             left: wifiClipping.right
                             leftMargin: 5
@@ -110,7 +155,8 @@ Scope {
                     UIText {
                         text: NetworkManager.active ? NetworkManager.active.ssid : Translation.tr("No network")
                         elide: Text.ElideRight
-                        gray: true
+                        gray: false
+                        font.weight: 500
                         height: 20
                         width: panelWindow.box+10
                         anchors {
@@ -124,10 +170,18 @@ Scope {
                     id: bluetoothWidget
                     anchors {
                         top: wifiWidget.bottom
-                        left: wifiWidget.left
-                        topMargin: 10
+                        left: parent.left
+                        leftMargin: root.bluetoothOpened ? 0 : 10
+                        topMargin: root.bluetoothOpened ? -75 : 10
+                        Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+                        Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                     }
-                    enabled: Bluetooth.defaultAdapter?.enabled || false
+                    hideCause: false
+                    width: root.bluetoothOpened ? panelWindow.gridImplicitWidth : panelWindow.box
+                    height: root.bluetoothOpened ? 250 : panelWindow.box
+                    Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    enabled: false
                     VectorImage {
                         id: rBBluetooth
                         source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
@@ -135,12 +189,57 @@ Scope {
                         height: panelWindow.box-10
                         preferredRendererType: VectorImage.CurveRenderer
                         anchors.centerIn: parent
+                        opacity: root.bluetoothOpened ? 0 : 1
+                        Behavior on opacity { NumberAnimation { duration: 200 } }
                         layer.enabled: true
                         layer.effect: MultiEffect {
                             colorization: 1
                             colorizationColor: bluetoothWidget.enabled ? "#2495ff" : "#fff"
                         }
-                    } 
+                    }
+                    Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 2 } }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            root.bluetoothOpened = !root.bluetoothOpened
+                        }
+                        onPressed: {
+                            if (root.bluetoothOpened) return;
+                            bluetoothWidget.scale = 0.9
+                        }
+                        onReleased: {
+                            bluetoothWidget.scale = 1
+                        }
+                        pressAndHoldInterval: 300
+                        onPressAndHold: {
+                            root.bluetoothOpened = true;
+                        }
+                    }
+                    light: root.bluetoothOpened ? "transparent" : "#80ffffff"
+                    color: root.bluetoothOpened ? "transparent" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
+                    Behavior on color { ColorAnimation { duration: 200 } }
+                    ClippingRectangle {
+                        id: clippingRect
+                        color: "transparent"
+                        anchors.fill: parent
+                        radius: root.bluetoothOpened ? 20 : 40
+                        Behavior on radius { NumberAnimation { duration: 200 } }
+                        z: 100
+                        opacity: root.bluetoothOpened ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        BoxGlass {
+                            anchors.fill: parent
+                            radius: 20
+                            color: "#20ffffff"
+                            light: "#80ffffff"
+                            rimStrength: 1.3
+                            lightDir: Qt.point(1, -0.2)
+                            CCBluetooth {
+                                width: panelWindow.gridImplicitWidth
+                                height: 250
+                            }
+                        }
+                    }
                 }
                 Button1x1 {
                     id: airdropWidget

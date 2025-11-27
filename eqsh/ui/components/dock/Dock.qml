@@ -154,7 +154,7 @@ Scope {
             }
           }
 
-          CFRect {
+          BoxGlass {
             id: dockBackground
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
@@ -162,10 +162,8 @@ Scope {
             implicitHeight: 65
             radius: Config.dock.radius
             color: Config.dock.color
-            border {
-              width: 1
-              color: Config.dock.border
-            }
+            rimStrength: 0.2
+            lightDir: Qt.point(1, -0.05)
             anchors.bottomMargin: 6
           }
 
