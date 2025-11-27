@@ -41,10 +41,6 @@ Scope {
         function open() {
             root.open()
         }
-        function openBluetooth() {
-            root.open()
-            root.bluetoothOpened = true;
-        }
         function close() {
             panelWindow.opened = false;
         }
@@ -181,7 +177,7 @@ Scope {
                     height: root.bluetoothOpened ? 250 : panelWindow.box
                     Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                     Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-                    enabled: false
+                    enabled: Bluetooth.defaultAdapter?.enabled || false
                     VectorImage {
                         id: rBBluetooth
                         source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
@@ -216,7 +212,7 @@ Scope {
                         }
                     }
                     light: root.bluetoothOpened ? "transparent" : "#80ffffff"
-                    color: root.bluetoothOpened ? "transparent" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
+                    color: root.bluetoothOpened ? "transparent" : enabled ? "#fff" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
                     Behavior on color { ColorAnimation { duration: 200 } }
                     ClippingRectangle {
                         id: clippingRect
@@ -378,7 +374,7 @@ Scope {
                     id: displayWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
-                    radius: 30
+                    radius: 25
                     anchors {
                         top: focusWidget.bottom
                         left: parent.left
@@ -493,7 +489,7 @@ Scope {
                     id: volumeWidget
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
-                    radius: 30
+                    radius: 25
                     anchors {
                         top: displayWidget.bottom
                         left: parent.left

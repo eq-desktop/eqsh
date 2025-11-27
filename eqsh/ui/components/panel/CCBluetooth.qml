@@ -13,7 +13,15 @@ Item {
     id: root
     property var adapter: Bluetooth.defaultAdapter
     property var enabled: adapter ? adapter.enabled : false
-    property var devices: adapter ? adapter.devices : []
+    property var devices: {
+        var filteredDevices = adapter ? adapter.devices.values.filter(function(device) {
+            return device.name !== "";
+        }) : [];
+        filteredDevices.sort(function(a, b) {
+            return a.connected === b.connected ? 0 : a.connected ? -1 : 1;
+        });
+        return filteredDevices;
+    }
     Item {
         id: content
         anchors.fill: parent
@@ -109,6 +117,7 @@ Item {
                         }
                         CFText {
                             text: modelData.name
+                            font.pixelSize: 14
                         }
                     }
                 }

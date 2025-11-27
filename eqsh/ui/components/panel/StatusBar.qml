@@ -256,6 +256,25 @@ Scope {
             }
           }
         }
+        ControlCenter {
+          id: controlCenter
+          screen: panelWindow.screen
+          onOpenedChanged: {
+            if (opened) {
+              ccBluetoothSingle.opened = false;
+            }
+          }
+        }
+
+        CCBluetoothSingle {
+          id: ccBluetoothSingle
+          screen: panelWindow.screen
+          onOpenedChanged: {
+            if (opened) {
+              controlCenter.opened = false;
+            }
+          }
+        }
 
         RowLayout {
           spacing: Config.bar.height > 35 ? 0 : -8
@@ -309,6 +328,8 @@ Scope {
           Component {
             id: bluetoothComponent
             UIBButton {
+              onClick: { ccBluetoothSingle.open(); controlCenter.opened = false; }
+              selected: ccBluetoothSingle.opened
               VectorImage {
                 id: rBBluetooth
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
@@ -424,10 +445,6 @@ Scope {
                 }
               }
               onClick: controlCenter.open()
-              ControlCenter {
-                id: controlCenter
-                screen: panelWindow.screen
-              }
             }
           }
           Component {
