@@ -11,6 +11,14 @@ import qs.ui.controls.advanced
 
 Item {
     id: root
+
+    required property color glassColor
+    required property color glassRimColor
+    required property real  glassRimStrength
+    required property real  glassRimStrengthStrong
+    required property point glassLightDirStrong
+    required property color textColor
+
     property var adapter: Bluetooth.defaultAdapter
     property var enabled: adapter ? adapter.enabled : false
     property var devices: {
@@ -118,6 +126,7 @@ Item {
                         CFText {
                             text: modelData.name
                             font.pixelSize: 14
+                            color: "#ffffff"
                         }
                     }
                 }

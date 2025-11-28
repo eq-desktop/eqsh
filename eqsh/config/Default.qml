@@ -67,6 +67,7 @@ Item {
 		property bool   darkMode: true
 		property bool   autoDarkMode: false
 		property bool   reduceMotion: false
+		property string deviceLevel: "desktop" // desktop | laptop | low
 		property string language: "en_US" // Available languages: "en", "de", "es", "it", "ja"
 	}
 
@@ -74,6 +75,8 @@ Item {
 		property int   iconColorType: 1 // 1=Original | 2=Monochrome | 3=Tinted | 4=Glass
 		property bool  dynamicAccentColor: true
 		property bool  multiAccentColor: true
+		property int   glass: 0 // 0=Clear | 1=Tinted | 2=Room Light | 3=Dark | 4=Opaque | 5=Room Dark | 6=Thick Dark | 7=Custom
+		property color glass_Color: "#202369ff" // Only applies if glass is set to Custom
 		property color accentColor: "#2369ff"
 	}
 

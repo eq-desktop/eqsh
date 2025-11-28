@@ -18,6 +18,14 @@ import QtQuick.Controls.Fusion
 
 Item {
     anchors.fill: parent
+
+    required property color glassColor
+    required property color glassRimColor
+    required property real  glassRimStrength
+    required property real  glassRimStrengthStrong
+    required property point glassLightDirStrong
+    required property color textColor
+
     id: musicPlayerContainer
     ClippingRectangle {
         id: thumbnail
@@ -46,6 +54,7 @@ Item {
             leftMargin: 10
             rightMargin: 10
         }
+        color: "#ffffff"
         text: MusicPlayerProvider.title
         elide: Text.ElideRight
         font.weight: 600
@@ -60,7 +69,7 @@ Item {
             rightMargin: 10
         }
         text: MusicPlayerProvider.artist
-        color: Config.general.darkMode ? "#aaffffff" : "#aa1e1e1e"
+        color: "#aaffffff"
         elide: Text.ElideRight
         font.weight: 400
     }

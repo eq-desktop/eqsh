@@ -25,6 +25,14 @@ Scope {
         panelWindow.opened = true;
     }
     id: root
+
+    property color glassColor: Theme.glassColor
+    property color glassRimColor: Theme.glassRimColor
+    property real  glassRimStrength: Theme.glassRimStrength
+    property real  glassRimStrengthStrong: Theme.glassRimStrengthStrong
+    property point glassLightDirStrong: Theme.glassLightDirStrong
+    property color textColor: Theme.textColor
+
     required property var screen
     property alias opened: panelWindow.opened
     signal openBluetooth()
@@ -62,19 +70,23 @@ Scope {
             property bool enabled: false
             property bool hideCause: root.bluetoothOpened
             opacity: boxbutton.hideCause ? 0 : 1
-            scale: boxbutton.hideCause ? 0.5 : 1
+            property bool scaleCause: false
+            scale: boxbutton.scaleCause ? 1.25 : 1
             transform: Translate {
-                y: boxbutton.hideCause ? -20 : 0
+                y: boxbutton.hideCause ? 0 : 0
                 Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             }
             Behavior on opacity { NumberAnimation { duration: 200 } }
             Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-            light: "#80ffffff"
-            color: boxbutton.enabled ? "#fff" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
+            light: root.glassRimColor
+            rimStrength: root.glassRimStrength
+            color: boxbutton.enabled ? "#fff" : root.glassColor
             highlightEnabled: !boxbutton.enabled
         }
 
-        component UIText: CFText {}
+        component UIText: CFText {
+            color: root.textColor
+        }
         
         component Button1x1: BoxButton {
             id: buttonx1
@@ -97,6 +109,8 @@ Scope {
                 id: rect
                 width: panelWindow.gridImplicitWidth
                 height: panelWindow.gridImplicitHeight
+                scale: root.bluetoothOpened ? 0.8 : 1
+                Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                 color: "transparent"
                 anchors {
                     top: parent.top
@@ -168,7 +182,7 @@ Scope {
                         top: wifiWidget.bottom
                         left: parent.left
                         leftMargin: root.bluetoothOpened ? 0 : 10
-                        topMargin: root.bluetoothOpened ? -75 : 10
+                        topMargin: root.bluetoothOpened ? -100 : 10
                         Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                         Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                     }
@@ -193,26 +207,32 @@ Scope {
                             colorizationColor: bluetoothWidget.enabled ? "#2495ff" : "#fff"
                         }
                     }
-                    Behavior on scale { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 2 } }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             root.bluetoothOpened = !root.bluetoothOpened
+                            if (root.bluetoothOpened) {
+                                bluetoothWidget.scale = 1.25
+                            } else {
+                                bluetoothWidget.scale = 1
+                            }
                         }
                         onPressed: {
                             if (root.bluetoothOpened) return;
                             bluetoothWidget.scale = 0.9
                         }
                         onReleased: {
-                            bluetoothWidget.scale = 1
+                            bluetoothWidget.scale = 1.25
                         }
                         pressAndHoldInterval: 300
                         onPressAndHold: {
                             root.bluetoothOpened = true;
+                            bluetoothWidget.scale = 1.25
                         }
                     }
-                    light: root.bluetoothOpened ? "transparent" : "#80ffffff"
-                    color: root.bluetoothOpened ? "transparent" : enabled ? "#fff" : (Config.general.darkMode ? "#20ffffff" : "#50ffffff")
+                    scaleCause: root.bluetoothOpened
+                    light: root.bluetoothOpened ? "transparent" : root.glassRimColor
+                    color: root.bluetoothOpened ? "transparent" : enabled ? "#fff" : root.glassColor
                     Behavior on color { ColorAnimation { duration: 200 } }
                     ClippingRectangle {
                         id: clippingRect
@@ -226,13 +246,19 @@ Scope {
                         BoxGlass {
                             anchors.fill: parent
                             radius: 20
-                            color: "#20ffffff"
-                            light: "#80ffffff"
-                            rimStrength: 1.3
-                            lightDir: Qt.point(1, -0.2)
+                            color: root.glassColor
+                            light: root.glassRimColor
+                            rimStrength: root.glassRimStrengthStrong
+                            lightDir: root.glassLightDirStrong
                             CCBluetooth {
                                 width: panelWindow.gridImplicitWidth
                                 height: 250
+                                glassColor: root.glassColor
+                                glassRimColor: root.glassRimColor
+                                glassRimStrength: root.glassRimStrength
+                                glassRimStrengthStrong: root.glassRimStrengthStrong
+                                glassLightDirStrong: root.glassLightDirStrong
+                                textColor: root.textColor
                             }
                         }
                     }
@@ -286,7 +312,7 @@ Scope {
                         radius: 40
                         width: 40
                         height: 40
-                        color: NotificationDaemon.popupInhibited ? "#ffffff" : "#60ffffff"
+                        color: NotificationDaemon.popupInhibited ? "#ffffff" : root.glassColor
                         VectorImage {
                             id: rBFocus
                             source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dnd.svg")
@@ -324,7 +350,14 @@ Scope {
                         leftMargin: 10
                         topMargin: 10
                     }
-                    MusicPlayer {}
+                    MusicPlayer {
+                        glassColor: root.glassColor
+                        glassRimColor: root.glassRimColor
+                        glassRimStrength: root.glassRimStrength
+                        glassRimStrengthStrong: root.glassRimStrengthStrong
+                        glassLightDirStrong: root.glassLightDirStrong
+                        textColor: root.textColor
+                    }
                 }
                 Button1x1 {
                     id: stageWidget

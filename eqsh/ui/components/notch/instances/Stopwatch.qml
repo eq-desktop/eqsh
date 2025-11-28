@@ -5,6 +5,7 @@ import qs
 import qs.core.system
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
 import qs.ui.components.panel
 import QtQuick.VectorImage
 import QtQuick.Controls
@@ -90,9 +91,10 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            background: Rectangle {
+            background: BoxGlass {
                 anchors.fill: parent
                 color: '#30ff9e1e'
+                light: '#80ff9e1e'
                 radius: 99
                 VectorImage {
                     id: rBStart
@@ -132,7 +134,7 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            background: Rectangle {
+            background: BoxGlass {
                 anchors.fill: parent
                 color: '#30ffffff'
                 radius: 99
@@ -166,7 +168,7 @@ NotchApplication {
             onClicked: {
                 notch.closeNotchInstance(meta.id)
             }
-            Rectangle {
+            BoxGlass {
                 id: closeButton
                 anchors.fill: parent
                 color: '#20ffffff'

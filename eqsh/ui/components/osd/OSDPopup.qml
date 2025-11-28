@@ -63,6 +63,8 @@ Scope {
                 bottom: parent.bottom
                 bottomMargin: Config.osd.animation == 3 ? -180 : 20
             }
+            color: Theme.glassColor
+            light: Theme.glassRimColor
 
             layer.enabled: true
             layer.smooth: true

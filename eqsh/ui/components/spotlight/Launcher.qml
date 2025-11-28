@@ -45,6 +45,8 @@ Scope {
             width: parent.width * 0.85
             implicitHeight: results.height + search.height + 8
             radius: 25
+            color: Theme.glassColor
+            light: Theme.glassRimColor
             rimStrength: search.text == "" ? 0.2 : 1.7
             lightDir: Qt.point(1, -0.05)
 

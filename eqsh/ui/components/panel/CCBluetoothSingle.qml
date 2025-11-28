@@ -24,6 +24,14 @@ Scope {
         panelWindow.opened = true;
     }
     id: root
+
+    property color glassColor: Theme.glassColor
+    property color glassRimColor: Theme.glassRimColor
+    property real  glassRimStrength: Theme.glassRimStrength
+    property real  glassRimStrengthStrong: Theme.glassRimStrengthStrong
+    property point glassLightDirStrong: Theme.glassLightDirStrong
+    property color textColor: Theme.textColor
+
     required property var screen
     property alias opened: panelWindow.opened
     CustomShortcut {
@@ -62,13 +70,19 @@ Scope {
                     right: parent.right
                     topMargin: Config.bar.height+5
                 }
-                color: "#20ffffff"
-                light: "#80ffffff"
+                color: root.glassColor
+                light: root.glassRimColor
                 rimStrength: 1.3
                 lightDir: Qt.point(1, -0.2)
                 CCBluetooth {
                     width: 310
                     height: 250
+                    glassColor: root.glassColor
+                    glassRimColor: root.glassRimColor
+                    glassRimStrength: root.glassRimStrength
+                    glassRimStrengthStrong: root.glassRimStrengthStrong
+                    glassLightDirStrong: root.glassLightDirStrong
+                    textColor: root.textColor
                 }
             }
         }

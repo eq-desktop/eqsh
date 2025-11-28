@@ -6,6 +6,7 @@ import qs.core.system
 import qs.ui.controls.providers
 import qs.ui.controls.auxiliary
 import qs.ui.components.panel
+import qs.ui.controls.advanced
 import QtQuick.VectorImage
 import QtQuick.Controls
 import QtQuick.Effects
@@ -129,6 +130,7 @@ NotchApplication {
                 font.pixelSize: 20
                 focus: activeItem.focusV
                 selectByMouse: true
+                selectionColor: "#44ff4925"
                 inputMask: "99:99"
                 onAccepted: {
                     root.resetTimeFromString(text)
@@ -151,9 +153,10 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            background: Rectangle {
+            background: BoxGlass {
                 anchors.fill: parent
                 color: "#30ff4925"
+                light: "#80ff4925"
                 radius: 99
                 VectorImage {
                     source: timer.running
@@ -190,7 +193,7 @@ NotchApplication {
             }
             onClicked: notch.closeNotchInstance(meta.id)
 
-            Rectangle {
+            BoxGlass {
                 id: closeButton
                 anchors.fill: parent
                 color: '#20ffffff'

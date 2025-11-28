@@ -13,6 +13,7 @@ import qs
 import qs.core.system
 import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
+import qs.ui.controls.advanced
 import qs.ui.controls.primitives
 
 Scope {
@@ -265,6 +266,7 @@ Scope {
         }
         onImplicitHeightChanged: {
           panelWindow.mask.changed();
+          Runtime.notchHeight = implicitHeight;
         }
 
         PropertyAnimation {
