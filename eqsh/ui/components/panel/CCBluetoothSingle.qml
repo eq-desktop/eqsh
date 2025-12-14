@@ -41,12 +41,14 @@ Scope {
             root.open()
         }
     }
-    IpcHandler {
-        target: "controlCenter"
-        function openBluetooth() {
-            root.open()
-            root.bluetoothOpened = true;
-        }
+    function openBluetooth() {
+        root.open()
+        root.bluetoothOpened = true;
+    }
+    Component.onCompleted: {
+      Runtime.subscribe("controlCenterBluetooth", () => {
+        openBluetooth()
+      })
     }
     Pop {
         id: panelWindow

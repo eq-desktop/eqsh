@@ -67,6 +67,7 @@ Scope {
         Loader { active: Config.widgets.enable; anchors.fill: parent; sourceComponent: WidgetGrid {
           id: grid
           anchors.fill: parent
+          wallpaper: backgroundImage
           editMode: Runtime.widgetEditMode
           screen: panelWindow.screen
           scale: Runtime.locked ? 0.95 : 1

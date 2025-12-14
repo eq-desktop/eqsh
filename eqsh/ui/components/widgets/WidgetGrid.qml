@@ -24,6 +24,7 @@ Item {
     property int cellsY: Config.widgets.cellsY || 10
     property color backgroundColor: "#00000000"
     property bool editMode: false
+    property var wallpaper
     property var screen
     property list<var> widgets: []
 
@@ -49,7 +50,9 @@ Item {
         options: modelData.options || {}
         editMode: root.editMode
         screen: root.screen
+        wallpaper: root.wallpaper
         deleteWidget: root.deleteWidget
+        grid: root
         onWidgetMoved: {
             root.widgetMoved(this);
         }

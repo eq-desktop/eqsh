@@ -105,13 +105,12 @@ Rectangle {
 		source: wallpaperImage
 		opacity: 0
 		anchors.fill: parent
-	}
-
-	Rectangle {
-		id: backgroundImageDim
-		anchors.fill: parent
-		color: Config.lockScreen.dimColor
-		opacity: Config.lockScreen.dimOpacity
+		Rectangle {
+			id: backgroundImageDim
+			anchors.fill: parent
+			color: Config.lockScreen.dimColor
+			opacity: Config.lockScreen.dimOpacity
+		}
 	}
 
 	Item {
@@ -152,33 +151,32 @@ Rectangle {
 			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 
-		Backdrop {
-			id: clockBlurSource
-			sourceItem: backgroundImage
-			sourceX: clock.x
-			sourceY: clock.y
-			sourceW: clock.width
-			sourceH: clock.height
-			sourceRect: Qt.rect(clock.x, clock.y, clock.width, clock.height)
-		}
+		//Backdrop {
+		//	id: clockBlurSource
+		//	sourceItem: backgroundImage
+		//	sourceX: clockGlass.x
+		//	sourceY: clockGlass.y
+		//	sourceW: clockGlass.width
+		//	sourceH: clockGlass.height
+		//	hideSource: true
+		//	visible: false
+		//	anchors.centerIn: clock
+		//}
 
-		MultiEffect {
-			id: clockBlur
-			anchors.centerIn: clock
-			width: clock.width
-			height: clock.height
-			source: clockBlurSource
-			blurEnabled: true
-			blur: 1
-			blurMax: 64
-			brightness: 0.4
-			blurMultiplier: 1.2
-			autoPaddingEnabled: false
-			maskEnabled: true
-			maskSource: clock
-			smooth: true
-			layer.enabled: true
-		}
+		//GlassBox {
+		//	id: clockGlass
+		//	anchors.centerIn: clock
+		//	width: clock.width+80
+		//	Behavior on width {
+		//		NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
+		//	}
+		//	height: clock.height+80
+		//	source: clockBlurSource
+		//	blurSource: clockBlurSource
+		//	radius: 50
+		//	glassBevel: 80
+		//	glassMaxRefractionDistance: 50
+		//}
 
 		Label {
 			id: clock
@@ -190,14 +188,15 @@ Rectangle {
 			}
 
 			renderType: Text.NativeRendering
-			color: "#30ffffff"
+			color: "#ffffff"
 			font.family: Fonts.sFProRoundedRegular.family
 			font.pointSize: 80
 			font.weight: 900
 			layer.enabled: true
 			layer.smooth: true
 
-			text: {Time.getTime(Config.lockScreen.timeFormat)}
+			//text: root.context.currentText == "" ? Time.getTime(Config.lockScreen.timeFormat) : root.context.currentText
+			text: Time.getTime(Config.lockScreen.timeFormat)
 		}
 
 		ShaderEffectSource {
@@ -326,31 +325,53 @@ Rectangle {
 							NumberAnimation { duration: 300; easing.type: Easing.InOutQuad }
 						}
 					}
+					Backdrop {
+						id: sourceBackdrop
+						sourceItem: backgroundImage
+						sourceX: inputArea.x+passwordBoxLayout.x+passwordBoxContainer.x
+						sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y
+						sourceW: passwordBoxContainer.width
+						sourceH: passwordBoxContainer.height
+						hideSource: true
+						visible: false
+					}
 					BackdropBlur {
+						id: passwordBoxBlur
 						anchors.centerIn: passwordBoxContainer
 						width: passwordBoxContainer.width
 						height: passwordBoxContainer.height
 						clipRadius: 100
-						opacity: passwordBoxContainer.opacity
-						brightness: 0.07
-						Backdrop {
-							sourceItem: backgroundImage
-							sourceX: inputArea.x+passwordBoxLayout.x+passwordBoxContainer.x
-							sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y
-							sourceW: passwordBoxContainer.width
-							sourceH: passwordBoxContainer.height
-						}
+						opacity: 1
+						blur: 0.2
+						contrast: 0.1
+						brightness: 0.14
+						source: sourceBackdrop
+						anchors.fill: parent
 					}
-					BoxGlass {
+					Backdrop {
+						id: blurSourceBackdrop
+						sourceItem: passwordBoxBlur
+						hideSource: true
+						visible: false
+					}
+					Item {
 						id: passwordBoxContainer
 						width: 200
 						height: 35
 						opacity: 0
-						rimStrength: 0.2
-						lightDir: Qt.point(1, -0.05)
-						color: "#20ffffff"
 						Behavior on opacity {
 							NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
+						}
+						GlassBox {
+							width: parent.width
+							height: parent.height
+							opacity: parent.opacity
+							source: sourceBackdrop
+							blurSource: blurSourceBackdrop
+							rimStrength: 0.5
+							glassMaxRefractionDistance: 10
+							lightDir: Qt.point(1, -0.05)
+							color: '#00361905'
 						}
 						SequentialAnimation {
 							id: wiggleAnim
@@ -374,7 +395,7 @@ Rectangle {
 									anchors.fill: parent
 									verticalAlignment: Text.AlignVCenter
 									text: passwordBox.text == "" ? root.context.showFailure ? Translation.tr("Incorrect Password") : Translation.tr("Enter Password") : ""
-									color: root.context.showFailure ? '#cccccc' : '#bbdedede'
+									color: root.context.showFailure ? '#aaaaaa' : '#bbdedede'
 									anchors.leftMargin: 10
 									font.weight: 600
 								}
@@ -427,11 +448,11 @@ Rectangle {
 							size: 27
 							lineWidth: 2
 							opacity: passwordBox.text == "" ? 0 : 1
-							color: "#50ffffff"
+							color: "#a0ffffff"
 							CFVI {
 								anchors.centerIn: parent
 								size: 15
-								opacity: 0.5
+								color: "#a0ffffff"
 								icon: "arrow-right.svg"
 							}
 						}
@@ -443,7 +464,7 @@ Rectangle {
 				Layout.alignment: Qt.AlignHCenter
 				horizontalAlignment: Text.AlignHCenter
 				text: Config.lockScreen.usageInfo
-				color: "#55ffffff"
+				color: "#88ffffff"
 				width: 180
 				Layout.preferredWidth: 180
 				wrapMode: Text.WordWrap

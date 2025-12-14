@@ -16,6 +16,13 @@ Scope {
 			LockContext {
 				id: lockContext
 
+				Connections {
+					target: root
+					function onUnlock() {
+						lock.locked = false;
+					}
+				}
+
 				onUnlocked: {
 					root.unlock();
 					lock.locked = false;
@@ -64,9 +71,13 @@ Scope {
         description: "Unlock the current session"
         onPressed: {
 			root.unlock();
-			loader.item.locked = false;
 		}
     }
+
+	function lockScreen() {
+		root.lock();
+		loader.activeAsync = true;
+	}
 
     IpcHandler {
         target: "eqlock"

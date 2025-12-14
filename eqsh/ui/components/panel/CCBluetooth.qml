@@ -18,9 +18,8 @@ Item {
     required property real  glassRimStrengthStrong
     required property point glassLightDirStrong
     required property color textColor
-
-    property var adapter: Bluetooth.defaultAdapter
-    property var enabled: adapter ? adapter.enabled : false
+    property var adapter: Runtime.bluetoothAdapter
+    property var enabled: adapter.enabled
     property var devices: {
         var filteredDevices = adapter ? adapter.devices.values.filter(function(device) {
             return device.name !== "";

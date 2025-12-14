@@ -10,6 +10,7 @@ import qs.config
 import qs
 import qs.core.foundation
 import qs.ui.controls.auxiliary
+import qs.ui.controls.advanced
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import qs.ui.controls.windows
@@ -127,15 +128,110 @@ Scope {
             verticalCenter: parent.verticalCenter
             leftMargin: 0
           }
+          DropDownMenu {
+            id: lBAppMenuDrop
+            x: 0
+            y: 0
+            windows: [ panelWindow ]
+            margins: [ 0, Config.bar.height, 0, 0 ]
+            model: [ // ⌘, ⌃, ⌥, ⇧
+              DropDownItem {
+                name: "About this Mac"
+                iconSize: 15
+                iconColorized: false
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/mac.svg")
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: "System Settings…"
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/settings.svg")
+                action: () => {
+                  Runtime.settingsOpen = true
+                }
+              },
+              DropDownItem {
+                name: "App Store"
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/store.svg")
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: "Recent Items"
+                iconSize: 15
+                iconScale: 0.8
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/clock.svg")
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: "Force Quit…"
+                kb: "⇧⌘⎋"
+                iconSize: 15
+                iconScale: 0.8
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/quit.svg")
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: "Sleep"
+                iconSize: 15
+                iconScale: 0.8
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/sleep.svg")
+                action: () => {
+                  Quickshell.execDetached(["systemctl", "suspend"])
+                }
+              },
+              DropDownItem {
+                name: "Restart…"
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/caret-left.svg")
+                action: () => {
+                  Quickshell.execDetached(["reboot"])
+                }
+              },
+              DropDownItem {
+                name: "Shut Down…"
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/power.svg")
+                action: () => {
+                  Quickshell.execDetached(["shutdown", "now"])
+                }
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: "Lock Screen"
+                kb: "⌃⌘Q"
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/lock.svg")
+                action: () => {
+                  Runtime.run("lockscreen")
+                }
+              }
+            ]
+          }
 
-          UIBButton {VectorImage {
-            id: lBAppMenu
-            source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/icon.svg")
-            width: barFS
-            height: barFS
-            preferredRendererType: VectorImage.CurveRenderer
-            anchors.centerIn: parent
-          }}
+          UIBButton {
+            VectorImage {
+              id: lBAppMenu
+              source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/icon.svg")
+              width: barFS
+              height: barFS
+              preferredRendererType: VectorImage.CurveRenderer
+              anchors.centerIn: parent
+            }
+            onHover: {
+              globalMenu.iconHover = true
+            }
+            onExited: {
+              globalMenu.iconHover = false
+            }
+            onClick: {
+              if (lBAppMenuDrop.opened) {
+                lBAppMenuDrop.opened = false
+              } else {
+                lBAppMenuDrop.open()
+              }
+            }
+          }
 
           Rectangle {
             id: globalMenu
@@ -147,6 +243,7 @@ Scope {
             color: "transparent"
             property real dragOffset: -Config.bar.height
             property bool shown: false
+            property bool iconHover: false
             Timer {
               id: globalMenuTimer
               interval: 1000
@@ -238,7 +335,7 @@ Scope {
                     required property var index
                     text: modelData.app ? modelData.text : Translation.tr(modelData.text)
                     id: globalMenuButton
-                    selected: index == globalMenuRepeater.selectedItem && globalMenuRepeater.isOpened
+                    selected: index == globalMenuRepeater.selectedItem && globalMenuRepeater.isOpened && !globalMenu.iconHover
                     font.weight: modelData.app ? 700 : 500
                     Layout.alignment: Qt.AlignVCenter
 

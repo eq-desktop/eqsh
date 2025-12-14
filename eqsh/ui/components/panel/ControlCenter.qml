@@ -47,11 +47,28 @@ Scope {
     IpcHandler {
         target: "controlCenter"
         function open() {
-            root.open()
+            Runtime.run("controlCenterOpen")
         }
         function close() {
-            panelWindow.opened = false;
+            Runtime.run("controlCenterClose")
         }
+        function openBluetooth() {
+            Runtime.run("controlCenterBluetooth")
+        }
+    }
+    function openCC() {
+        root.open()
+    }
+    function closeCC() {
+        panelWindow.opened = false;
+    }
+    Component.onCompleted: {
+      Runtime.subscribe("controlCenterOpen", () => {
+        openCC()
+      })
+      Runtime.subscribe("controlCenterClose", () => {
+        closeCC()
+      })
     }
     Pop {
         id: panelWindow

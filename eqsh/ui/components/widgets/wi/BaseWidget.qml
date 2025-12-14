@@ -18,6 +18,8 @@ Control {
     id: root
     anchors.fill: parent
     padding: 10
+    property var wallpaper
+    property var grid
     property var screen
     property var monitor: Hyprland.monitorFor(screen)
     property real sF: Math.min(0.7777, (1+(1-monitor.scale || 1)))

@@ -100,16 +100,17 @@ Scope {
         }
         Rectangle {
           anchors.fill: parent
-          radius: 8
+          radius: 10
           color: dropItem.hover ? root.hoverColor : "transparent"
           IconImage {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 2
-            height: 15
-            width: 15
+            anchors.leftMargin: 15
+            scale: modelData.iconScale
+            height: modelData.iconSize
+            width: modelData.iconSize
             source: modelData.icon
-            layer.enabled: true
+            layer.enabled: modelData.iconColorized
             layer.effect: MultiEffect {
               colorization: 1
               colorizationColor: modelData.disabled ? (Config.general.darkMode ? "#50ffffff" : "#50000000") : dropItem.hover ? root.hoverTextColor : Config.general.darkMode ? "#ffffff" : "#1e1e1e"
@@ -117,7 +118,7 @@ Scope {
           }
           Text {
             anchors.fill: parent
-            anchors.leftMargin: 22
+            anchors.leftMargin: modelData.icon == "" ? 15 : (15+modelData.iconSize+5)
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             text: modelData.name

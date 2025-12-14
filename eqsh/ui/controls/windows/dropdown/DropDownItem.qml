@@ -17,7 +17,10 @@ QtObject {
   id: root
   property string name
   property string icon
-  property string kb
+  property bool   iconColorized: true
+  property int    iconSize: 15
+  property real   iconScale: 1
+  property string kb // ⌘, ⌃, ⌥, ⇧
   property string type: "item"
   property bool disabled: false
   property var action: null
