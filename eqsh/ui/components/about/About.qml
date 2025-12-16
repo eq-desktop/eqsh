@@ -89,7 +89,7 @@ Scope {
                 id: row1
                 spacing: 5
                 CFText {
-                    text: "Processor"
+                    text: Translation.tr("Processor")
                     width: 120
                     horizontalAlignment: Text.AlignRight
                     color: "#555"
@@ -105,7 +105,7 @@ Scope {
                 id: row2
                 spacing: 5
                 CFText {
-                    text: "Graphics-Card"
+                    text: Translation.tr("Graphics")
                     width: 120
                     horizontalAlignment: Text.AlignRight
                     color: "#555"
@@ -121,7 +121,7 @@ Scope {
                 id: row3
                 spacing: 5
                 CFText {
-                    text: "Memory"
+                    text: Translation.tr("Memory")
                     width: 120
                     horizontalAlignment: Text.AlignRight
                     color: "#555"
@@ -137,7 +137,7 @@ Scope {
                 id: row4
                 spacing: 5
                 CFText {
-                    text: "Serial Number"
+                    text: Translation.tr("Serial Number")
                     width: 120
                     horizontalAlignment: Text.AlignRight
                     color: "#555"
@@ -173,7 +173,7 @@ Scope {
                 top: list.bottom
                 topMargin: 20
             }
-            text: "More Info..."
+            text: Translation.tr("More Info...")
             width: 100
             onClicked: {
                 Qt.openUrlExternally("https://github.com/eq-desktop/eqsh")
@@ -186,7 +186,7 @@ Scope {
                 bottom: copyright.top
                 bottomMargin: 10
             }
-            text: "<u>Regulatory Certification</u>"
+            text: `<u>${Translation.tr("Regulatory Certification")}</u>`
             color: "#a0777777"
             horizontalAlignment: Text.AlignHCenter
             height: 10
@@ -198,7 +198,7 @@ Scope {
                 bottom: rightsreserved.top
                 bottomMargin: 8
             }
-            text: "™ and © 2025-2026 The Eq Desktop"
+            text: `™ ${Translation.tr("and")} © 2025-2026 The Eq Desktop`
             color: "#a0777777"
             horizontalAlignment: Text.AlignHCenter
             height: 10
@@ -210,7 +210,7 @@ Scope {
                 bottom: parent.bottom
                 bottomMargin: 20
             }
-            text: "All rights reserved."
+            text: Translation.tr("All rights reserved.")
             color: "#a0777777"
             horizontalAlignment: Text.AlignHCenter
             height: 10

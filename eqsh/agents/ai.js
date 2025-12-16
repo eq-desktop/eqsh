@@ -12,7 +12,7 @@ function callO(promptText, callback) {
   })
 }
 
-function call(promptText, apiKey, model, options = {}, callback) {
+function call(promptText, apiKey, model, options = {}, callback, additionalData) {
   const type = options.type || "google"; // "google" | "openai" | "other"
 
   let url, body, headers;
@@ -20,6 +20,7 @@ function call(promptText, apiKey, model, options = {}, callback) {
   if (type === "google") {
     let finalPrompt = `
       Chat History: ${options.previousMessages ? JSON.stringify(options.previousMessages) : "Empty"}
+      Other Info: ${additionalData}
       Prompt: ${promptText}
     `
     url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;

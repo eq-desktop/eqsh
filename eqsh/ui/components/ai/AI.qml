@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Io
+import Quickshell.Services.UPower
 import qs
 import qs.config
 import qs.ui.controls.windows
@@ -19,6 +20,27 @@ Scope {
     id: root
     property var agent: AIAgent
     property var statusbar: null
+
+    property string location: "--"
+    property string temperature: "--"
+    property string description: "--"
+    property string hlVal: "--"
+
+    Process {
+        id: weatherProc
+        command: ["sh", "-c", `curl -s wttr.in/${Config.widgets.location}?format=j1 | jq '{location: .nearest_area[0].areaName[0].value, temperature: .current_condition[0].temp_${Config.widgets.tempUnit}, feelsLikeTemp: .current_condition[0].FeelsLike${Config.widgets.tempUnit}, description: .current_condition[0].weatherDesc[0].value, highTemp: .weather[0].maxtemp${Config.widgets.tempUnit}, lowTemp: .weather[0].mintemp${Config.widgets.tempUnit}}'`]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const text = this.text;
+                const json = JSON.parse(text);
+                root.location = Config.widgets.useLocationInUI ? Config.widgets.location : json.location;
+                root.temperature = json.temperature;
+                root.description = json.description;
+                root.hlVal = "H: " + json.highTemp + "°" + Config.widgets.tempUnit + ", L: " + json.lowTemp + "°" + Config.widgets.tempUnit;
+            }
+        }
+    }
 
     FileView {
         id: sigridPrompt
@@ -184,6 +206,20 @@ Scope {
                     renderType: Text.NativeRendering
                     font.family: Fonts.sFProDisplayRegular.family
                     font.pixelSize: 16
+                    property var additional: (`
+                    Name of user: ${Config.account.name}
+                    deviceName: ${Config.account.deviceName}
+                    darkMode: ${Config.general.darkMode}
+                    language: ${Config.general.language}
+                    apps in dock: ${Config.dock.apps.join(", ")}
+                    Current time: ${Time.time}
+                    Location: ${Config.widgets.location}
+                    Temperature: ${Config.widgets.temperature}
+                    Temperature high/low: ${Config.widgets.hlVal}
+                    Battery percentage: ${(UPower.displayDevice.isLaptopBattery ? UPower.displayDevice.percentage : 1)*100}
+                    Battery powered: ${UPower.onBattery}
+                    Eqsh Version: ${Config.version} / ${Config.versionPretty}
+                    `)
                     onAccepted: {
                         console.info("Request AI Answer To: " + inputText.text)
                         acceptAnim.start()
@@ -231,6 +267,9 @@ Scope {
                                                     useIcon: false
                                                 })
                                                 break;
+                                            case "lock_screen":
+                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Lock Screen"])
+                                                Runtime.run("lockscreen")
                                             case "open_settings":
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
                                                 Runtime.settingsOpen = true
@@ -248,7 +287,7 @@ Scope {
                                 wiggleAnim.start()
                                 input.error = true
                             }
-                        })
+                        }, additional)
                         inputText.text = ""
                     }
                 }
@@ -367,6 +406,7 @@ Scope {
                     lightDir: Qt.point(1, -0.05)
                     z: 1
                     width: 300
+                    radius: 20
                     property string text: modelData[0] == "user" ? "<font color=\"#aaa\">You: </font>" + modelData[1] : modelData[1]
                     opacity: 1
                     height: content.height + 20
