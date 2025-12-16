@@ -132,9 +132,9 @@ Item {
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
 		property int    radius: 30
-		property int    height: 25
+		property int    height: 28
 		property int    margin: 2
-		property int    minWidth: 250
+		property int    minWidth: 175
 		property int    maxWidth: 400
 		property bool   onlyVisual: false
 		property bool   openOnHover: false

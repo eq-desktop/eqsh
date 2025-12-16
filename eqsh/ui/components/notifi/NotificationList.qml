@@ -186,21 +186,21 @@ Scope {
 		}
 	}
 	CustomShortcut {
-		name: "notification-center"
+		name: "notificationCenter"
 		description: "Toggle Notification Center"
 		onPressed: {
 			scope.showAll = !scope.showAll;
 		}
 	}
 	CustomShortcut {
-		name: "notification-center-open"
+		name: "notificationCenterOpen"
 		description: "Open Notification Center"
 		onPressed: {
 			scope.showAll = true;
 		}
 	}
 	CustomShortcut {
-		name: "notification-center-close"
+		name: "notificationCenterClose"
 		description: "Close Notification Center"
 		onPressed: {
 			scope.showAll = false;

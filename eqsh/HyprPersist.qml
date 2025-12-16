@@ -30,4 +30,7 @@ Item {
     Proc {
         command: ["hyprctl", "keyword", "layerrule", "blurpopups, ^.*$"]
     }
+    Proc {
+        command: ["hyprctl", "keyword", "misc:session_lock_xray", "true"]
+    }
 }
