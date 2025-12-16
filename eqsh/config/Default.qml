@@ -55,10 +55,16 @@ Item {
 	}
 
 	readonly property string version: "Pre-Release 0.0.85-alpha"
+	readonly property string versionPretty: "Tahiti pr0.0.85a"
+	// 0.1.0 = Tahiti
+	// 0.2.0 = Niagara
 
 	component Account: JsonObject {
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
+		property string serialNumber: "FHGOU82OWLDG"
 		property string name: "First Lastname"
+		property string deviceName: "MacBook Air"
+		property string deviceDescription: "Retina, 13\", 2019"
 		property bool   firstTimeRunning: true
 		property string avatarPath: root.homeDirectory+"/.face" // Path to avatar image
 	}

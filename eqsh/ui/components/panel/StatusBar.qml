@@ -136,14 +136,17 @@ Scope {
             margins: [ 0, Config.bar.height, 0, 0 ]
             model: [ // ⌘, ⌃, ⌥, ⇧
               DropDownItem {
-                name: "About this Mac"
+                name: Translation.tr("About this Mac")
                 iconSize: 15
                 iconColorized: false
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/mac.svg")
+                action: () => {
+                  Runtime.aboutOpen = true
+                }
               },
               DropDownSpacer {},
               DropDownItem {
-                name: "System Settings…"
+                name: Translation.tr("System Settings…")
                 iconSize: 15
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/settings.svg")
                 action: () => {
@@ -151,20 +154,20 @@ Scope {
                 }
               },
               DropDownItem {
-                name: "App Store"
+                name: Translation.tr("App Store")
                 iconSize: 15
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/store.svg")
               },
               DropDownSpacer {},
               DropDownItem {
-                name: "Recent Items"
+                name: Translation.tr("Recent Items")
                 iconSize: 15
                 iconScale: 0.8
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/clock.svg")
               },
               DropDownSpacer {},
               DropDownItem {
-                name: "Force Quit…"
+                name: Translation.tr("Force Quit…")
                 kb: "⇧⌘⎋"
                 iconSize: 15
                 iconScale: 0.8
@@ -172,7 +175,7 @@ Scope {
               },
               DropDownSpacer {},
               DropDownItem {
-                name: "Sleep"
+                name: Translation.tr("Sleep")
                 iconSize: 15
                 iconScale: 0.8
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/sleep.svg")
@@ -181,7 +184,7 @@ Scope {
                 }
               },
               DropDownItem {
-                name: "Restart…"
+                name: Translation.tr("Restart…")
                 iconSize: 15
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/caret-left.svg")
                 action: () => {
@@ -189,7 +192,7 @@ Scope {
                 }
               },
               DropDownItem {
-                name: "Shut Down…"
+                name: Translation.tr("Shut Down…")
                 iconSize: 15
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/power.svg")
                 action: () => {
@@ -198,7 +201,16 @@ Scope {
               },
               DropDownSpacer {},
               DropDownItem {
-                name: "Lock Screen"
+                name: Translation.tr("Log out…")
+                iconSize: 15
+                icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/reload.svg")
+                action: () => {
+                  Quickshell.execDetached(["hyprctl", "dispatch", "exit"])
+                }
+              },
+              DropDownSpacer {},
+              DropDownItem {
+                name: Translation.tr("Lock Screen")
                 kb: "⌃⌘Q"
                 iconSize: 15
                 icon: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/dropdown/lock.svg")

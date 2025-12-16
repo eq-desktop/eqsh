@@ -13,6 +13,7 @@ Singleton {
     property bool   locked: false
     property int    notchHeight: 0
     property bool   settingsOpen: false
+    property bool   aboutOpen: false
     property bool   spotlightOpen: false
     property bool   aiOpen: false
     property bool   launchpadOpen: false
