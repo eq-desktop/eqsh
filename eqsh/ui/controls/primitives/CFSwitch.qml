@@ -8,13 +8,16 @@ Switch {
     id: control
     text: ""
 
+    property int switchHeight: 22
+    property int switchWidth: 54
+
     indicator: Rectangle {
         id: bg
-        implicitWidth: 54
-        implicitHeight: 22
+        implicitWidth: control.switchWidth
+        implicitHeight: control.switchHeight
         x: control.leftPadding
         y: parent.height / 2 - height / 2
-        radius: 13
+        radius: Infinity
         color: control.checked ? AccentColor.color : "#20000000"
         Behavior on color { ColorAnimation { duration: 500; easing.type: Easing.InOutQuad } }
 
@@ -46,7 +49,7 @@ Switch {
                 target: handle
                 property: "x"
                 from: 2
-                to: bg.width - 36
+                to: bg.width - (handle.width-3)
                 duration: 200
                 easing.type: Easing.InOutQuad
                 onStopped: {
@@ -58,7 +61,7 @@ Switch {
                 id: turnOffAnim
                 target: handle
                 property: "x"
-                from: bg.width - 36
+                from: bg.width - (handle.width-3)
                 to: 2
                 duration: 200
                 easing.type: Easing.InOutQuad
@@ -68,9 +71,9 @@ Switch {
                 }
             }
             anchors.verticalCenter: parent.verticalCenter
-            width:  animating ? 48 : 34
-            height: animating ? 28 : 18
-            radius: 99
+            width:  animating ? (control.switchWidth / 2) + 14 : (control.switchWidth / 2) + 8
+            height: animating ? control.switchHeight + 6 : control.switchHeight - 4
+            radius: Infinity
             scale: 1
             transform: Translate {
                 x: handle.animating ? -9 : 0
