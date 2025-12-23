@@ -33,7 +33,7 @@ Item {
         id: content
         anchors.fill: parent
         CFText {
-            text: "Bluetooth"
+            text: Translation.tr("Bluetooth")
             font.weight: 700
             font.pixelSize: 16
             anchors.left: parent.left
@@ -143,7 +143,7 @@ Item {
         }
 
         CFText {
-            text: "Bluetooth Settings..."
+            text: Translation.tr("Bluetooth Settings...")
             font.pixelSize: 14
             font.weight: 500
             anchors.left: parent.left

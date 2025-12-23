@@ -22,21 +22,28 @@ import QtQuick.Controls.Fusion
 Scope {
     function open() {
         root.bluetoothOpened = false;
+        root.wifiOpened = false;
         panelWindow.opened = true;
     }
     id: root
 
     property color glassColor: Theme.glassColor
     property color glassRimColor: Theme.glassRimColor
+    property real  glassRimStrengthWeak: Theme.glassRimStrengthWeak
     property real  glassRimStrength: Theme.glassRimStrength
     property real  glassRimStrengthStrong: Theme.glassRimStrengthStrong
     property point glassLightDirStrong: Theme.glassLightDirStrong
     property color textColor: Theme.textColor
+    property int animationDur: 300
 
     required property var screen
     property alias opened: panelWindow.opened
     signal openBluetooth()
+    signal openWifi()
+    signal close()
     property bool bluetoothOpened: false
+    property bool wifiOpened: false
+    property bool windowOpened: bluetoothOpened || wifiOpened
     CustomShortcut {
         name: "controlCenter"
         description: "Open Control Center"
@@ -54,6 +61,9 @@ Scope {
         }
         function openBluetooth() {
             Runtime.run("controlCenterBluetooth")
+        }
+        function openWifi() {
+            Runtime.run("controlCenterWifi")
         }
     }
     function openCC() {
@@ -81,17 +91,47 @@ Scope {
         property int gridImplicitWidth: ((box*gridW)+(boxMargin*gridW)+boxMargin)
         property int gridImplicitHeight: ((box*gridH)+(boxMargin*gridH)+boxMargin)
 
+        function gridPos(x, y) {
+            return {
+                left: x*(box+boxMargin)+boxMargin,
+                top: y*(box+boxMargin)+boxMargin
+            }
+        }
+
+        function gridX(x) {
+            return x*(box+boxMargin)+boxMargin
+        }
+
+        function gridY(y) {
+            return y*(box+boxMargin)+boxMargin
+        }
+
         component BoxButton: BoxGlass {
             id: boxbutton
             radius: 40
             property bool enabled: false
-            property bool hideCause: root.bluetoothOpened
+            property bool hideCause: root.bluetoothOpened || root.wifiOpened
             opacity: boxbutton.hideCause ? 0 : 1
             property bool scaleCause: false
             scale: boxbutton.scaleCause ? 1.25 : 1
             transform: Translate {
                 y: boxbutton.hideCause ? 0 : 0
                 Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            }
+            transformOrigin: Item.Top
+            property int xPos: 0
+            property int yPos: 0
+            property bool overwriteX: false
+            property bool overwriteY: false
+            property int overwriteXPos: 0
+            property int overwriteYPos: 0
+            anchors {
+                top: parent.top
+                left: parent.left
+                leftMargin: boxbutton.overwriteX ? boxbutton.overwriteXPos : panelWindow.gridX(boxbutton.xPos)
+                topMargin: boxbutton.overwriteY ? boxbutton.overwriteYPos : panelWindow.gridY(boxbutton.yPos)
+                Behavior on topMargin { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+                Behavior on leftMargin { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 1 } }
             }
             Behavior on opacity { NumberAnimation { duration: 200 } }
             Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
@@ -112,8 +152,13 @@ Scope {
         }
 
         onEscapePressed: () => {
+            root.close()
             if (root.bluetoothOpened) {
                 root.bluetoothOpened = false;
+                return;
+            }
+            if (root.wifiOpened) {
+                root.wifiOpened = false;
                 return;
             }
             panelWindow.opened = false;
@@ -126,23 +171,158 @@ Scope {
                 id: rect
                 width: panelWindow.gridImplicitWidth
                 height: panelWindow.gridImplicitHeight
-                scale: root.bluetoothOpened ? 0.8 : 1
-                Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                scale: root.windowOpened ? 0.8 : 1
+                Behavior on scale { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                 color: "transparent"
                 anchors {
                     top: parent.top
                     right: parent.right
                     topMargin: Config.bar.height+5
                 }
+                //Repeater {
+                //    model: {
+                //        var array = [];
+                //        for (var i = 0; i <= 5; i++) {
+                //            for (var j = 0; j <= 3; j++) {
+                //                array.push([i, j]);
+                //            }
+                //        }
+                //        return array
+                //    }
+                //    delegate: Item {
+                //        width: panelWindow.box
+                //        height: panelWindow.box
+                //        anchors {
+                //            top: parent.top
+                //            left: parent.left
+                //            topMargin: panelWindow.gridX(modelData[0])
+                //            leftMargin: panelWindow.gridY(modelData[1])
+                //        }
+                //        Rectangle {
+                //            anchors {
+                //                top: parent.top
+                //                left: parent.left
+                //            }
+                //            width: panelWindow.box
+                //            height: 1
+                //            color: "#f00"
+                //        }
+                //        Rectangle {
+                //            anchors {
+                //                top: parent.top
+                //                left: parent.left
+                //            }
+                //            width: 1
+                //            height: panelWindow.box
+                //            color: "#0f0"
+                //        }
+                //        Rectangle {
+                //            anchors.fill: parent
+                //            color: "transparent"
+                //            border {
+                //                width: 1
+                //                color: "#50ffffff"
+                //            }
+                //        }
+                //        Rectangle {
+                //            anchors.centerIn: parent
+                //            color: "#ff0"
+                //            width: 10
+                //            height: 10
+                //            radius: 5
+                //        }
+                //        Rectangle {
+                //            anchors.centerIn: parent
+                //            color: "#ff0"
+                //            width: 20
+                //            height: 3
+                //            radius: 5
+                //        }
+                //        Rectangle {
+                //            anchors.centerIn: parent
+                //            color: "#ff0"
+                //            width: 3
+                //            height: 20
+                //            radius: 5
+                //        }
+                //    }
+                //}
                 BoxButton {
                     id: wifiWidget
-                    width: panelWindow.box*2+panelWindow.boxMargin
-                    height: panelWindow.box
+                    width: root.wifiOpened ? panelWindow.gridImplicitWidth : panelWindow.box*2+panelWindow.boxMargin
+                    height: root.wifiOpened ? clippingRectWifiLoader.implicitHeight : panelWindow.box
+                    Behavior on width { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    Behavior on height { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                     radius: 40
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        margins: 10
+                    hideCause: root.bluetoothOpened
+
+                    scaleCause: root.wifiOpened
+                    light: root.wifiOpened ? "transparent" : root.glassRimColor
+                    color: root.wifiOpened ? "transparent" : enabled ? "#fff" : root.glassColor
+                    Behavior on color { ColorAnimation { duration: root.animationDur } }
+                    xPos: 0
+                    yPos: 0
+                    overwriteX: root.wifiOpened
+                    overwriteY: root.wifiOpened
+                    overwriteXPos: 0
+                    overwriteYPos: -60
+                    Connections {
+                        target: root
+                        function onClose() {
+                            if (root.wifiOpened) {
+                                wifiWidget.scale = 1
+                            }
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        enabled: !root.windowOpened || root.wifiOpened
+                        onClicked: {
+                            root.wifiOpened = !root.wifiOpened
+                            if (root.wifiOpened) {
+                                wifiWidget.scale = 1.25
+                            } else {
+                                wifiWidget.scale = 1
+                            }
+                        }
+                        onPressed: {
+                            if (root.wifiOpened) return;
+                            wifiWidget.scale = 0.9
+                        }
+                        onReleased: {
+                            wifiWidget.scale = 1.25
+                        }
+                        pressAndHoldInterval: 300
+                        onPressAndHold: {
+                            root.wifiOpened = true;
+                            wifiWidget.scale = 1.25
+                        }
+                    }
+                    UIText {
+                        text: Translation.tr("Wi-Fi")
+                        font.weight: 700
+                        anchors {
+                            left: wifiClipping.right
+                            leftMargin: 5
+                            top: wifiClipping.top
+                        }
+                        opacity: root.wifiOpened ? 0 : 1
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
+                    }
+                    UIText {
+                        text: NetworkManager.active ? NetworkManager.active.ssid : Translation.tr("No network")
+                        elide: Text.ElideRight
+                        gray: false
+                        font.weight: 500
+                        height: 20
+                        width: panelWindow.box+10
+                        anchors {
+                            left: wifiClipping.right
+                            leftMargin: 5
+                            bottom: wifiClipping.bottom
+                        }
+                        opacity: root.wifiOpened ? 0 : 1
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
                     }
                     ClippingRectangle {
                         id: wifiClipping
@@ -155,6 +335,8 @@ Scope {
                         width: 40
                         height: 40
                         color: NetworkManager.active ? "#fff" : "transparent"
+                        opacity: root.wifiOpened ? 0 : 1
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
                         VectorImage {
                             transform: Translate {y:-3}
                             id: rBWifi
@@ -170,45 +352,68 @@ Scope {
                             }
                         }
                     }
-                    UIText {
-                        text: Translation.tr("Wi-Fi")
-                        font.weight: 700
-                        anchors {
-                            left: wifiClipping.right
-                            leftMargin: 5
-                            top: wifiClipping.top
-                        }
-                    }
-                    UIText {
-                        text: NetworkManager.active ? NetworkManager.active.ssid : Translation.tr("No network")
-                        elide: Text.ElideRight
-                        gray: false
-                        font.weight: 500
-                        height: 20
-                        width: panelWindow.box+10
-                        anchors {
-                            left: wifiClipping.right
-                            leftMargin: 5
-                            bottom: wifiClipping.bottom
+                    Loader {
+                        id: clippingRectWifiLoader
+                        anchors.fill: parent
+                        enabled: root.wifiOpened
+                        sourceComponent: ClippingRectangle {
+                            id: clippingRectWifi
+                            color: "transparent"
+                            implicitHeight: root.wifiOpened ? wifiBox.implicitHeight : 0
+                            implicitWidth: root.wifiOpened ? wifiWidget.width : 0
+                            radius: root.wifiOpened ? 20 : 40
+                            Behavior on radius { NumberAnimation { duration: root.animationDur } }
+                            z: 100
+                            layer.enabled: true
+                            layer.samples: 4
+                            opacity: root.wifiOpened ? 1 : 0
+                            Behavior on opacity { NumberAnimation { duration: root.animationDur } }
+                            BoxGlass {
+                                id: wifiBox
+                                anchors.fill: parent
+                                radius: 20
+                                implicitHeight: wifiCC.implicitHeight
+                                color: root.glassColor
+                                light: root.glassRimColor
+                                rimStrength: root.glassRimStrengthStrong
+                                lightDir: root.glassLightDirStrong
+                                CCWifi {
+                                    id: wifiCC
+                                    width: panelWindow.gridImplicitWidth
+                                    glassColor: root.glassColor
+                                    glassRimColor: root.glassRimColor
+                                    glassRimStrength: root.glassRimStrength
+                                    glassRimStrengthStrong: root.glassRimStrengthStrong
+                                    glassLightDirStrong: root.glassLightDirStrong
+                                    textColor: root.textColor
+                                    z: 100
+                                }
+                            }
                         }
                     }
                 }
                 Button1x1 {
                     id: bluetoothWidget
-                    anchors {
-                        top: wifiWidget.bottom
-                        left: parent.left
-                        leftMargin: root.bluetoothOpened ? 0 : 10
-                        topMargin: root.bluetoothOpened ? -100 : 10
-                        Behavior on topMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
-                        Behavior on leftMargin { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 } }
-                    }
-                    hideCause: false
+                    xPos: 0
+                    yPos: 1
+                    overwriteX: root.bluetoothOpened
+                    overwriteY: root.bluetoothOpened
+                    overwriteXPos: 0
+                    overwriteYPos: -60
+                    hideCause: root.wifiOpened
                     width: root.bluetoothOpened ? panelWindow.gridImplicitWidth : panelWindow.box
                     height: root.bluetoothOpened ? 250 : panelWindow.box
-                    Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-                    Behavior on height { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    Behavior on width { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    Behavior on height { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                     enabled: Bluetooth.defaultAdapter?.enabled || false
+                    Connections {
+                        target: root
+                        function onClose() {
+                            if (root.bluetoothOpened) {
+                                bluetoothWidget.scale = 1
+                            }
+                        }
+                    }
                     VectorImage {
                         id: rBBluetooth
                         source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/bluetooth-clear.svg")
@@ -217,7 +422,7 @@ Scope {
                         preferredRendererType: VectorImage.CurveRenderer
                         anchors.centerIn: parent
                         opacity: root.bluetoothOpened ? 0 : 1
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
                         layer.enabled: true
                         layer.effect: MultiEffect {
                             colorization: 1
@@ -226,6 +431,7 @@ Scope {
                     }
                     MouseArea {
                         anchors.fill: parent
+                        enabled: !root.windowOpened || root.bluetoothOpened
                         onClicked: {
                             root.bluetoothOpened = !root.bluetoothOpened
                             if (root.bluetoothOpened) {
@@ -250,43 +456,47 @@ Scope {
                     scaleCause: root.bluetoothOpened
                     light: root.bluetoothOpened ? "transparent" : root.glassRimColor
                     color: root.bluetoothOpened ? "transparent" : enabled ? "#fff" : root.glassColor
-                    Behavior on color { ColorAnimation { duration: 200 } }
-                    ClippingRectangle {
-                        id: clippingRect
-                        color: "transparent"
+                    Behavior on color { ColorAnimation { duration: root.animationDur } }
+                    Loader {
                         anchors.fill: parent
-                        radius: root.bluetoothOpened ? 20 : 40
-                        Behavior on radius { NumberAnimation { duration: 200 } }
-                        z: 100
-                        opacity: root.bluetoothOpened ? 1 : 0
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
-                        BoxGlass {
-                            anchors.fill: parent
-                            radius: 20
-                            color: root.glassColor
-                            light: root.glassRimColor
-                            rimStrength: root.glassRimStrengthStrong
-                            lightDir: root.glassLightDirStrong
-                            CCBluetooth {
-                                width: panelWindow.gridImplicitWidth
-                                height: 250
-                                glassColor: root.glassColor
-                                glassRimColor: root.glassRimColor
-                                glassRimStrength: root.glassRimStrength
-                                glassRimStrengthStrong: root.glassRimStrengthStrong
-                                glassLightDirStrong: root.glassLightDirStrong
-                                textColor: root.textColor
+                        enabled: root.bluetoothOpened
+                        sourceComponent: ClippingRectangle {
+                            id: clippingRectBluetooth
+                            color: "transparent"
+                            radius: root.bluetoothOpened ? 20 : 40
+                            implicitHeight: root.bluetoothOpened ? bluetoothWidget.height : 0
+                            implicitWidth: root.bluetoothOpened ? bluetoothWidget.width : 0
+                            Behavior on radius { NumberAnimation { duration: root.animationDur } }
+                            z: 100
+                            layer.enabled: true
+                            layer.samples: 4
+                            opacity: root.bluetoothOpened ? 1 : 0
+                            Behavior on opacity { NumberAnimation { duration: root.animationDur } }
+                            BoxGlass {
+                                anchors.fill: parent
+                                radius: 20
+                                color: root.glassColor
+                                light: root.glassRimColor
+                                rimStrength: root.glassRimStrengthStrong
+                                lightDir: root.glassLightDirStrong
+                                CCBluetooth {
+                                    width: panelWindow.gridImplicitWidth
+                                    height: 250
+                                    glassColor: root.glassColor
+                                    glassRimColor: root.glassRimColor
+                                    glassRimStrength: root.glassRimStrength
+                                    glassRimStrengthStrong: root.glassRimStrengthStrong
+                                    glassLightDirStrong: root.glassLightDirStrong
+                                    textColor: root.textColor
+                                }
                             }
                         }
                     }
                 }
                 Button1x1 {
                     id: airdropWidget
-                    anchors {
-                        top: wifiWidget.bottom
-                        right: wifiWidget.right
-                        topMargin: 10
-                    }
+                    xPos: 1
+                    yPos: 1
                     enabled: true
                     VectorImage {
                         id: rBAirdrop
@@ -307,16 +517,17 @@ Scope {
                     width: panelWindow.box*2+panelWindow.boxMargin
                     height: panelWindow.box
                     radius: 40
-                    anchors {
-                        top: airdropWidget.bottom
-                        left: parent.left
-                        topMargin: 10
-                        leftMargin: 10
-                    }
-                    MouseArea {
+                    xPos: 0
+                    yPos: 2
+                    Loader {
                         anchors.fill: parent
-                        onClicked: {
-                            NotificationDaemon.toggleDND()
+                        enabled: !root.windowOpened
+                        sourceComponent: MouseArea {
+                            preventStealing: true
+                            propagateComposedEvents: true
+                            onClicked: {
+                                NotificationDaemon.toggleDND()
+                            }
                         }
                     }
                     ClippingRectangle {
@@ -361,12 +572,8 @@ Scope {
                     width: panelWindow.box*2+panelWindow.boxMargin
                     height: panelWindow.box*2+panelWindow.boxMargin
                     radius: 25
-                    anchors {
-                        top: parent.top
-                        left: wifiWidget.right
-                        leftMargin: 10
-                        topMargin: 10
-                    }
+                    xPos: 2
+                    yPos: 0
                     MusicPlayer {
                         glassColor: root.glassColor
                         glassRimColor: root.glassRimColor
@@ -378,11 +585,8 @@ Scope {
                 }
                 Button1x1 {
                     id: stageWidget
-                    anchors {
-                        top: musicWidget.bottom
-                        left: musicWidget.left
-                        topMargin: 10
-                    }
+                    xPos: 2
+                    yPos: 2
                     enabled: false
                     VectorImage {
                         id: rBStage
@@ -400,11 +604,8 @@ Scope {
                 }
                 Button1x1 {
                     id: screenshareWidget
-                    anchors {
-                        top: musicWidget.bottom
-                        right: musicWidget.right
-                        topMargin: 10
-                    }
+                    xPos: 3
+                    yPos: 2
                     enabled: false
                     VectorImage {
                         id: rBScreenshare
@@ -425,11 +626,9 @@ Scope {
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
                     radius: 25
-                    anchors {
-                        top: focusWidget.bottom
-                        left: parent.left
-                        margins: 10
-                    }
+                    xPos: 0
+                    yPos: 3
+                    rimStrength: root.glassRimStrengthWeak
                     UIText {
                         id: brightnessTitle
                         anchors {
@@ -491,6 +690,7 @@ Scope {
                         value: Brightness.monitors[0].brightness
                         property var lastValue: null
                         property bool screenDimHelper: false
+                        enabled: !root.windowOpened
 
                         // Update the monitor brightness when the slider moves
                         onValueChanged: {
@@ -540,11 +740,9 @@ Scope {
                     width: panelWindow.box*4+panelWindow.boxMargin*3
                     height: panelWindow.box
                     radius: 25
-                    anchors {
-                        top: displayWidget.bottom
-                        left: parent.left
-                        margins: 10
-                    }
+                    xPos: 0
+                    yPos: 4
+                    rimStrength: root.glassRimStrengthWeak
                     UIText {
                         id: volumeTitle
                         anchors {
@@ -590,7 +788,7 @@ Scope {
                             colorizationColor: "#fff"
                         }
                     }
-                     PwObjectTracker {
+                    PwObjectTracker {
                         objects: [ Pipewire.defaultAudioSink ]
                     }
                     CFSlider {
@@ -603,6 +801,7 @@ Scope {
                             leftMargin: 30
                             rightMargin: 30
                         }
+                        enabled: !root.windowOpened
                         from: 0
                         to: 1
                         stepSize: 1 / 100.0
@@ -616,38 +815,23 @@ Scope {
                 }
                 Button1x1 {
                     id: darkModeWidget
-                    anchors {
-                        top: volumeWidget.bottom
-                        left: volumeWidget.left
-                        topMargin: 10
-                    }
+                    xPos: 0
+                    yPos: 5
                 }
                 Button1x1 {
                     id: calculatorWidget
-                    anchors {
-                        top: volumeWidget.bottom
-                        left: darkModeWidget.right
-                        topMargin: 10
-                        leftMargin: 10
-                    }
+                    xPos: 1
+                    yPos: 5
                 }
                 Button1x1 {
                     id: clockWidget
-                    anchors {
-                        top: volumeWidget.bottom
-                        left: calculatorWidget.right
-                        topMargin: 10
-                        leftMargin: 10
-                    }
+                    xPos: 2
+                    yPos: 5
                 }
                 Button1x1 {
                     id: screenshotWidget
-                    anchors {
-                        top: volumeWidget.bottom
-                        left: clockWidget.right
-                        topMargin: 10
-                        leftMargin: 10
-                    }
+                    xPos: 3
+                    yPos: 5
                 }
             }
         }
