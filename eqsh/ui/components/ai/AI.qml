@@ -179,7 +179,9 @@ Scope {
                     id: inputText
                     anchors.fill: parent
                     focus: Runtime.aiOpen
-                    color: Config.general.darkMode ? "#fff" : "#000"
+                    color: "#fff"
+                    selectionColor: '#50ffffff'
+                    selectedTextColor: '#a0ffffff'
                     leftPadding: 38
                     CFI {
                         id: sicon

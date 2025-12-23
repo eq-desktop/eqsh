@@ -56,6 +56,7 @@ Item {
 
 	readonly property string version: "Pre-Release 0.0.85-alpha"
 	readonly property string versionPretty: "Tahiti pr0.0.85a"
+	readonly property string versionApple: "Tahoe 26.2"
 	// 0.1.0 = Tahiti
 	// 0.2.0 = Niagara
 
@@ -73,6 +74,7 @@ Item {
 		property bool   darkMode: true
 		property bool   autoDarkMode: false
 		property bool   reduceMotion: false
+		property bool   appleNames: true // Tahoe instead of Tahiti
 		property string deviceLevel: "desktop" // desktop | laptop | low
 		property string language: "en_US" // Available languages: "en", "de", "es", "it", "ja"
 	}

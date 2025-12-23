@@ -19,7 +19,7 @@ Scope {
         onClosed: {
             Runtime.aboutOpen = false
         }
-        property bool focused: Hyprland.activeToplevel.title == "About this Mac"
+        property bool focused: Hyprland.activeToplevel?.title ?? "" == "About this Mac"
         UIControls {
             id: controls
             focused: about.focused

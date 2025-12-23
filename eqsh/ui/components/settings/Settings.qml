@@ -20,7 +20,7 @@ import Quickshell.Widgets
 FloatingWindow {
     id: settingsApp
     visible: Runtime.settingsOpen
-    title: Translation.tr("Equora Settings")
+    title: Translation.tr("Systemsettings")
     minimumSize: "675x540"
     maximumSize: Qt.size(675, screen.height-Config.bar.height)
     
