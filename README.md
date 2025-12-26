@@ -211,6 +211,9 @@ EqSh is designed to be used with a keyboard, which is why it has a lot of action
 - settings: Opens the Settings
 - spotlight: Opens the Spotlight
 
+
+</details>
+
 ---
 
 ## ✨ Features
