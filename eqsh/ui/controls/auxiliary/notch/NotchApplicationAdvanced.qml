@@ -19,7 +19,11 @@ Item {
     property Component indicative: null
     property Component active: null
     property int _pullHeight: 0
+    property bool immortal: false
+    property real _xScaleIndicativeLoader: 1
     z: 99
+
+    Behavior on _xScaleIndicativeLoader { NumberAnimation { duration: meta.animDuration; easing.type: Easing.OutBack; easing.overshoot: 1 } }
 
     //Rectangle {
     //    id: notchBg
@@ -32,19 +36,20 @@ Item {
     //}
 
     component Meta: QtObject {
-        property int  width: notch.defaultWidth
-        property int  height: notch.defaultHeight
-        property int  indicativeWidth: notch.defaultWidth
-        property int  indicativeHeight: notch.defaultHeight
-        property int  xOffset: 0
-        property real startScale: 1
-        property real startOpacity: 0
-        property int  animDuration: 500
-        property int  closeAfterMs: -1
-        property int  shrinkMs: 125
-        property int  scrollHeight: 50
-        property var  shadowOpacity: undefined
-        property var  id: null
+        property int    width: notch.defaultWidth
+        property int    height: notch.defaultHeight
+        property int    indicativeWidth: notch.defaultWidth
+        property int    indicativeHeight: notch.defaultHeight
+        property int    xOffset: 0
+        property real   startScale: 1
+        property real   startOpacity: 0
+        property int    animDuration: 500
+        property int    closeAfterMs: -1
+        property string name: ""
+        property int    shrinkMs: 125
+        property int    scrollHeight: 50
+        property var    shadowOpacity: undefined
+        property var    id: null
     }
 
     component Details: QtObject {
@@ -71,9 +76,9 @@ Item {
 
     onNotchStateChanged: {
         if (notchState === "active") {
-            notch.setSize(meta.width, meta.height)
+            notch.setSize(meta.width, meta.height, false, root.meta.id)
         } else {
-            notch.setSize(meta.indicativeWidth, meta.indicativeHeight)
+            notch.setSize(meta.indicativeWidth, meta.indicativeHeight, false, root.meta.id, true)
         }
     }
 
@@ -81,9 +86,9 @@ Item {
         opacity = 1
         scale = 1
         if (notchState === "active") {
-            notch.setSize(meta.width, meta.height)
+            notch.setSize(meta.width, meta.height, false, root.meta.id)
         } else {
-            notch.setSize(meta.indicativeWidth, meta.indicativeHeight)
+            notch.setSize(meta.indicativeWidth, meta.indicativeHeight, false, root.meta.id)
         }
     }
 
@@ -112,6 +117,7 @@ Item {
     property var runningNotchInstances: notch.runningNotchInstances
     onRunningNotchInstancesChanged: {
         if (meta.id !== null && !runningNotchInstances.includes(meta.id)) {
+            if (immortal) return;
             shadowOpacity = 0
             root.destroy()
         }
@@ -195,7 +201,8 @@ Item {
             anchors.fill: parent
             sourceComponent: root.indicative
             transform: Scale {
-                xScale: 1
+                xScale: root._xScaleIndicativeLoader
+                origin.x: indicativeLoader.width / 2
                 yScale: root.scaleY
                 Behavior on yScale { NumberAnimation { duration: meta.animDuration; easing.type: Easing.OutCubic } }
             }
@@ -251,7 +258,7 @@ Item {
         hoverEnabled: true
         scrollGestureEnabled: true
         onEntered: {
-            notch.setSize(meta.indicativeWidth+10, meta.indicativeHeight+5)
+            notch.setSize(meta.indicativeWidth+10, meta.indicativeHeight+5, false, root.meta.id)
             shadowOpacity = 0.5
             if (Config.notch.openOnHover) {
                 openTimer.start()
@@ -259,7 +266,7 @@ Item {
         }
         onExited: {
             if (notchState !== "active") {
-                notch.setSize(meta.indicativeWidth, meta.indicativeHeight)
+                notch.setSize(meta.indicativeWidth, meta.indicativeHeight, false, root.meta.id)
                 shadowOpacity = 0
                 root._pullHeight = 0
                 root.scaleY = 1
@@ -272,7 +279,7 @@ Item {
                 root._pullHeight = 0
             }
             root.scaleY = Math.max(0.9, 1 + (root._pullHeight/(meta.scrollHeight*2)))
-            notch.setSize(meta.indicativeWidth-(root.scaleY*20), meta.indicativeHeight+5+Math.max(-10, root._pullHeight))
+            notch.setSize(meta.indicativeWidth-(root.scaleY*20), meta.indicativeHeight+5+Math.max(-10, root._pullHeight), false, root.meta.id)
             if (root._pullHeight > meta.scrollHeight) {
                 root.activate()
                 root.scaleY = 1
@@ -283,7 +290,7 @@ Item {
             }
         }
         onPressed: {
-            notch.setSize(meta.indicativeWidth-10, meta.indicativeHeight+5)
+            notch.setSize(meta.indicativeWidth-10, meta.indicativeHeight+5, false, root.meta.id)
         }
         enabled: (root.notchState === "indicative") && !root.noMode
     }

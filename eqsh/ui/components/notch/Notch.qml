@@ -12,6 +12,7 @@ import qs.config
 import qs
 import qs.core.system
 import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.controls.providers
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
@@ -22,36 +23,26 @@ Scope {
   property bool appInFullscreen: HyprlandExt.appInFullscreen
   property bool forceHide: Config.notch.autohide
   property bool inFullscreen: shown ? forceHide : appInFullscreen || forceHide
-  property string activeWindow: ""
+  property int    defaultWidth: Config.notch.minWidth
+  property int    defaultHeight: Config.notch.height
   property int    topMargin: Config.notch.islandMode ? Config.notch.margin : -1
   property int    width: Config.notch.minWidth
-  property int    defaultWidth: Config.notch.minWidth
   property int    height: Config.notch.height
-  property int    defaultHeight: Config.notch.height
   property var    notch: root
 
-  property string customNotchCode: ""
-  property var    customNotchId: null
-  property bool   customNotchVisible: false
-
-  property int       customWidth: 0
-  property int       customHeight: 0
-  property list<var> customSizes: []
-  property bool      customResize: false
-
-  property list<int> runningNotchInstances: []
+  property list<var> runningNotchInstances: []
 
   property bool   locked: Runtime.locked
+  property var    focusedRunningInstance: runningNotchInstances.length > 0 ? runningNotchInstances[runningNotchInstances.length -1] : null
 
   property bool firstTimeRunning: Config.account.firstTimeRunning
   property bool loadedConfig: Config.loaded
   property bool dndMode: NotificationDaemon.popupInhibited
   readonly property bool batCharging: UPower.onBattery ? (UPower.displayDevice.state == UPowerDeviceState.Charging) : true
 
-
   property var details: QtObject {
-    property list<string> supportedVersions: ["0.1.0", "0.1.1", "0.1.2"]
-    property string currentVersion: "0.1.2"
+    property list<string> supportedVersions: ["0.1.2", "Elephant-1"]
+    property string currentVersion: "Elephant-1"
   }
 
   property var notchRegistry: {
@@ -59,34 +50,34 @@ Scope {
     "charging": { path: "Charging.qml" },
     "dnd": { path: "DND.qml" },
     "lock": { path: "Lock.qml" },
+    "audio": { path: "Audio.qml" }
   }
 
-  function launchById(id) {
+  signal newNotchInstance(string code, string name, int id)
+
+  function launchByRId(id) {
     const app = notchRegistry[id];
     if (app) {
       fileViewer.path = Quickshell.shellDir + "/ui/components/notch/instances/" + app.path;
-      return root.notchInstance(fileViewer.text());
+      return root.notchInstance(fileViewer.text(), id);
     }
   }
 
-  onFirstTimeRunningChanged: getWelcomeNotchApp()
-  onLoadedConfigChanged: getWelcomeNotchApp()
-
-  function getWelcomeNotchApp() {
-    if (Config.account.firstTimeRunning && Config.loaded) {
-      launchById("welcome")
-    } else {
-      if (root.customNotchVisible) {
-        root.closeAllNotchInstances()
-      }
-    }
+  function idIsRunning(id) {
+    if (root.runningNotchInstances.length === 0) return false;
+    return root.runningNotchInstances.some(instance => instance.meta.id === id);
   }
+
+  function getNotchInstanceById(id) {
+    return root.runningNotchInstances.find(instance => instance.meta.id === id);
+  }
+
+
+  property bool audioPlaying: MusicPlayerProvider.isPlaying
+  property var lockId: null
 
   signal activateInstance()
-
-  onDndModeChanged: launchById("dnd")
-
-  onBatChargingChanged: if (batCharging) launchById("charging")
+  signal focusedInstance(var instance)
 
   FileView {
     id: fileViewer
@@ -94,13 +85,18 @@ Scope {
     blockAllReads: true
   }
 
-  property var lockId: null
+  onDndModeChanged: launchByRId("dnd")
+  onBatChargingChanged: if (batCharging) launchByRId("charging")
   onLockedChanged: {
     if (locked) {
-      root.lockId = launchById("lock")
+      launchByRId("lock")
     } else {
-      root.closeNotchInstance(root.lockId)
+      root.closeNotchInstance("lock")
     }
+  }
+
+  Component.onCompleted: {
+    launchByRId("audio")
   }
 
   function getIcon(path) {
@@ -111,71 +107,37 @@ Scope {
     }
   }
 
-  function notchInstance(code) {
-    root.customNotchVisible = false
+  function notchInstance(code, name) {
     const id = Math.floor(Math.random() * 1000000)
-    root.customNotchId = id
-    root.customNotchCode = code
-    root.customNotchVisible = true
+    root.newNotchInstance(code, name, id)
     return id;
   }
 
-  function closeNotchInstance(id) {
-    let new_notch_instances = root.runningNotchInstances
-    for (let i = 0; i < root.runningNotchInstances.length; i++) {
-      if (new_notch_instances[i] === id) {
-        new_notch_instances.splice(i, 1)
-        i--;
-      }
-    }
-    root.runningNotchInstances = new_notch_instances
-    root.customNotchVisible = false
-    root.customNotchId = null
-    root.customNotchCode = ""
-    if (new_notch_instances.length === 0) {
-      root.resetSize()
-    } else {
-      root.flushSize()
-    }
+  function closeNotchInstance(name) {
+    let new_notch_instances = root.runningNotchInstances.filter(instance => instance.meta.name !== name || instance.immortal == true);
+    root.runningNotchInstances = new_notch_instances;
+  }
+  function closeNotchInstanceById(id) {
+    let new_notch_instances = root.runningNotchInstances.filter(instance => instance.meta.id !== id || instance.immortal == true);
+    root.runningNotchInstances = new_notch_instances;
+  }
+  function closeNotchInstanceFocused() {
+    if (root.focusedRunningInstance === null) return;
+    root.closeNotchInstanceById(root.focusedRunningInstance.meta.id);
   }
 
   function closeAllNotchInstances() {
-    root.customNotchVisible = false
-    root.customNotchId = null
-    root.customNotchCode = ""
-    root.runningNotchInstances = []
-    root.resetSize()
+    root.runningNotchInstances.forEach(instance => {
+      root.closeNotchInstanceById(instance.meta.id);
+    });
   }
 
-  function setSize(width=-1, height=-1, temp=false) {
-    root.customResize = false
-    if (!temp) root.customSizes.push([width, height])
-    root.customWidth = width
-    root.customHeight = height
-    root.customResize = true
+  onRunningNotchInstancesChanged: {
+    if (runningNotchInstances.length === 0) return;
+    // get current instance
+    const currentInstance = runningNotchInstances[runningNotchInstances.length - 1];
+    root.focusedInstance(currentInstance);
   }
-  function resetSize() {
-    root.customWidth = 0
-    root.customHeight = 0
-    root.customSizes = []
-    root.customResize = false
-  }
-
-  function flushSize() {
-    root.customSizes.pop()
-    const size = root.customSizes[root.customSizes.length - 1]
-    if (!size) {
-      root.resetSize()
-      return;
-    }
-    root.customResize = false
-    root.customWidth = size[0]
-    root.customHeight = size[1]
-    root.customResize = true
-  }
-
-  function setWto(width, dur=300, ov=3, temp=false, easing=Easing.OutBack) {}
-  function setHto(height, dur=300, ov=3, temp=false, easing=Easing.OutBack) {}
 
   Variants {
     model: Quickshell.screens
@@ -212,14 +174,14 @@ Scope {
         blur: 40
         spread: 10
         opacity: shadowOpacity
+        Behavior on opacity {
+          NumberAnimation { duration: 200 }
+        }
         transform: Translate {
           x: notchBg.xOffset
           Behavior on x {
             NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
           }
-        }
-        Behavior on opacity {
-          NumberAnimation { duration: 200 }
         }
       }
 
@@ -236,30 +198,33 @@ Scope {
             panelWindow.mask.changed();
           }
         }
-        property int xOffset: notchBg.notchCustomCodeObj?.meta.xOffset || 0
+        scale: 1
+        onScaleChanged: {
+          panelWindow.mask.changed();
+        }
+        property int xOffset: 0
         transform: Translate {
           x: notchBg.xOffset
           Behavior on x {
             NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
           }
         }
-        scale: 1
-        onScaleChanged: {
-          panelWindow.mask.changed();
-        }
         onXOffsetChanged: {
           panelWindow.mask.changed();
         }
-        Behavior on scale {
-          NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
-        }
-        implicitWidth: root.width
-        implicitHeight: root.height
+
+
+        Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+        Behavior on implicitWidth { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+        Behavior on implicitHeight { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+        Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+        Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 } }
+        width: root.width
+        height: root.height
         topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
         topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
         bottomLeftRadius: Config.notch.radius
         bottomRightRadius: Config.notch.radius
-        property bool customResize: root.customResize
 
         onImplicitWidthChanged: {
           panelWindow.mask.changed();
@@ -269,152 +234,40 @@ Scope {
           Runtime.notchHeight = implicitHeight;
         }
 
-        PropertyAnimation {
-          id: animW
-          target: root
-          property: "width"
-          from: root.width
-          to: root.width
-          duration: 300
-          easing.type: Easing.OutBack
-          easing.overshoot: 0
-        }
-
-        PropertyAnimation {
-          id: animH
-          target: root
-          property: "height"
-          from: root.height
-          to: root.height
-          duration: 300
-          easing.type: Easing.OutBack
-          easing.overshoot: 0
-        }
-
-        function decideOv(width=null, height=null) {
-          if (width) {
-            if (width > notchBg.implicitWidth) {
-              return 3
-            } else { return 1 }
-          } else if (height) {
-            if (height > notchBg.implicitHeight) {
-              return 3
-            } else { return 1 }
-          }
-        }
-
-        function setHto(height, dur=300, ov=3, temp=false, easing=Easing.OutBack) {
-          animH.from = implicitHeight
-          animH.to = height
-          animH.duration = dur
-          animH.easing.overshoot = ov
-          animH.easing.type = easing
-          if (temp) {
-            animH.target = notchBg
-            animH.property = "implicitHeight"
-          } else {
-            animH.target = root
-            animH.property = "height"
-          }
-          animH.restart()
-        }
-
-        function setWto(width, dur=300, ov=3, temp=false, easing=Easing.OutBack) {
-          animW.from = implicitWidth
-          animW.to = width
-          animW.duration = dur
-          animW.easing.overshoot = ov
-          animW.easing.type = easing
-          if (temp) {
-            animW.target = notchBg
-            animW.property = "implicitWidth"
-          } else {
-            animW.target = root
-            animW.property = "width"
-          }
-          animW.restart()
-        }
-
-        property int _pullHeight: 0
-        
-        MouseArea {
-          anchors.fill: parent
-          hoverEnabled: true
-          scrollGestureEnabled: true
-          onEntered: {
-            notchBg.setWto(root.width+10, 500, 5, true)
-            notchBg.setHto(root.height+5, 500, 5, true)
-            shadowOpacity = 0.5
-          }
-          onExited: {
-            if (notchBg.notchCustomCodeObj === null) {
-              notchBg.setWto(minWidth, 300, 2)
-              notchBg.setHto(Config.notch.height, 300, 2)
-              shadowOpacity = 0
-            }
-          }
-          onWheel: (wheel) => {
-            let delta = Math.min(50, Math.round(wheel.angleDelta.y/50))
-            notchBg._pullHeight = Math.min(20, Math.max(0, notchBg._pullHeight + delta))
-            if (wheel.angleDelta.y === 0) {
-              notchBg._pullHeight = 0
-            }
-            notchBg.setHto(30+5+notchBg._pullHeight, 300, 2, true)
-          }
-          enabled: notchBg.notchCustomCodeObj === null
-        }
-
-        onCustomResizeChanged: {
-          if (root.customResize) {
-            let newH = root.customHeight == -1 ? Config.notch.height : root.customHeight;
-            let newW = root.customWidth == -1 ? minWidth : root.customWidth;
-            let ovW = decideOv(root.customWidth)
-            let ovH = decideOv(null, root.customHeight)
-            setHto(newH, 300, ovH)
-            setWto(newW, 300, ovW)
-          } else {
-            let ovW = decideOv(minWidth)
-            let ovH = decideOv(null, Config.notch.height)
-            setHto(Config.notch.height, 300, ovH)
-            setWto(minWidth, 300, ovW)
-          }
-          panelWindow.mask.changed();
-        }
-        clip: true
+        //MouseArea {
+        //  anchors.fill: parent
+        //  hoverEnabled: true
+        //  scrollGestureEnabled: true
+        //  onEntered: {
+        //    notchBg.implicitWidth = root.width + 10
+        //    notchBg.implicitHeight = root.height + 5
+        //    shadowOpacity = 0.5
+        //  }
+        //  onExited: {
+        //    if (root.runningNotchInstances.length === 0) {
+        //      notchBg.implicitWidth = minWidth
+        //      notchBg.implicitHeight = Config.notch.height
+        //      shadowOpacity = 0
+        //    }
+        //  }
+        //  enabled: root.runningNotchInstances.length === 0
+        //}
         color: Config.notch.backgroundColor
-        property var notchCustomCodeObj: null
-        property var notchCustomCodeVis: root.customNotchVisible
         Connections {
           target: root
-          function onActivateInstance() {
-            if (notchBg.notchCustomCodeObj === null) return
-            if (notchBg.notchCustomCodeObj.noMode) return
-            if (notchBg.notchCustomCodeObj.notchState === "active") {
-              notchBg.notchCustomCodeObj.setIndicative();
-              return
-            }
-            if (notchBg.notchCustomCodeObj.notchState === "indicative") notchBg.notchCustomCodeObj.activate();
-          }
-        }
-        onNotchCustomCodeVisChanged: {
-          if (notchCustomCodeVis) {
-            notchBg.notchCustomCodeObj = Qt.createQmlObject(root.customNotchCode, notchBg)
-            notchBg.notchCustomCodeObj.screen = panelWindow
-            notchBg.notchCustomCodeObj.meta.id = root.customNotchId
-            const version = notchBg.notchCustomCodeObj.details.version
-            if (notchBg.notchCustomCodeObj.details.appType == "media") {
-              runningNotchInstances = [notchBg.notchCustomCodeObj.meta.id];
-            } else {
-              runningNotchInstances.push(notchBg.notchCustomCodeObj.meta.id);
-            }
-            if (!root.details.supportedVersions.includes(version)) {
-              console.warn("The notch app version (" + version + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
-            }
-            if (notchBg.notchCustomCodeObj.details.shadowOpacity !== undefined) {
-              panelWindow.shadowOpacity = notchBg.notchCustomCodeObj.details.shadowOpacity
+          function onNewNotchInstance(code, name, id) {
+            let obj = Qt.createQmlObject(code, notchBg)
+            obj.screen = panelWindow
+            obj.meta.inCreation = true
+            obj.meta.id = id
+            obj.meta.name = name
+            runningNotchInstances.push(obj);
+            obj.meta.inCreation = false
+            const instanceVersion = obj.details.version
+            if (!root.details.supportedVersions.includes(instanceVersion)) {
+              console.warn("The notch app version (" + instanceVersion + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
             }
           }
-          panelWindow.mask.changed();
         }
       }
       Rectangle { // Camera
@@ -487,12 +340,6 @@ Scope {
   }
   IpcHandler {
     target: "notch"
-    function setSize(width: int, height: int) {
-      root.setSize(width, height);
-    }
-    function resetResize() {
-      root.resetResize();
-    }
     function instance(code: string) {
       root.notchInstance(code);
     }
@@ -500,10 +347,10 @@ Scope {
       root.activateInstance();
     }
     function closeInstance() {
-      root.closeNotchInstance(root.runningNotchInstances[root.runningNotchInstances.length - 1]);
+      root.closeNotchInstanceFocused();
     }
     function closeAllInstances() {
-      root.closeNotchInstance();
+      root.closeAllNotchInstances();
     }
   }
 }

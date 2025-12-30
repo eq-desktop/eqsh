@@ -4,7 +4,7 @@ import qs.config
 import qs
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.components.panel
 import QtQuick.VectorImage
 import QtQuick.Controls
@@ -13,10 +13,10 @@ import Qt5Compat.GraphicalEffects
 
 NotchApplication {
     id: root
-    details.version: "0.1.2"
-    details.appType: "info"
-    meta.width: 375
-    meta.closeAfterMs: 2500
+    details.version: "Elephant-1"
+    meta.width: 200
+    meta.xOffset: -85
+    meta.closeAfterMs: -1
     onlyActive: true
 
     active: Item {
@@ -32,12 +32,6 @@ NotchApplication {
             }
             source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/notch/info.svg")
             rotation: 0
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                anchors.fill: icon
-                colorization: 1
-                colorizationColor: '#ff2f00'
-            }
         }
         Text {
             id: text
@@ -46,7 +40,7 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            color: '#ff7b5d'
+            color: '#ffffff'
             text: "Update Available"
             font.family: Fonts.sFProMonoRegular.family
             font.pixelSize: 13

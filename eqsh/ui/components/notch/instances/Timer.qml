@@ -4,7 +4,7 @@ import qs.config
 import qs
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.components.panel
 import qs.ui.controls.advanced
 import QtQuick.VectorImage
@@ -13,7 +13,7 @@ import QtQuick.Effects
 
 NotchApplication {
     id: root
-    details.version: "0.1.2"
+    details.version: "Elephant-1"
     details.appType: "media"
     meta.height: 60
     meta.width: 300
@@ -191,7 +191,7 @@ NotchApplication {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            onClicked: notch.closeNotchInstance(meta.id)
+            onClicked: root.closeMe()
 
             BoxGlass {
                 id: closeButton

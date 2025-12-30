@@ -5,7 +5,7 @@ import qs.config
 import qs
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.controls.primitives
 import qs.ui.components.panel
 import QtQuick.VectorImage

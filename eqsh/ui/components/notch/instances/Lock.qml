@@ -3,15 +3,15 @@ import Quickshell
 import qs.config
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.2"
+    details.version: "Elephant-1"
     meta.width: notch.defaultWidth + 40
     meta.height: notch.defaultHeight + 20
-    meta.animDuration: 1000
+    properties.animDuration: 1000
     noMode: true
     indicative: Item {
         VectorImage {

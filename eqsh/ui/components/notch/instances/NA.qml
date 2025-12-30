@@ -4,7 +4,7 @@ import qs.config
 import qs.core.system
 import qs
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import QtQuick.VectorImage
 import QtQuick.Effects
 

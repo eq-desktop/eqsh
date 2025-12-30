@@ -6,7 +6,7 @@ import qs
 import qs.core.system
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.components.panel
 import QtQuick.VectorImage
 import QtQuick.Controls
@@ -14,10 +14,16 @@ import QtQuick.Effects
 
 NotchApplication {
     id: root
-    details.version: "0.1.2"
+    details.version: "Elephant-1"
     details.appType: "media"
+    immortal: true
+    meta.indicativeWidth: 210
+    meta.informativeHeight: meta.indicativeHeight + 20
     meta.height: 200
     meta.width: 400
+
+    properties.useScaleX: false
+    z: 98
     ColorQuantizer {
         id: quantizer
         depth: 3
@@ -26,11 +32,18 @@ NotchApplication {
     }
 
     indicative: Item {
+        visible: MusicPlayerProvider.isPlaying && root.isFocused
+        onVisibleChanged: {
+            if (visible) {
+                root.indicativeShowAnim.start()
+            }
+        }
         ClippingRectangle {
             anchors {
                 left: parent.left
                 leftMargin: 10
-                verticalCenter: parent.verticalCenter
+                topMargin: 4
+                top: parent.top
             }
             radius: 7
             width: 20
@@ -41,15 +54,62 @@ NotchApplication {
                 colorized: false
                 source: MusicPlayerProvider.thumbnail
             }
+            transform: Scale {
+                origin.x: thumbnail.width
+                xScale: root.properties.scaleX
+            }
+        }
+        CFText {
+            anchors {
+                left: parent.left
+                leftMargin: 10
+                topMargin: 28
+                top: parent.top
+            }
+            opacity: root.notchState === "informative" ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+            text: MusicPlayerProvider.title
+            elide: Text.ElideRight
+            font.weight: 400
+            height: 12
+            font.pixelSize: 12
+            width: parent.width - thumbnail.width
+        }
+        Rectangle {
+            anchors {
+                right: parent.right
+                rightMargin: 45
+                topMargin: 28+16
+                top: parent.top
+            }
+            opacity: root.notchState === "informative" ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.InOutQuad } }
+            height: 50
+            width: 16
+            transform: Rotation {
+                angle: -90
+            }
+            gradient: Gradient {
+                stops: [
+                    GradientStop { position: 0.0; color: "#00000000" },
+                    GradientStop { position: 0.7; color: "#ff000000" },
+                    GradientStop { position: 1.0; color: "#ff000000" }
+                ]
+            }
         }
         Item {
             anchors {
                 right: parent.right
-                rightMargin: 10
-                verticalCenter: parent.verticalCenter
+                rightMargin: 4
+                topMargin: 4
+                top: parent.top
             }
             width: 20
             height: 20
+            transform: Scale {
+                origin.x: 0
+                xScale: 1
+            }
             Repeater {
                 id: barRepeater
                 model: 3
@@ -93,6 +153,16 @@ NotchApplication {
     }
 
     active: Item {
+        MultiEffect {
+            source: thumbnail
+            anchors.fill: thumbnail
+            blurEnabled: true
+            blur: 1
+            blurMultiplier: 1
+            blurMax: 64
+            scale: 2
+            autoPaddingEnabled: true
+        }
         ClippingRectangle {
             id: thumbnail
             anchors.bottom: time.top

@@ -3,15 +3,16 @@ import Quickshell
 import qs.config
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.2"
-    details.appType: "media"
+    details.version: "Elephant-1"
+    details.appType: "indicator"
     noMode: true
     meta.height: notch.defaultHeight+10
+
     indicative: Item {
         Rectangle {
             id: recordingIndicator
@@ -23,9 +24,9 @@ NotchApplication {
                     NumberAnimation { duration: Config.notch.leftIconAnimDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
                 }
             }
-            width: 12
-            height: 12
-            color: '#e13039'
+            width: 8
+            height: 8
+            color: '#ff5c64'
             radius: 50
         }
     }

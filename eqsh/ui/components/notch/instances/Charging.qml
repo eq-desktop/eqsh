@@ -4,17 +4,16 @@ import qs.config
 import qs
 import qs.core.system
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.components.panel
 import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.2"
+    details.version: "Elephant-1"
     meta.height: notch.defaultHeight+10
     meta.width: 300
     meta.closeAfterMs: 2000
-    meta.shadowOpacity: 0.5
     onlyActive: true
     active: Item {
         Battery {

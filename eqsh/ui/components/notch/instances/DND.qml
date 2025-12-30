@@ -4,13 +4,13 @@ import qs.config
 import qs.core.system
 import qs
 import qs.ui.controls.providers
-import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.notch
 import qs.ui.controls.primitives
 import QtQuick.VectorImage
 import QtQuick.Effects
 
 NotchApplication {
-    details.version: "0.1.2"
+    details.version: "Elephant-1"
     meta.closeAfterMs: 2000
     onlyActive: true
     active: Item {
