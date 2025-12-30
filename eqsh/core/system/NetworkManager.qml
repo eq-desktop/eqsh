@@ -14,7 +14,7 @@ Singleton {
 
     readonly property list<AccessPoint> networks: []
     readonly property list<AccessPoint> networksKnown: []
-    readonly property AccessPoint active: networks.find(n => n.active) ?? null
+    readonly property AccessPoint active: networks.find(n => n.active) || null
     property bool wifiEnabled: true
     readonly property bool scanning: rescanProc.running
 
@@ -34,7 +34,8 @@ Singleton {
 
     function connectToNetwork(ssid: string, password: string): void {
         // password handled by NM if profile exists
-        connectProc.exec(["nmcli", "conn", "up", ssid])
+        if (password == "") connectProc.exec(["nmcli", "conn", "up", ssid])
+        else connectProc.exec(["nmcli", "--ask", "device", "wifi", "connect", ssid, "password", password])
     }
 
     function disconnectFromNetwork(): void {
@@ -87,7 +88,7 @@ Singleton {
     Process {
         id: rescanProc
         command: ["nmcli", "dev", "wifi", "list", "--rescan", "yes"]
-        onExited: getNetworks.running = true
+        onExited: {getNetworks.running = true; getKnownNetworks.running = true}
     }
 
     /* ===== Connect / Disconnect ===== */
@@ -196,7 +197,10 @@ Singleton {
 
                 // get AccessPoint from networks by ssid from known and put into networksKnown
                 const rKnown = root.networksKnown
-                rKnown.splice(0, rKnown.length, ...root.networks.filter(n => known.includes(n.ssid)))
+                rKnown.splice(0, rKnown.length)
+                for (const n of root.networks.filter(n => known.includes(n.ssid))) {
+                    rKnown.push(n)
+                }
             }
         }
     }
