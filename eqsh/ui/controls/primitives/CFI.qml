@@ -19,6 +19,7 @@ Image {
     smooth: true
     mipmap: true
     layer.enabled: colorized
+    layer.samples: 4
     layer.effect: MultiEffect {
         colorization: vi.colorized ? 1 : 0
         colorizationColor: vi.color

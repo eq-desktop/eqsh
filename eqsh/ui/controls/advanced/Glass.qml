@@ -34,7 +34,7 @@ Item {
         box.glassBevel = Math.min(box.glassBevel, smallerVal / 2)
     }
     property real glassMaxRefractionDistance: glassBevel
-    property real glassHairlineWidthPixels: 5
+    property real glassHairlineWidthPixels: 2
     property real glassHairlineReflectionDistance: 20
     Rectangle {
         anchors.fill: parent
@@ -45,6 +45,7 @@ Item {
         id: glowBox
         anchors.fill: parent
         property var iResolution: box.iResolution
+        property var boxPos: box.boxPos
         property var boxSize: box.boxSize
         property var cornerRadii: box.cornerRadii
         property var glowColor: box.glowColor
@@ -56,7 +57,7 @@ Item {
         property var  baseColor: box.color
         property real glassBevel: box.glassBevel
         property real glassMaxRefractionDistance: box.glassMaxRefractionDistance
-        property real glassHairlineWidthPixels: box.glassHairlineWidthPixels
+        property real glassHairlineWidthPixels: box.glassHairlineWidthPixels*100
         property real glassHairlineReflectionDistance: box.glassHairlineReflectionDistance
         property bool blurAvailable: box.blurSource !== null
         property var  source: box.source
@@ -64,7 +65,7 @@ Item {
 
         property var lightDir: box.lightDir
 
-        fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/lgxframe.frag-0.1.6.qsb")
+        fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/lgxframe.frag.qsb")
         vertexShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/lgxframe.vert.qsb")
     }
 }

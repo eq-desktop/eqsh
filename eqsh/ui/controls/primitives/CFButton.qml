@@ -8,9 +8,11 @@ Button {
     id: button
     height: 30
     property bool primary: false
+    property int radius: 20
     property real rimStrength: 0.4
     property var lightDir: Qt.point(-1, 0.2)
-    property bool highlightEnabled: !button.primary
+    property string light: "#40ffffff"
+    property bool highlightEnabled: true
     property string color: "#40000000"
     property string hoverColor: "#40FFFFFF"
     property string primaryColor: AccentColor.color
@@ -18,7 +20,9 @@ Button {
     background: BoxGlass {
         anchors.fill: parent
         rimStrength: button.rimStrength
+        radius: button.radius
         lightDir: button.lightDir
+        light: button.light
         color: button.primary ? (mouseArea.containsMouse ? button.primaryHoverColor : button.primaryColor) : (mouseArea.containsMouse ? button.hoverColor : button.color)
         highlightEnabled: button.highlightEnabled
     }

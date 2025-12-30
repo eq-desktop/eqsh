@@ -335,22 +335,22 @@ Rectangle {
 						hideSource: true
 						visible: false
 					}
-					BackdropBlur {
-						id: passwordBoxBlur
-						anchors.centerIn: passwordBoxContainer
-						width: passwordBoxContainer.width
-						height: passwordBoxContainer.height
-						clipRadius: 100
-						opacity: 1
-						blur: 0.2
-						contrast: 0.1
-						brightness: 0.14
-						source: sourceBackdrop
-						anchors.fill: parent
-					}
+					//BackdropBlur {
+					//	id: passwordBoxBlur
+					//	anchors.centerIn: passwordBoxContainer
+					//	width: passwordBoxContainer.width
+					//	height: passwordBoxContainer.height
+					//	clipRadius: 100
+					//	opacity: 1
+					//	blur: 0.2
+					//	contrast: 0.1
+					//	brightness: 0.14
+					//	source: sourceBackdrop
+					//	anchors.fill: parent
+					//}
 					Backdrop {
 						id: blurSourceBackdrop
-						sourceItem: passwordBoxBlur
+						sourceItem: sourceBackdrop
 						hideSource: true
 						visible: false
 					}
@@ -370,6 +370,7 @@ Rectangle {
 							blurSource: blurSourceBackdrop
 							rimStrength: 0.5
 							glassMaxRefractionDistance: 10
+							glassHairlineReflectionDistance: 5
 							lightDir: Qt.point(1, -0.05)
 							color: '#00361905'
 						}

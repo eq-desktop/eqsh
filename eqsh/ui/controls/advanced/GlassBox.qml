@@ -13,6 +13,7 @@ Item {
     property var blurSource: null
     property real boxW: width-2
     property real boxH: height-2
+    property var boxPos: Qt.size(0, 0)
     property var boxSize: Qt.size(boxW, boxH)
     
     property color light: '#40ffffff'
@@ -28,6 +29,8 @@ Item {
 
     property real glassBevel: 15
     property real glassMaxRefractionDistance: glassBevel
+    property real glassHairlineWidthPixels: 5
+    property real glassHairlineReflectionDistance: 20
 
     Behavior on color { PropertyAnimation { duration: animationSpeed; easing.type: Easing.InSine } }
     
@@ -37,10 +40,13 @@ Item {
         color: box.transparent ? "transparent" : box.color
         radius: box.radius
         source: box.source
+        boxPos: box.boxPos
         blurSource: box.blurSource
         boxSize: box.boxSize
         glassBevel: Math.min(box.glassBevel, boxContainer.smallerVal / 2)
         glassMaxRefractionDistance: box.glassMaxRefractionDistance
+        glassHairlineWidthPixels: box.glassHairlineWidthPixels
+        glassHairlineReflectionDistance: box.glassHairlineReflectionDistance
         glowColor: box.highlightEnabled ? box.light : Qt.rgba(0,0,0,0)
         lightDir: box.lightDir
         glowEdgeBand: box.rimSize

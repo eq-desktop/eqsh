@@ -116,7 +116,7 @@ Scope {
             scale: boxbutton.scaleCause ? 1.25 : 1
             transform: Translate {
                 y: boxbutton.hideCause ? 0 : 0
-                Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                Behavior on y { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             }
             transformOrigin: Item.Top
             property int xPos: 0
@@ -133,8 +133,8 @@ Scope {
                 Behavior on topMargin { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 1 } }
                 Behavior on leftMargin { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 1 } }
             }
-            Behavior on opacity { NumberAnimation { duration: 200 } }
-            Behavior on scale { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            Behavior on opacity { NumberAnimation { duration: root.animationDur/2 } }
+            Behavior on scale { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             light: root.glassRimColor
             rimStrength: root.glassRimStrength
             color: boxbutton.enabled ? "#fff" : root.glassColor
@@ -250,10 +250,11 @@ Scope {
                 BoxButton {
                     id: wifiWidget
                     width: root.wifiOpened ? panelWindow.gridImplicitWidth : panelWindow.box*2+panelWindow.boxMargin
-                    height: root.wifiOpened ? clippingRectWifiLoader.implicitHeight : panelWindow.box
+                    height: root.wifiOpened ? clippingRectWifi.implicitHeight : panelWindow.box
                     Behavior on width { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                     Behavior on height { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-                    radius: 40
+                    radius: root.wifiOpened ? 20 : 40
+                    Behavior on radius { NumberAnimation { duration: root.animationDur } }
                     hideCause: root.bluetoothOpened
 
                     scaleCause: root.wifiOpened
@@ -352,42 +353,39 @@ Scope {
                             }
                         }
                     }
-                    Loader {
-                        id: clippingRectWifiLoader
+                    ClippingRectangle {
                         anchors.fill: parent
-                        enabled: root.wifiOpened
-                        sourceComponent: ClippingRectangle {
-                            id: clippingRectWifi
-                            color: "transparent"
-                            implicitHeight: root.wifiOpened ? wifiBox.implicitHeight : 0
-                            implicitWidth: root.wifiOpened ? wifiWidget.width : 0
+                        id: clippingRectWifi
+                        color: "transparent"
+                        implicitHeight: root.wifiOpened ? wifiBox.implicitHeight : 0
+                        implicitWidth: root.wifiOpened ? wifiWidget.width : 0
+                        radius: root.wifiOpened ? 20 : 40
+                        Behavior on radius { NumberAnimation { duration: root.animationDur } }
+                        z: 100
+                        layer.enabled: true
+                        layer.samples: 4
+                        opacity: root.wifiOpened ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
+                        BoxGlass {
+                            id: wifiBox
+                            anchors.fill: parent
                             radius: root.wifiOpened ? 20 : 40
                             Behavior on radius { NumberAnimation { duration: root.animationDur } }
-                            z: 100
-                            layer.enabled: true
-                            layer.samples: 4
-                            opacity: root.wifiOpened ? 1 : 0
-                            Behavior on opacity { NumberAnimation { duration: root.animationDur } }
-                            BoxGlass {
-                                id: wifiBox
-                                anchors.fill: parent
-                                radius: 20
-                                implicitHeight: wifiCC.implicitHeight
-                                color: root.glassColor
-                                light: root.glassRimColor
-                                rimStrength: root.glassRimStrengthStrong
-                                lightDir: root.glassLightDirStrong
-                                CCWifi {
-                                    id: wifiCC
-                                    width: panelWindow.gridImplicitWidth
-                                    glassColor: root.glassColor
-                                    glassRimColor: root.glassRimColor
-                                    glassRimStrength: root.glassRimStrength
-                                    glassRimStrengthStrong: root.glassRimStrengthStrong
-                                    glassLightDirStrong: root.glassLightDirStrong
-                                    textColor: root.textColor
-                                    z: 100
-                                }
+                            implicitHeight: wifiCC.implicitHeight
+                            color: root.glassColor
+                            light: root.glassRimColor
+                            rimStrength: root.glassRimStrengthStrong
+                            lightDir: root.glassLightDirStrong
+                            CCWifi {
+                                id: wifiCC
+                                width: panelWindow.gridImplicitWidth
+                                glassColor: root.glassColor
+                                glassRimColor: root.glassRimColor
+                                glassRimStrength: root.glassRimStrength
+                                glassRimStrengthStrong: root.glassRimStrengthStrong
+                                glassLightDirStrong: root.glassLightDirStrong
+                                textColor: root.textColor
+                                z: 100
                             }
                         }
                     }
@@ -405,6 +403,8 @@ Scope {
                     height: root.bluetoothOpened ? 250 : panelWindow.box
                     Behavior on width { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
                     Behavior on height { NumberAnimation { duration: root.animationDur; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                    radius: root.bluetoothOpened ? 20 : 40
+                    Behavior on radius { NumberAnimation { duration: root.animationDur } }
                     enabled: Bluetooth.defaultAdapter?.enabled || false
                     Connections {
                         target: root
@@ -457,38 +457,36 @@ Scope {
                     light: root.bluetoothOpened ? "transparent" : root.glassRimColor
                     color: root.bluetoothOpened ? "transparent" : enabled ? "#fff" : root.glassColor
                     Behavior on color { ColorAnimation { duration: root.animationDur } }
-                    Loader {
+                    ClippingRectangle {
+                        id: clippingRectBluetooth
                         anchors.fill: parent
-                        enabled: root.bluetoothOpened
-                        sourceComponent: ClippingRectangle {
-                            id: clippingRectBluetooth
-                            color: "transparent"
+                        color: "transparent"
+                        radius: root.bluetoothOpened ? 20 : 40
+                        implicitHeight: root.bluetoothOpened ? bluetoothWidget.height : 0
+                        implicitWidth: root.bluetoothOpened ? bluetoothWidget.width : 0
+                        Behavior on radius { NumberAnimation { duration: root.animationDur } }
+                        z: 100
+                        layer.enabled: true
+                        layer.samples: 4
+                        opacity: root.bluetoothOpened ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: root.animationDur } }
+                        BoxGlass {
+                            anchors.fill: parent
                             radius: root.bluetoothOpened ? 20 : 40
-                            implicitHeight: root.bluetoothOpened ? bluetoothWidget.height : 0
-                            implicitWidth: root.bluetoothOpened ? bluetoothWidget.width : 0
                             Behavior on radius { NumberAnimation { duration: root.animationDur } }
-                            z: 100
-                            layer.enabled: true
-                            layer.samples: 4
-                            opacity: root.bluetoothOpened ? 1 : 0
-                            Behavior on opacity { NumberAnimation { duration: root.animationDur } }
-                            BoxGlass {
-                                anchors.fill: parent
-                                radius: 20
-                                color: root.glassColor
-                                light: root.glassRimColor
-                                rimStrength: root.glassRimStrengthStrong
-                                lightDir: root.glassLightDirStrong
-                                CCBluetooth {
-                                    width: panelWindow.gridImplicitWidth
-                                    height: 250
-                                    glassColor: root.glassColor
-                                    glassRimColor: root.glassRimColor
-                                    glassRimStrength: root.glassRimStrength
-                                    glassRimStrengthStrong: root.glassRimStrengthStrong
-                                    glassLightDirStrong: root.glassLightDirStrong
-                                    textColor: root.textColor
-                                }
+                            color: root.glassColor
+                            light: root.glassRimColor
+                            rimStrength: root.glassRimStrengthStrong
+                            lightDir: root.glassLightDirStrong
+                            CCBluetooth {
+                                width: panelWindow.gridImplicitWidth
+                                height: 250
+                                glassColor: root.glassColor
+                                glassRimColor: root.glassRimColor
+                                glassRimStrength: root.glassRimStrength
+                                glassRimStrengthStrong: root.glassRimStrengthStrong
+                                glassLightDirStrong: root.glassLightDirStrong
+                                textColor: root.textColor
                             }
                         }
                     }
@@ -521,7 +519,7 @@ Scope {
                     yPos: 2
                     Loader {
                         anchors.fill: parent
-                        enabled: !root.windowOpened
+                        active: !root.windowOpened
                         sourceComponent: MouseArea {
                             preventStealing: true
                             propagateComposedEvents: true

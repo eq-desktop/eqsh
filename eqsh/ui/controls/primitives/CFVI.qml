@@ -25,6 +25,7 @@ VectorImage {
     Layout.preferredHeight: size
     preferredRendererType: VectorImage.CurveRenderer
     layer.enabled: colorized
+    layer.samples: 16
     layer.effect: MultiEffect {
         colorization: vi.colorized ? 1 : 0
         colorizationColor: vi.color

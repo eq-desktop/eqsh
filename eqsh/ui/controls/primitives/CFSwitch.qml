@@ -49,7 +49,7 @@ Switch {
                 target: handle
                 property: "x"
                 from: 2
-                to: bg.width - (handle.width-3)
+                to: bg.width - ((control.switchWidth / 2) + 11)
                 duration: 200
                 easing.type: Easing.InOutQuad
                 onStopped: {
@@ -61,7 +61,7 @@ Switch {
                 id: turnOffAnim
                 target: handle
                 property: "x"
-                from: bg.width - (handle.width-3)
+                from: bg.width - ((control.switchWidth / 2) + 11)
                 to: 2
                 duration: 200
                 easing.type: Easing.InOutQuad
@@ -71,12 +71,15 @@ Switch {
                 }
             }
             anchors.verticalCenter: parent.verticalCenter
+            property int wH: (control.switchWidth / 2) + 14
+            property int wL: (control.switchWidth / 2) + 8
             width:  animating ? (control.switchWidth / 2) + 14 : (control.switchWidth / 2) + 8
             height: animating ? control.switchHeight + 6 : control.switchHeight - 4
             radius: Infinity
             scale: 1
+            transformOrigin: Item.Center
             transform: Translate {
-                x: handle.animating ? -9 : 0
+                x: handle.animating ? -((handle.wH - handle.wL)/2) : 0
                 Behavior on x { PropertyAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 3 } }
             }
             Behavior on width { PropertyAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 3 } }

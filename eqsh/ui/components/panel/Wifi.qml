@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.VectorImage
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import qs.core.system
 
@@ -8,9 +9,10 @@ Item {
   id: root
 
   property int iconSize: 24
+  property string color: "#fff"
 
   readonly property bool wifiEnabled: NetworkManager.wifiEnabled
-  readonly property int networkStrength: NetworkManager.active ? NetworkManager.active.strength : 0
+  property int networkStrength: NetworkManager.active ? NetworkManager.active.strength : 0
   property string networkIcon: {
     (networkStrength > 90) ? "100" : (networkStrength > 66) ? "66" : (networkStrength > 33) ? "33" : "0";
   }
@@ -29,5 +31,11 @@ Item {
       centerIn: parent
     }
     transform: Translate {y:-4}
+    layer.enabled: true
+    layer.samples: 16
+    layer.effect: MultiEffect {
+      colorization: 1
+      colorizationColor: root.color
+    }
   }
 }

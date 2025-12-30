@@ -10,6 +10,10 @@ Control {
     property real lightScale: 1.2
     property real hoverScale: lightScale
     property real _actualScale: lightScale
+    property real _rimStrength: 0.4
+    property var _lightDir: Qt.point(-1, -0.2)
+    property bool _glassShader: false
+    property var _glassSource: null
     property bool showBox: false
     property bool focused: false
     property var actionClose: () => {}
@@ -47,11 +51,27 @@ Control {
             root.state = root.focused ? "focused" : "unfocused"
             root._actualScale = root.lightScale
         }
-        BoxGlass {
+        Loader {
             anchors.fill: parent
-            rimStrength: 0.4
-            radius: Infinity
-            visible: showBox
+            active: root._glassShader
+            sourceComponent: GlassBox {
+                rimStrength: root._rimStrength
+                source: root._glassSource
+                radius: Math.max(parent.width, parent.height)/2
+                lightDir: root._lightDir
+                visible: showBox
+            }
+        }
+        Loader {
+            anchors.fill: parent
+            active: !root._glassShader
+            sourceComponent: BoxGlass {
+                rimStrength: root._rimStrength
+                radius: Math.max(parent.width, parent.height)/2
+                color: "transparent"
+                lightDir: root._lightDir
+                visible: showBox
+            }
         }
         Row {
             id: layout

@@ -116,10 +116,10 @@ Item {
                             parent.hovered = false
                         }
                         onClicked: {
-                            if (modelData.active) {
+                            if ((modelData?.active || false)) {
                                 NetworkManager.disconnectFromNetwork()
                             } else {
-                                NetworkManager.connectToNetwork(modelData.ssid, "")
+                                NetworkManager.connectToNetwork((modelData?.ssid || ""), "")
                             }
                         }
                     }
@@ -140,7 +140,7 @@ Item {
                                 width: 30
                                 height: 30
                                 radius: 100
-                                color: modelData.active ? AccentColor.color : "#20ffffff"
+                                color: (modelData?.active || false) ? AccentColor.color : "#20ffffff"
                                 CFVI {
                                     anchors.centerIn: parent
                                     property string wfIcon: "wifi/nm-signal-100-symbolic.svg"
@@ -149,12 +149,12 @@ Item {
                                         x: 1
                                         y: -2
                                     }
-                                    color: modelData.active ? AccentColor.textColor : "#ffffff"
+                                    color: (modelData?.active || false) ? AccentColor.textColor : "#ffffff"
                                     size: 25
                                 }
                             }
                             CFText {
-                                text: modelData.ssid
+                                text: (modelData?.ssid || Translation.tr("Unknown Network"))
                                 font.pixelSize: 14
                                 color: "#ffffff"
                             }
@@ -257,7 +257,7 @@ Item {
                                 parent.hovered = false
                             }
                             onClicked: {
-                                if (modelData.active) {
+                                if ((modelData?.active || false)) {
                                     NetworkManager.disconnectFromNetwork()
                                 } else {
                                     listViewUnknown.passwordInterface = index
@@ -282,7 +282,7 @@ Item {
                                     width: 30
                                     height: 30
                                     radius: 100
-                                    color: modelData.active ? AccentColor.color : "#20ffffff"
+                                    color: (modelData?.active || false) ? AccentColor.color : "#20ffffff"
                                     CFVI {
                                         anchors.centerIn: parent
                                         property string wfIcon: "wifi/nm-signal-100-symbolic.svg"
@@ -291,12 +291,12 @@ Item {
                                             x: 1
                                             y: -2
                                         }
-                                        color: modelData.active ? AccentColor.textColor : "#ffffff"
+                                        color: (modelData?.active || false) ? AccentColor.textColor : "#ffffff"
                                         size: 25
                                     }
                                 }
                                 CFText {
-                                    text: modelData.ssid
+                                    text: (modelData?.ssid || Translation.tr("Unknown Network"))
                                     font.pixelSize: 14
                                     color: "#ffffff"
                                 }
@@ -333,7 +333,7 @@ Item {
                                 visible: opacity != 0
                                 Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
                                 onAccepted: {
-                                    NetworkManager.connectToNetwork(modelData.ssid, wfPasswordUnknown.text)
+                                    NetworkManager.connectToNetwork((modelData?.ssid || ""), wfPasswordUnknown.text)
                                     wfPasswordUnknown.text = ""
                                     listViewUnknown.passwordInterface = -1
                                 }
@@ -354,7 +354,7 @@ Item {
                                 Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 
                                 onClicked: {
-                                    NetworkManager.connectToNetwork(modelData.ssid, wfPasswordUnknown.text)
+                                    NetworkManager.connectToNetwork((modelData?.ssid || ""), wfPasswordUnknown.text)
                                     wfPasswordUnknown.text = ""
                                     listViewUnknown.passwordInterface = -1
                                 }
@@ -375,10 +375,11 @@ Item {
             color: "#10ffffff"
         }
 
-        CFText {
+        CFButton {
             text: Translation.tr("Wi-Fi Settings...")
             font.pixelSize: 14
             font.weight: 500
+            background: null
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.top: separatorBottom2.bottom
