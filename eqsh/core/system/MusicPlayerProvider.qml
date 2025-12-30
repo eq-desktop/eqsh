@@ -10,19 +10,19 @@ Singleton {
     id: mpris
     property var players: Mpris.players.values
     property var activePlayer: mpris.players[mpris.players.length - 1] || null
-    property string title: mpris.activePlayer?.trackTitle ?? Translation.tr("Not Playing")
-    property string artist: mpris.activePlayer?.trackArtist ?? ""
-    property string album: mpris.activePlayer?.trackAlbum ?? ""
-    property url thumbnail: mpris.activePlayer?.trackArtUrl ?? ""
-    property bool isPlaying: mpris.activePlayer?.isPlaying ?? false
-    property int duration: mpris.activePlayer?.length ?? 0
-    property int position: mpris.activePlayer?.position ?? 0
+    property string title: mpris.activePlayer?.trackTitle || Translation.tr("Not Playing")
+    property string artist: mpris.activePlayer?.trackArtist || ""
+    property string album: mpris.activePlayer?.trackAlbum || ""
+    property url thumbnail: mpris.activePlayer?.trackArtUrl || ""
+    property bool isPlaying: mpris.activePlayer?.isPlaying || false
+    property int duration: mpris.activePlayer?.length || 0
+    property int position: mpris.activePlayer?.position || 0
     Timer {
         interval: 1000
         repeat: true
         running: true
         onTriggered: {
-            mpris.position = mpris.activePlayer?.position ?? 0
+            mpris.position = mpris.activePlayer?.position || 0
         }
     }
     property bool available: false
