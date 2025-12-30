@@ -28,6 +28,7 @@
     <td><a href="https://github.com/eq-desktop/eqSh/releases/latest">Download</a></td>
     <td><a href="#install-guide">Install Guide</a></td>
     <td><a href="https://github.com/eq-desktop/eqSh/issues">Issues</a></td>
+	<td><a href="https://eqsh-wiki.github.io/">Wiki</a></td>
   </tr>
 </table>
 
@@ -61,6 +62,8 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 ---
 
 ## 🚀 Quickstart
+
+<a href="https://eqsh-wiki.github.io/">Wiki</a>
 
 <a name="install-guide">Install Guide</a>
 
@@ -254,7 +257,7 @@ EqSh is designed to be used with a keyboard, which is why it has a lot of action
 
 ## 📖 Documentation
 
-👉 Full docs & guides: [Wiki](https://github.com/eq-desktop/eqSh/wiki)
+👉 Full docs & guides: [Wiki](https://eqsh-wiki.github.io/)
 
 ---
 
