@@ -63,7 +63,7 @@ Item {
 	component Account: JsonObject {
 		property string activationKey: "060-XXX-YYY-ZZZ-000"
 		property string serialNumber: "FHGOU82OWLDG"
-		property string name: "First Lastname"
+		property string name: ""
 		property string deviceName: "MacBook Air"
 		property string deviceDescription: "Retina, 13\", 2019"
 		property bool   firstTimeRunning: true
