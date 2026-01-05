@@ -38,13 +38,16 @@ a polished, Apple-inspired Linux environment for both **superusers** and **every
 
 It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub, lockscreen, wallpaper engine, tray, and more** — all in one.
 
----
+
+<figure>
 
 ## Preview
 
 ![Preview of eqShs About Menu and Control Center](Media/preview7.png)
 
 ![Preview of eqSh Lockscreen with Password](Media/preview6.png)
+
+</figure>
 
 <details>
 <summary>
