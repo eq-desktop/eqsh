@@ -68,7 +68,7 @@ Scope {
   function takeScreenshot() {
     root.takingScreenshot = true
     Runtime.showScrn = false
-    console.info(takeScreenshotProcess.command)
+    Logger.d("Screenshot", takeScreenshotProcess.command)
   }
 
   Process {
@@ -83,7 +83,7 @@ Scope {
       root.takingScreenshot = false
     }
     stderr: StdioCollector {
-      onStreamFinished: if (text != "") console.error("taking screenshot:", text)
+      onStreamFinished: if (text != "") Logger.error("Screenshot", "taking screenshot:", text);
     }
   }
 
@@ -96,11 +96,11 @@ Scope {
     ]
     running: false
     onExited: {
-      console.info("Screenshot taken")
-      root.takingScreenshot = false
+      Logger.info("Screenshot", "Screenshot taken");
+      root.takingScreenshot = false;
     }
     stderr: StdioCollector {
-      onStreamFinished: if (text != "") console.error("taking screenshot:", text)
+      onStreamFinished: if (text != "") Logger.error("Screenshot", "taking screenshot:", text);
     }
   }
   onRequestScreenshot: (quick) => {

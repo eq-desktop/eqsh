@@ -40,6 +40,9 @@ Scope {
                 root.hlVal = "H: " + json.highTemp + "°" + Config.widgets.tempUnit + ", L: " + json.lowTemp + "°" + Config.widgets.tempUnit;
             }
         }
+        stderr: StdioCollector {
+            onStreamFinished: if (text != "") Logger.e("AI", "weather fetch error:", text);
+        }
     }
 
     FileView {
@@ -223,7 +226,7 @@ Scope {
                     Eqsh Version: ${Config.version} / ${Config.versionPretty}
                     `)
                     onAccepted: {
-                        console.info("Request AI Answer To: " + inputText.text)
+                        Logger.d("AI", "Request AI answer to: " + inputText.text)
                         acceptAnim.start()
                         loadingAnim2.start()
                         input.error = false
@@ -242,6 +245,7 @@ Scope {
                                     if (result) {
                                         switch (result.action) {
                                             case "run_command":
+                                                Logger.d("AI", "Request to run command: " + result.command);
                                                 result.command = result.command.replace(/"/g, '\\"').replace(/'/g, "\\'")
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + result.command])
                                                 Runtime.run("modal", {
@@ -270,26 +274,30 @@ Scope {
                                                 })
                                                 break;
                                             case "lock_screen":
+                                                Logger.d("AI", "Locking screen per Sigrid request")
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Lock Screen"])
                                                 Runtime.run("lockscreen")
                                             case "open_settings":
+                                                Logger.d("AI", "Opening Settings per Sigrid request")
                                                 panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
                                                 Runtime.settingsOpen = true
                                                 break;
                                             default:
-                                                console.error("Unknown action: " + result.action)
+                                                Logger.e("AI", "Unknown action: " + result.action)
                                         }
 
                                     }
                                 } catch (e) {
+                                    Logger.d("AI", "Response: " + response.candidates[0].content.parts[0].text)
                                     panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
                                 }
                             } else {
+                                Logger.e("AI", "Error getting AI response")
                                 panelWindow.state = "error"
                                 wiggleAnim.start()
                                 input.error = true
                             }
-                        }, additional)
+                        }, additional, Logger)
                         inputText.text = ""
                     }
                 }

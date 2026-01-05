@@ -33,12 +33,12 @@ PopupWindow {
 
   function showAt(item, x, y) {
     if (!item) {
-      Logger.warn("TrayMenu", "anchorItem is undefined, won't show menu.")
+      Logger.d("TrayMenu", "anchorItem is undefined, won't show menu.")
       return
     }
 
     if (!opener.children || opener.children.values.length === 0) {
-      //Logger.warn("TrayMenu", "Menu not ready, delaying show")
+      Logger.d("TrayMenu", "Menu not ready, delaying show")
       Qt.callLater(() => showAt(item, x, y))
       return
     }
