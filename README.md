@@ -5,18 +5,17 @@
 
 ---
 
+
 <p align="center">
 	<img src="./Media/logo.svg" alt="eqSh Logo" width="160"/>
 </p>
+<div align="center">
 
-<table align="center">
-  <tr>
-    <td><a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache-2.0"></a></td>
-    <td><a href="https://github.com/eq-desktop/eqSh/stargazers"><img src="https://img.shields.io/github/stars/eq-desktop/eqSh?style=flat" alt="GitHub stars"></a></td>
-    <td><a href="https://github.com/eq-desktop/eqSh/issues"><img src="https://img.shields.io/github/issues/eq-desktop/eqSh" alt="GitHub issues"></a></td>
-    <td><a href="https://github.com/eq-desktop/eqSh"><img src="https://img.shields.io/github/last-commit/eq-desktop/eqSh" alt="GitHub last commit"></a></td>
-  </tr>
-</table>
+[![GitHub stars](https://img.shields.io/github/stars/eq-desktop/eqsh?style=for-the-badge&logo=github&color=FFB686&logoColor=D9E0EE&labelColor=1e1e1e)](https://github.com/eq-desktop/eqsh/stargazers)
+[![Hyprland](https://img.shields.io/badge/Made%20for-Hyprland-blue?style=for-the-badge&logo=linux&logoColor=D9E0EE&labelColor=1e1e1e&color=58E1FF)](https://hyprland.org/)
+[![Maintained](https://img.shields.io/badge/Maintained-Yes-blue?style=for-the-badge&logo=linux&logoColor=D9E0EE&labelColor=1e1e1e&color=2369FF)]()
+[![LICENSE](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge&labelColor=1e1e1e&color=EEE1FF)](https://hyprland.org/)
+</div>
 
 
 ![eqSh Banner](./Media/banner.png)  
@@ -25,8 +24,7 @@
 
 <table align="center">
   <tr>
-    <td><a href="https://github.com/eq-desktop/eqSh/releases/latest">Download</a></td>
-    <td><a href="#install-guide">Install Guide</a></td>
+    <td><a href="https://eqsh-wiki.github.io/install">Install</a></td>
     <td><a href="https://github.com/eq-desktop/eqSh/issues">Issues</a></td>
 	<td><a href="https://eqsh-wiki.github.io/">Wiki</a></td>
   </tr>
@@ -44,6 +42,15 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 
 ## Preview
 
+![Preview of eqShs About Menu and Control Center](Media/preview7.png)
+
+![Preview of eqSh Lockscreen with Password](Media/preview6.png)
+
+<details>
+<summary>
+<b>More Screenshots</b>
+</summary>
+
 ![Preview of eqSh](Media/preview.png)
 
 ![Preview of eqSh Settings app](Media/preview2.png)
@@ -54,16 +61,13 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 
 ![Preview of eqSh Notch App](Media/preview5.png)
 
-![Preview of eqSh Lockscreen with Password](Media/preview6.png)
-
-![Preview of eqShs About Menu and Control Center](Media/preview7.png)
-
+</details>
 
 ---
 
 ## 🚀 Quickstart
 
-<a href="https://eqsh-wiki.github.io/">Wiki</a>
+<h3><a href="https://eqsh-wiki.github.io/"><b>Wiki</b></a></h3>
 
 <a name="install-guide">Install Guide</a>
 
@@ -265,10 +269,3 @@ EqSh is designed to be used with a keyboard, which is why it has a lot of action
 
 This project is released under the **APACHE-2.0 License**.  
 You are free to use, modify, and distribute — but all changes must remain open-source.
-
----
-
-## 🌌 eqSh = Linux + Elegance
-
-Stop juggling multiple apps.  
-Let them **rely on eqSh**.

@@ -163,7 +163,7 @@ StackLayout {
                             id: sections
                             model: [
                                 ["about", "About", 1],
-                                ["softwareupdate", "Softwareupdate", 2],
+                                ["softwareupdate", "Software Update", 2],
                                 ["storage", "Storage", 3],
                                 ["airdrop", "Airdrop", 4],
                                 ["autostart", "Autostart", 5]
@@ -236,7 +236,7 @@ StackLayout {
                                 ["share", "Share", 9],
                                 ["timemachine", "Time Machine", 10],
                                 ["restore", "Restore", 11],
-                                ["startvolume", "Startvolume", 12],
+                                ["startvolume", "Start Volume", 12],
                             ]
                             delegate: SectionItem { model: sections4.model }
                         }
