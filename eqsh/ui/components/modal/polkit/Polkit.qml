@@ -25,7 +25,7 @@ Scope {
             }
         }
         onAuthenticationRequestStarted: () => {
-            console.log("Auth request started")
+            Logger.d("Polkit", "Auth request started")
             Runtime.run("modal", {
                 appName: "Aureli",
                 title: Translation.tr("Authentication Required"),

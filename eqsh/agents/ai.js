@@ -12,7 +12,7 @@ function callO(promptText, callback) {
   })
 }
 
-function call(promptText, apiKey, model, options = {}, callback, additionalData) {
+function call(promptText, apiKey, model, options = {}, callback, additionalData, Logger) {
   const type = options.type || "google"; // "google" | "openai" | "other"
 
   let url, body, headers;
@@ -63,7 +63,7 @@ function call(promptText, apiKey, model, options = {}, callback, additionalData)
       "Authorization": `Bearer ${apiKey}`
     };
   } else {
-    console.error("Unsupported AI type");
+    Logger.e("AI", "Unsupported AI type");
     return;
   }
 
@@ -77,10 +77,10 @@ function call(promptText, apiKey, model, options = {}, callback, additionalData)
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
-        console.info("AI successfully generated");
+        Logger.i("AI", "successfully generated");
         callback(true, response);
       } else {
-        console.error("AI failed to generate:", xhr.responseText);
+        Logger.e("AI", "failed to generate:", xhr.responseText);
         callback(false, xhr.responseText);
       }
     }

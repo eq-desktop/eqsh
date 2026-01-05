@@ -1,6 +1,7 @@
 import Quickshell
 import QtQuick
 import qs.core.foundation
+import qs
 import Quickshell.Io
 
 Item {
@@ -32,6 +33,9 @@ Item {
         watchChanges: true
         onFileChanged: reload()
 		onAdapterUpdated: writeAdapter()
+		onLoaded: {
+			Logger.i("eRCS", "Configuration loaded from", path)
+		}
 		JsonAdapter {
 			id: adapter
 			property Notch          notch: Notch {}

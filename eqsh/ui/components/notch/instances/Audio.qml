@@ -97,59 +97,6 @@ NotchApplication {
                 ]
             }
         }
-        Item {
-            anchors {
-                right: parent.right
-                rightMargin: 4
-                topMargin: 4
-                top: parent.top
-            }
-            width: 20
-            height: 20
-            transform: Scale {
-                origin.x: 0
-                xScale: 1
-            }
-            Repeater {
-                id: barRepeater
-                model: 3
-
-                Rectangle {
-                    id: bar
-                    width: 2
-                    radius: 2
-                    anchors {
-                        left: index === 0 ? parent.left : barRepeater.itemAt(index - 1).right
-                        verticalCenter: parent.verticalCenter
-                    }
-                    color: quantizer?.colors[quantizer.colors.length - 1] || "#ffffff"
-
-                    // Animate the height like an equalizer bar
-                    property real baseHeight: 5
-                    property real maxBoost: 5
-
-                    SequentialAnimation on height {
-                        loops: Animation.Infinite
-
-                        // small offset so each bar moves differently
-                        PauseAnimation { duration: index * 120 }
-
-                        NumberAnimation {
-                            from: baseHeight
-                            to: baseHeight + maxBoost
-                            duration: 300
-                            easing.type: Easing.InOutQuad
-                        }
-                        NumberAnimation {
-                            from: baseHeight + maxBoost
-                            to: baseHeight
-                            duration: 300
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
-                }
-            }
-        }
     }
 
     active: Item {
@@ -194,56 +141,6 @@ NotchApplication {
             text: MusicPlayerProvider.title
             elide: Text.ElideRight
             font.weight: 600
-        }
-        Item {
-            anchors {
-                left: title.right
-                leftMargin: -20
-                top: title.top
-            }
-            width: 20
-            height: 20
-            Repeater {
-                id: barRepeater
-                model: 3
-                property real baseHeight: 5
-                property real maxBoost: 5
-
-                Rectangle {
-                    id: bar
-                    width: 2
-                    radius: 2
-                    anchors {
-                        left: index === 0 ? parent.left : barRepeater.itemAt(index - 1).right
-                        verticalCenter: parent.verticalCenter
-                    }
-                    color: quantizer?.colors[quantizer.colors.length - 1] || "#ffffff"
-
-                    // Animate the height like an equalizer bar
-                    property real baseHeight: 5
-                    property real maxBoost: 5
-
-                    SequentialAnimation on height {
-                        loops: Animation.Infinite
-
-                        // small offset so each bar moves differently
-                        PauseAnimation { duration: index * 120 }
-
-                        NumberAnimation {
-                            from: baseHeight
-                            to: baseHeight + maxBoost
-                            duration: 300
-                            easing.type: Easing.InOutQuad
-                        }
-                        NumberAnimation {
-                            from: baseHeight + maxBoost
-                            to: baseHeight
-                            duration: 300
-                            easing.type: Easing.InOutQuad
-                        }
-                    }
-                }
-            }
         }
         Text {
             id: artist

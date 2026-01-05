@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Widgets
+import qs
 import qs.config
 import qs.core.system
 import qs.ui.controls.providers
@@ -53,6 +54,7 @@ Item {
     Behavior on height { NumberAnimation { duration: properties.animDuration; easing.type: Easing.OutBack; easing.overshoot: 1 } }
 
     anchors.fill: parent
+    anchors.top: parent.top
 
     Rectangle {
         id: notchBg
@@ -192,6 +194,7 @@ Item {
         if (immortal) return; 
         if (meta.resizeExit) root.setSizeDefault()
         notchState = "closed"
+        Logger.d("NotchApplication", "Closing notch application", root.meta.id)
         closing()
         closeTimer.running = true
     }
@@ -200,6 +203,16 @@ Item {
 
     Connections {
         target: notch
+        function onActivateInstance() {
+            if (root.isFocused) {
+                root.activateInstance();
+            }
+        }
+        function onInformInstance() {
+            if (root.isFocused) {
+                root.setInformative();
+            }
+        }
         function onFocusedInstance(instance) {
             if (instance.meta.id !== root.meta.id && root.details.appType === "indicator") {
                 root.closeMe()
@@ -225,7 +238,7 @@ Item {
         if (root.meta.id !== null && !notch.idIsRunning(root.meta.id)) {
             if (immortal) return;
             shadowOpacity = 0
-            console.info("Killed", root.meta.id)
+            Logger.d("NotchApplication", "Exited gracefully", root.meta.id)
             root.destroy()
         }
     }

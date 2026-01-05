@@ -176,7 +176,6 @@ Singleton {
             }
 
             root.notify(newNotifObject);
-            // console.info(notifToString(newNotifObject));
             notifFileView.setText(stringifyList(root.list));
         }
     }
@@ -237,7 +236,7 @@ Singleton {
             action.invoke()
         }
         else {
-			console.info("Notification not found in server: " + id)
+			Logger.i("Notification", "not found in server: " + id)
 		}
         root.discardNotification(id);
     }
@@ -255,7 +254,7 @@ Singleton {
     }
 
     function dummyInit() {
-		console.info("Init Notification Server")
+		Logger.i("Notification", "Init Notification Server")
 	}
 
     FileView {
@@ -282,17 +281,17 @@ Singleton {
                 maxId = Math.max(maxId, notif.id)
             })
 
-            console.info("[Notifications] File loaded")
+            Logger.i("Notification", "File loaded")
             root.idOffset = maxId
             root.initDone()
         }
         onLoadFailed: (error) => {
             if(error == FileViewError.FileNotFound) {
-                console.info("[Notifications] File not found, creating new file.")
+                Logger.i("Notification", "File not found, creating new file.")
                 root.list = []
                 notifFileView.setText(stringifyList(root.list));
             } else {
-                console.info("[Notifications] Error loading file: " + error)
+                Logger.i("Notification", "Error loading file: " + error)
             }
         }
     }

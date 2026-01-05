@@ -33,7 +33,7 @@ Singleton {
         if (typeof func === "function") {
             subscribers[name] = func
         } else {
-            console.warn("Global.subscribe: Tried to subscribe non-function:", name)
+            Logger.w("Global::subscribe", "Tried to subscribe non-function:", name)
         }
     }
 
@@ -52,8 +52,11 @@ Singleton {
         if (subscribers[name]) {
             return subscribers[name].apply(this, args)
         } else {
-            console.warn("Global.run: No subscriber found for", name)
+            Logger.w("Global::run", "No subscriber found for", name)
         }
+    }
+    Component.onCompleted: {
+        Quickshell.execDetached(["mkdir", "-p", Directories.runtimeDir]);
     }
     Process {
         command: ["ls", Directories.runtimeDir + "/config.json"]

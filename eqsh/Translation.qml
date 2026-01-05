@@ -68,7 +68,7 @@ Singleton {
                 var jsonData = JSON.parse(textContent);
                 root.translations = jsonData;
             } catch (e) {
-                console.log("[Translation] Failed to load translations:", e);
+                Logger.i("Translation", "Failed to load translations:", e);
                 root.translations = {};
             }
             root.isLoading = false;

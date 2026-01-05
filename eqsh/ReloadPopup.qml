@@ -4,8 +4,8 @@ import Quickshell
 
 Scope {
 	id: root
-	property bool failed;
-	property string errorString;
+	property bool failed
+	property string errorString
 
 	// Connect to the Quickshell global to listen for the reload signals.
 	Connections {

@@ -44,7 +44,7 @@ Scope {
     try {
       parsedActions = JSON.parse(actions)
     } catch (e) {
-      console.warn("Modal: Failed to parse actions:", e)
+      Logger.w("Modal", "Failed to parse actions:", e)
       parsedActions = ([])
     }
   }
@@ -97,7 +97,7 @@ Scope {
 
       BoxGlass {
         anchors.fill: parent
-        color: Config.general.darkMode ? "#20333333" : "#20ffffff"
+        color: Config.general.darkMode ? "#d0000000" : "#20ffffff"
         radius: 30
       }
 
@@ -211,7 +211,7 @@ Scope {
                       }
                     }
                     if (redirected == null) {
-                      console.warn("Modal: callbackRedirect target not found:", modelData.callbackRedirect)
+                      Logger.w("Modal", "callbackRedirect target not found:", modelData.callbackRedirect)
                       return
                     }
                     if (redirected.modelData.callback) {

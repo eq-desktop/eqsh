@@ -102,7 +102,7 @@ Singleton {
             }
         }
         stderr: StdioCollector {
-            onStreamFinished: console.warn("Network connection error:", text)
+            onStreamFinished: Logger.w("Network", "connection error:", text)
         }
     }
 

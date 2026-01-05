@@ -52,6 +52,9 @@ BaseWidget {
                     root.hlVal = "H: " + json.highTemp + "°" + Config.widgets.tempUnit + ", L: " + json.lowTemp + "°" + Config.widgets.tempUnit;
                 }
             }
+            stderr: StdioCollector {
+                onStreamFinished: if (text != "") Logger.e("Dekstop::Widget::BWD2x2", "weather fetch error:", text);
+            }
         }
 
         property string location: "--"

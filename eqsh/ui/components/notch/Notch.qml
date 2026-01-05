@@ -77,6 +77,7 @@ Scope {
   property var lockId: null
 
   signal activateInstance()
+  signal informInstance()
   signal focusedInstance(var instance)
 
   FileView {
@@ -229,9 +230,9 @@ Scope {
         onImplicitWidthChanged: {
           panelWindow.mask.changed();
         }
-        onImplicitHeightChanged: {
+        onHeightChanged: {
           panelWindow.mask.changed();
-          Runtime.notchHeight = implicitHeight;
+          Runtime.notchHeight = height;
         }
 
         //MouseArea {
@@ -256,6 +257,7 @@ Scope {
         Connections {
           target: root
           function onNewNotchInstance(code, name, id) {
+            Logger.d("Notch", "New notch instance created", id, "of name," + name)
             let obj = Qt.createQmlObject(code, notchBg)
             obj.screen = panelWindow
             obj.meta.inCreation = true
@@ -265,7 +267,7 @@ Scope {
             obj.meta.inCreation = false
             const instanceVersion = obj.details.version
             if (!root.details.supportedVersions.includes(instanceVersion)) {
-              console.warn("The notch app version (" + instanceVersion + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
+              Logger.w("Notch", "The notch app version (" + instanceVersion + ") is not supported. Supported versions are: " + root.details.supportedVersions.join(", ") + ". The current version is: " + root.details.currentVersion + ". The notch app might not work as expected.")
             }
           }
         }
@@ -335,21 +337,29 @@ Scope {
     name: "toggleNotchInfo"
     description: "Toggle notch info panel"
     onPressed: {
-      return
+      root.informInstance();
     }
   }
   IpcHandler {
     target: "notch"
     function instance(code: string) {
+      Logger.d("IPC::Notch", "Notch instance requested");
       root.notchInstance(code);
     }
     function activateInstance() {
+      Logger.d("IPC::Notch", "Activating notch instance", root.meta.id);
       root.activateInstance();
     }
+    function informInstance() {
+      Logger.d("IPC::Notch", "Informing notch instance", root.meta.id);
+      root.informInstance();
+    }
     function closeInstance() {
+      Logger.d("IPC::Notch", "Closing notch instance", root.meta.id);
       root.closeNotchInstanceFocused();
     }
     function closeAllInstances() {
+      Logger.d("IPC::Notch", "Closing all notch instances");
       root.closeAllNotchInstances();
     }
   }
