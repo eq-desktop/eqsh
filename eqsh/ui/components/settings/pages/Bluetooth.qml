@@ -19,6 +19,6 @@ import Quickshell.Widgets
 ScrollView {
     ColumnLayout {
         anchors.fill: parent
-        CFText { text: Translation.tr("NOTIFICATIONS_NOT_AVAILABLE (ERR: 3: WIP)") }
+        CFText { text: Translation.tr("BT_NOT_AVAILABLE (ERR: 3: WIP)") }
     }
 }

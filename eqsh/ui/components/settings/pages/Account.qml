@@ -20,62 +20,91 @@ ScrollView {
     Rectangle {
         anchors.fill: parent
         color: "transparent"
-    }  
+    }
     ColumnLayout {
         anchors.centerIn: parent
         spacing: 20
         width: parent.width
 
-        // Profile Picture
-        ClippingRectangle {
-            id: imageContainer
+        Item {
             width: 120
             height: 120
-            radius: 99
-            color: "transparent"
-            clip: true
             Layout.alignment: Qt.AlignHCenter
-            FileDialog {
-                id: fileDialog
-                selectedFile: Config.account.avatarPath
-                nameFilters: ["Images (*.jpg *.jpeg *.png)", "All files (*)"]
-                onSelectedFilesChanged: {
-                    Config.account.avatarPath = selectedFiles[0]
-                    profileImage.source = Config.account.avatarPath
-                }
+            Blur {
+                source: imageContainer
+                anchors.fill: imageContainer
+                anchors.margins: 0
+                blur: 1
+                autoPaddingEnabled: true
             }
-            MouseArea {
-                id: editImageMouse
-                anchors.fill: parent
-                onClicked: {
-                    fileDialog.open()
-                }
-                hoverEnabled: true
-                Image {
-                    id: profileImage
-                    anchors.fill: parent
-                    source: Config.account.avatarPath
-                    fillMode: Image.PreserveAspectCrop
-                }
-                RectangularShadow {
-                    anchors.fill: editImage
-                    color: "#ffffff"
-                    radius: 20
-                    blur: 15
-                    spread: 10
-                    opacity: editImageMouse.containsMouse ? 1 : 0
-                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
-                }
-                Text {
-                    id: editImage
-                    anchors {
-                        bottom: parent.bottom
-                        bottomMargin: 15
-                        horizontalCenter: parent.horizontalCenter
+
+            // Profile Picture
+            ClippingRectangle {
+                id: imageContainer
+                width: 120
+                height: 120
+                radius: 99
+                color: "transparent"
+                clip: true
+                Layout.alignment: Qt.AlignHCenter
+                FileDialog {
+                    id: fileDialog
+                    selectedFile: Config.account.avatarPath
+                    nameFilters: ["Images (*.jpg *.jpeg *.png)", "All files (*)"]
+                    onSelectedFilesChanged: {
+                        Config.account.avatarPath = selectedFiles[0]
+                        profileImage.source = Config.account.avatarPath
                     }
-                    opacity: editImageMouse.containsMouse ? 1 : 0
-                    Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
-                    text: Translation.tr("Edit")
+                }
+                MouseArea {
+                    id: editImageMouse
+                    anchors.fill: parent
+                    onClicked: {
+                        fileDialog.open()
+                    }
+                    hoverEnabled: true
+                    Item {
+                        id: profilePic
+                        anchors.fill: parent
+                        CFVI {
+                            id: imageS
+                            anchors.fill: parent
+                            source: Config.account.avatarPath == "" ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/user.svg") : ""
+                            fillMode: Image.PreserveAspectCrop
+                        }
+                        Image {
+                            id: profileImage
+                            anchors.fill: parent
+                            source: Config.account.avatarPath == "" ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/user.svg") : Config.account.avatarPath
+                            fillMode: Image.PreserveAspectCrop
+                            onStatusChanged: {
+                                if (profileImage.status == Image.Error) {
+                                    imageS.source = Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/user.svg")
+                                    profileImage.source = ""
+                                }
+                            }
+                        }
+                    }
+                    RectangularShadow {
+                        anchors.fill: editImage
+                        color: "#ffffff"
+                        radius: 20
+                        blur: 15
+                        spread: 10
+                        opacity: editImageMouse.containsMouse ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
+                    }
+                    Text {
+                        id: editImage
+                        anchors {
+                            bottom: parent.bottom
+                            bottomMargin: 15
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                        opacity: editImageMouse.containsMouse ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad} }
+                        text: Translation.tr("Edit")
+                    }
                 }
             }
         }

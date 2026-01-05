@@ -36,7 +36,7 @@ ScrollView {
                     top: parent.top
                     topMargin: 10
                     left: parent.left
-                    leftMargin: 30
+                    leftMargin: 20
                 }
                 checked: Config.bar.enable
                 onClicked: {

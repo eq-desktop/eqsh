@@ -28,6 +28,8 @@ FloatingWindow {
         Runtime.settingsOpen = false
     }
 
+    property var history: []
+
     IpcHandler {
         id: ipcHandler
         target: "settings"
@@ -130,7 +132,7 @@ FloatingWindow {
                     z: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
-                    anchors.topMargin: 20
+                    anchors.topMargin: 50
                     UITextField {
                         id: searchField
                         width: 200
@@ -157,6 +159,33 @@ FloatingWindow {
                     }
                 }
 
+                Rectangle {
+                    anchors.fill: windowControls
+                    color: "#a0333333"
+                    radius: Infinity
+                    visible: Config.general.darkMode
+                }
+
+                UIControls {
+                    id: windowControls
+                    showBox: Config.general.darkMode
+                    focused: true
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.topMargin: 10
+                    anchors.leftMargin: 10
+                    _rimStrength: 0.4
+                    _lightDir: Qt.point(1, -0.2)
+                    _glassShader: false
+                    actionClose: () => {
+                        Runtime.settingsOpen = false
+                    }
+                    actionMaximize: () => {
+                        settingsApp.implicitHeight = screen.height-Config.bar.height
+                    }
+                    active: [true, false, true]
+                }
+
                 // Sidebar
                 ListView {
                     id: sidebar
@@ -164,9 +193,14 @@ FloatingWindow {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: searchBar.bottom
                     anchors.topMargin: 20
-                    height: parent.height - 75
+                    height: parent.height - 110
                     model: [
                         "_Account",
+                        "",
+                        Translation.tr("Wi-Fi"),
+                        Translation.tr("Bluetooth"),
+                        Translation.tr("Network"),
+                        Translation.tr("Energy"),
                         "",
                         Translation.tr("General"),
                         Translation.tr("Appearance"),
@@ -181,8 +215,11 @@ FloatingWindow {
                         Translation.tr("Osd")
                     ]
                     component SidebarItem: Button {
+                        required property var modelData
+                        required property int index
+                        id: sidebarItem
                         text: ""
-                        height: 35
+                        height: modelData == "" ? 20 : 35
                         anchors.topMargin: 20
                         background: Rectangle {
                             anchors.fill: parent
@@ -203,6 +240,12 @@ FloatingWindow {
 
                                 property list<string> svgs: [
                                     "",
+                                    "",
+                                    "wifi",
+                                    "bluetooth",
+                                    "network",
+                                    "energy",
+                                    "",
                                     "general",
                                     "appearance",
                                     "menu bar",
@@ -216,15 +259,34 @@ FloatingWindow {
                                     "osd"
                                 ]
 
-                                Image {
+                                CFVI {
+                                    id: svgS
                                     anchors.fill: parent
-                                    source: modelData == "" ? "" : modelData == "_Account" ? Config.account.avatarPath : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/settings/" + imageContainer.svgs[index-1] + ".svg")
+                                    source: sidebarItem.modelData == "" ? "" : (modelData == "_Account" ? "" : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/settings/" + imageContainer.svgs[sidebarItem.index] + ".svg"))
                                     fillMode: Image.PreserveAspectCrop
+                                    colorized: false
+                                    color: Config.general.darkMode ? "#fff" : "#333"
+                                }
+
+                                CFI {
+                                    id: imageS
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectCrop
+                                    colorized: false
+                                    source: modelData == "_Account" ? Config.account.avatarPath : ""
+                                    onStatusChanged: {
+                                        if (imageS.status == Image.Error) {
+                                            svgS.source = Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/user.svg")
+                                            svgS.colorized = true
+                                        } else {
+                                            svgS.colorized = false
+                                        }
+                                    }
                                 }
                             }
                             Text {
                                 anchors.fill: parent
-                                text: modelData == "_Account" ? Config.account.name : modelData
+                                text: modelData == "_Account" ? Config.account.name == "" ? Translation.tr("Sign in") : Config.account.name  : modelData
                                 color: Config.general.darkMode ? (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#fff") : (contentView.currentIndex == index && modelData != "_Account" ? AccentColor.textColor : "#000")
                                 font.pixelSize: 14
                                 font.weight: modelData == "_Account" ? 500 : Font.Normal
@@ -235,7 +297,7 @@ FloatingWindow {
                             Text {
                                 anchors.fill: parent
                                 visible: modelData == "_Account"
-                                text: Translation.tr("Equora Account")
+                                text: Config.account.name == "" ? Translation.tr("with your Equora Account") : Translation.tr("Equora Account")
                                 color: Config.general.darkMode ? "#ddd" :"#000"
                                 font.pixelSize: 12
                                 font.weight: 400
@@ -246,7 +308,7 @@ FloatingWindow {
                         }
                         onClicked: {
                             if (modelData == "") return
-                            contentView.currentIndex = index
+                            contentView.setIndex(index)
                         }
                     }
                     delegate: SidebarItem {
@@ -306,6 +368,12 @@ FloatingWindow {
                             colorization: 1
                             colorizationColor: Config.general.darkMode ? "#fff" : "#333"
                         }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                contentView.openHistory()
+                            }
+                        }
                     }
                     VectorImage {
                         source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/chevron-right-bold.svg")
@@ -356,12 +424,37 @@ FloatingWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 currentIndex: 0
+                property bool fromHistory: false
 
-                Account {}
-                // Space
-                ScrollView {}
-                General {}
-                Appearance {}
+                signal pageChanged(var index)
+
+                function setIndex(index) {
+                    settingsApp.history.push({ index: contentView.currentIndex })
+                    contentView.currentIndex = index
+                }
+
+                function openHistory() {
+                    if (settingsApp.history.length == 0) return
+                    contentView.fromHistory = true
+                    let lastHist = settingsApp.history.pop()
+                    contentView.currentIndex = lastHist.index
+                    pageChanged(lastHist)
+                }
+
+                function openSettings(page) {
+                    Runtime.settingsOpen = true
+                    contentView.setIndex(page)
+                }
+
+                Account { property var history: settingsApp.history; property var contentViewO: contentView }
+                Space { property var history: settingsApp.history; property var contentViewO: contentView }
+                Wifi { property var history: settingsApp.history; property var contentViewO: contentView }
+                Bluetooth { property var history: settingsApp.history; property var contentViewO: contentView }
+                Network { property var history: settingsApp.history; property var contentViewO: contentView }
+                Energy { property var history: settingsApp.history; property var contentViewO: contentView }
+                Space { property var history: settingsApp.history; property var contentViewO: contentView }
+                General { property var history: settingsApp.history; property var contentViewO: contentView }
+                Appearance { property var history: settingsApp.history; property var contentViewO: contentView }
 
                 MenuBar {}
 
@@ -369,12 +462,7 @@ FloatingWindow {
                 Wallpaper {}
 
                 // Notifications
-                ScrollView {
-                    ColumnLayout {
-                        anchors.fill: parent
-                        UILabel { text: Translation.tr("Nothing here yet :(") }
-                    }
-                }
+                Notifications {}
 
                 // Dialogs
                 ScrollView {

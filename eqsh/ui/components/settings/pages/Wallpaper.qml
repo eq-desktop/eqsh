@@ -8,6 +8,7 @@ import QtQuick.Shapes
 import QtQuick.VectorImage
 import Quickshell
 import qs
+import qs.core.foundation
 import qs.ui.components.settings.pages
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
@@ -19,7 +20,7 @@ import Qt.labs.folderlistmodel
 
 ScrollView {
     id: root
-    property string wallpaperFolder: "/home/enviction/.local/share/equora/wallpapers"
+    property string wallpaperFolder: SPPathResolver.strip(Config.wallpaper.folder)
     property string selectedWallpaper: Config.wallpaper.path || ""
     anchors.leftMargin: 10
 
