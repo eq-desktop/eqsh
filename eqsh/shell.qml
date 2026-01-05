@@ -29,9 +29,14 @@ import qs.ui.controls.primitives
 import qs.ui.controls.providers
 import qs.config
 import qs.core.foundation
+import qs.core.system
 
 Scope {
   id: root
+  Component.onCompleted: {
+    Plugins.init()
+    Logger.i("System", "Shell Loading Complete")
+  }
   About {
     id: about
   }
