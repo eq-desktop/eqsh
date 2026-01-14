@@ -188,44 +188,6 @@ Hyprland Config: [Hyprland Config](https://github.com/eq-desktop/hyprland-config
 
 ---
 
-## Configuration
-
-<details>
-<summary>
-<b>1. Keybinds</b>
-</summary>
-
-To assign eqsh actions to keybinds you can use this format
-
-```bash
-bind = mod, key, global, eqsh: action_name
-```
-
-EqSh is designed to be used with a keyboard, which is why it has a lot of actions:
-
-- widgets: Toggles Widget Edit Mode
-- sigrid: Toggles Sigrid AI Assistant
-- launchpad: Toggles Launchpad
-- lock: Locks the screen
-- unlock: Unlocks the screen (Not recommended)
-- toggleNotchActiveInstance: Toggles the Notchs active instance, opening or closing it
-- toggleNotchInfo: Toggles the Notchs info panel (not implemented yet)
-- notificationCenter: Toggles the Notification Center
-- notificationCenterOpen: Opens the Notification Center
-- notificationCenterClose: Closes the Notification Center
-- controlCenterBluetooth: Opens the Bluetooth Menu
-- controlCenter: Opens the Control Center
-- screenshot: Opens the Screenshot Menu
-- screenshotRegion: Opens the Screenshot Region Selector
-- screenshotEntireScreen: Takes a screenshot of the entire screen
-- settings: Opens the Settings
-- spotlight: Opens the Spotlight
-
-
-</details>
-
----
-
 ## ✨ Features
 
 - [x] Top Panel  
@@ -267,6 +229,9 @@ EqSh is designed to be used with a keyboard, which is why it has a lot of action
 👉 Full docs & guides: [Wiki](https://eqsh-wiki.github.io/)
 
 ---
+
+[![Stargazers over time](https://starchart.cc/eq-desktop/eqsh.svg?variant=adaptive)](https://starchart.cc/eq-desktop/eqsh)
+
 
 ## ⚖️ License
 
