@@ -185,7 +185,32 @@ Scope {
           }
         }
       }
-
+      CFRect {
+        id: notchBgBorder
+        anchors {
+          top: parent.top
+          topMargin: inFullscreen ? -(root.height + topMargin + 5) : root.topMargin
+          Behavior on topMargin {
+            NumberAnimation { duration: Config.notch.hideDuration; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
+          left: notchBg.left
+          right: notchBg.right
+          bottom: notchBg.bottom
+          margins: -1.5
+        }
+        scale: 1
+        transform: Translate {
+          x: notchBg.xOffset
+          Behavior on x {
+            NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1 }
+          }
+        }
+        topLeftRadius: Config.notch.islandMode ? Config.notch.radius : 0
+        topRightRadius: Config.notch.islandMode ? Config.notch.radius : 0
+        bottomLeftRadius: Config.notch.radius
+        bottomRightRadius: Config.notch.radius
+        color: "#20ffffff"
+      }
       CFRect {
         id: notchBg
         anchors {

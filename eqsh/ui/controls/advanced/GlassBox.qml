@@ -43,7 +43,7 @@ Item {
         boxPos: box.boxPos
         blurSource: box.blurSource
         boxSize: box.boxSize
-        glassBevel: Math.min(box.glassBevel, boxContainer.smallerVal / 2)
+        requestedGlassBevel: Math.min(box.glassBevel, boxContainer.smallerVal / 2)
         glassMaxRefractionDistance: box.glassMaxRefractionDistance
         glassHairlineWidthPixels: box.glassHairlineWidthPixels
         glassHairlineReflectionDistance: box.glassHairlineReflectionDistance

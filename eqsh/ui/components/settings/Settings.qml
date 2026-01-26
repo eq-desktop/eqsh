@@ -159,16 +159,9 @@ FloatingWindow {
                     }
                 }
 
-                Rectangle {
-                    anchors.fill: windowControls
-                    color: "#a0333333"
-                    radius: Infinity
-                    visible: Config.general.darkMode
-                }
-
                 UIControls {
                     id: windowControls
-                    showBox: Config.general.darkMode
+                    showBox: false
                     focused: true
                     anchors.top: parent.top
                     anchors.left: parent.left

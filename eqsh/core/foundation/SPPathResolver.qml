@@ -34,4 +34,21 @@ Singleton {
     function copy(from: url, to: url): void {
         Quickshell.execDetached(["cp", strip(from), strip(to)]);
     }
+
+    function move(from: url, to: url): void {
+        Quickshell.execDetached(["mv", strip(from), strip(to)]);
+    }
+
+    function rename(path: url, newName: string): void {
+        path = strip(path);
+        let dir = path.slice(0, path.lastIndexOf("/"));
+        let oldName = path.slice(path.lastIndexOf("/") + 1);
+        let newPath = `${dir}/${newName}`;
+        move(path, newPath);
+    }
+
+    function getName(path: url): string {
+        path = strip(path);
+        return path.slice(path.lastIndexOf("/") + 1);
+    }
 }

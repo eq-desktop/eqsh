@@ -29,18 +29,11 @@ Item {
     property real glowTheta1: 0.0
     property real glowTheta2: Math.PI
     property var lightDir: Qt.vector2d(1, 1)
-    property real glassBevel: Math.min(20, smallerVal / 2)
-    onGlassBevelChanged: {
-        box.glassBevel = Math.min(box.glassBevel, smallerVal / 2)
-    }
+    property real glassBevel: Math.min(requestedGlassBevel, smallerVal / 2)
+    property real requestedGlassBevel: 0
     property real glassMaxRefractionDistance: glassBevel
     property real glassHairlineWidthPixels: 2
     property real glassHairlineReflectionDistance: 20
-    Rectangle {
-        anchors.fill: parent
-        color: box.color
-        radius: box.radius
-    }
     ShaderEffect {
         id: glowBox
         anchors.fill: parent
@@ -54,7 +47,6 @@ Item {
         property real glowAngWidth: box.glowAngWidth
         property real glowTheta1: box.glowTheta1
         property real glowTheta2: box.glowTheta2
-        property var  baseColor: box.color
         property real glassBevel: box.glassBevel
         property real glassMaxRefractionDistance: box.glassMaxRefractionDistance
         property real glassHairlineWidthPixels: box.glassHairlineWidthPixels*100
@@ -67,5 +59,15 @@ Item {
 
         fragmentShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/lgxframe.frag.qsb")
         vertexShader: Qt.resolvedUrl(Quickshell.shellDir + "/media/shaders/lgxframe.vert.qsb")
+    }
+    Rectangle {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.topMargin:  box.boxPos.y
+        anchors.leftMargin: box.boxPos.x
+        width: box.boxSize.x
+        height: box.boxSize.y
+        color: box.color
+        radius: box.radius
     }
 }

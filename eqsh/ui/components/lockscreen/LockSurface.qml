@@ -14,6 +14,7 @@ import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import qs.config
 import qs.ui.components.panel
+import qs.core.system
 import qs
 
 Rectangle {
@@ -117,6 +118,7 @@ Rectangle {
 		id: contentItem
 		anchors.fill: parent
 		scale: Config.general.reduceMotion ? 1 : Config.lockScreen.zoom
+		property alias transformY: trans.y
 		transform: Translate {
 			id: trans
 			y: Config.general.reduceMotion ? 0 : -50
@@ -151,32 +153,219 @@ Rectangle {
 			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 
-		//Backdrop {
-		//	id: clockBlurSource
-		//	sourceItem: backgroundImage
-		//	sourceX: clockGlass.x
-		//	sourceY: clockGlass.y
-		//	sourceW: clockGlass.width
-		//	sourceH: clockGlass.height
-		//	hideSource: true
-		//	visible: false
-		//	anchors.centerIn: clock
-		//}
+		Backdrop {
+			id: clockBlurSource
+			sourceItem: backgroundImage
+			sourceX: mediaGlass.x
+			sourceY: mediaGlass.y+contentItem.transformY
+			sourceW: mediaGlass.width
+			sourceH: mediaGlass.height
+			hideSource: true
+			visible: false
+			anchors.centerIn: mediaGlass
+		}
 
-		//GlassBox {
-		//	id: clockGlass
-		//	anchors.centerIn: clock
-		//	width: clock.width+80
-		//	Behavior on width {
-		//		NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
-		//	}
-		//	height: clock.height+80
-		//	source: clockBlurSource
-		//	blurSource: clockBlurSource
-		//	radius: 50
-		//	glassBevel: 80
-		//	glassMaxRefractionDistance: 50
-		//}
+		GlassBox {
+			id: mediaGlass
+			visible: MusicPlayerProvider.isAvailable
+			anchors.bottom: inputArea.top
+			anchors.horizontalCenter: inputArea.horizontalCenter
+			anchors.bottomMargin: 10
+			width: 380
+			opacity: contentItem.opacity == 1 ? 1 : 0
+			Behavior on opacity {
+				NumberAnimation { duration: 400 }
+			}
+			Behavior on width {
+				NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
+			}
+			height: 250
+			boxPos: Qt.point(25, 25)
+			boxSize: Qt.point(width-50, height-50)
+			source: clockBlurSource
+			blurSource: clockBlurSource
+			radius: 30
+			Behavior on glassBevel {
+				NumberAnimation { duration: 400 }
+			}
+			color: Qt.alpha(AccentColor.preferredAccentTextColor == "white" ? "#1e1e1e" : "#ffffff", 0.5)
+			glassBevel: 0
+			Component.onCompleted: {
+				mediaGlass.glassBevel = 30
+			}
+			glassMaxRefractionDistance: 50
+			glassHairlineReflectionDistance: 20
+			glassHairlineWidthPixels: 1
+		}
+
+		Loader {
+			active: MusicPlayerProvider.isAvailable
+			enabled: MusicPlayerProvider.isAvailable
+			visible: MusicPlayerProvider.isAvailable
+			anchors.fill: mediaGlass
+			anchors.margins: 25
+			Item {
+				anchors.fill: parent
+				MultiEffect {
+					source: thumbnail
+					anchors.fill: thumbnail
+					blurEnabled: true
+					blur: 1
+					blurMultiplier: 1
+					blurMax: 64
+					scale: 2
+					autoPaddingEnabled: true
+				}
+				ClippingRectangle {
+					id: thumbnail
+					anchors.bottom: time.top
+					anchors.left: parent.left
+					anchors.margins: 10
+					anchors.bottomMargin: 20
+					width: 60
+					height: 60
+					radius: 15
+					color: "#10ffffff"
+					Image {
+						anchors.fill: parent
+						fillMode: Image.PreserveAspectCrop
+						source: MusicPlayerProvider.thumbnail
+						smooth: true
+						mipmap: true
+					}
+				}
+				CFText {
+					id: title
+					anchors {
+						top: thumbnail.top
+						left: thumbnail.right
+						right: parent.right
+						topMargin: 10
+						leftMargin: 10
+						rightMargin: 10
+					}
+					text: MusicPlayerProvider.title
+					elide: Text.ElideRight
+					font.weight: 600
+				}
+				Text {
+					id: artist
+					anchors {
+						top: title.bottom
+						left: thumbnail.right
+						right: parent.right
+						leftMargin: 10
+						rightMargin: 10
+					}
+					text: MusicPlayerProvider.artist
+					color: "#aaffffff"
+					elide: Text.ElideRight
+					font.weight: 400
+				}
+				// Progress Bar
+				CFText {
+					id: time
+					anchors {
+						left: parent.left
+						leftMargin: 10
+						bottom: controls.top
+						bottomMargin: 10
+					}
+					// position is in seconds
+					text: Qt.formatTime(new Date(MusicPlayerProvider.position * 1000), "mm:ss")
+					color: "#aaffffff"
+					elide: Text.ElideRight
+				}
+				ProgressBar {
+					id: control
+					anchors {
+						left: time.right
+						leftMargin: 10
+						right: remainingTime.left
+						rightMargin: 10
+						verticalCenter: time.verticalCenter
+					}
+					height: 5
+					value: MusicPlayerProvider.position / MusicPlayerProvider.duration
+					background: Rectangle {
+						implicitHeight: 5
+						color: '#50aaaaaa'
+						radius: 5
+					}
+					contentItem: Item {
+						implicitHeight: 5
+
+						// Progress indicator for determinate state.
+						Rectangle {
+							width: control.visualPosition * parent.width
+							height: parent.height
+							radius: 5
+							color: '#ffffff'
+							visible: !control.indeterminate
+						}
+					}
+				}
+				CFText {
+					id: remainingTime
+					anchors {
+						right: parent.right
+						rightMargin: 10
+						bottom: controls.top
+						bottomMargin: 10
+					}
+					// position is in seconds
+					text: Qt.formatTime(new Date((MusicPlayerProvider.duration-MusicPlayerProvider.position) * 1000), "-mm:ss")
+					color: "#aaffffff"
+					elide: Text.ElideLeft
+				}
+				Row {
+					id: controls
+					anchors.bottom: parent.bottom
+					anchors.bottomMargin: 10
+					anchors.horizontalCenter: parent.horizontalCenter
+					spacing: 0
+					Button {
+						width: 50
+						height: 50
+						background: Item {}
+						icon {
+							width: 35
+							height: 35
+							source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
+						}
+						onClicked: {
+							MusicPlayerProvider.previous()
+						}
+					}
+					Button {
+						width: 50
+						height: 50
+						background: Item {}
+						icon {
+							width: 50
+							height: 50
+							source: MusicPlayerProvider.isPlaying ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
+						}
+						onClicked: {
+							MusicPlayerProvider.togglePlay()
+						}
+					}
+					Button {
+						width: 50
+						height: 50
+						background: Item {}
+						icon {
+							width: 35
+							height: 35
+							source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
+						}
+						onClicked: {
+							MusicPlayerProvider.next()
+						}
+					}
+				}
+			}
+		}
 
 		Label {
 			id: clock
@@ -329,7 +518,7 @@ Rectangle {
 						id: sourceBackdrop
 						sourceItem: backgroundImage
 						sourceX: inputArea.x+passwordBoxLayout.x+passwordBoxContainer.x
-						sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y
+						sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y+contentItem.transformY
 						sourceW: passwordBoxContainer.width
 						sourceH: passwordBoxContainer.height
 						hideSource: true

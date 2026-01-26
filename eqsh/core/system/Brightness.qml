@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs
 
 Singleton {
   id: root
@@ -51,6 +52,16 @@ Singleton {
   onMonitorsChanged: {
     ddcMonitors = []
     ddcProc.running = true
+  }
+
+  IpcHandler {
+    target: "display"
+    function brighter(by: real) {
+      root.monitors.forEach(m => m.setBrightness(m.brightness + by))
+    }
+    function dimmer(by: real) {
+      root.monitors.forEach(m => m.setBrightness(m.brightness - by))
+    }
   }
 
   Variants {

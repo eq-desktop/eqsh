@@ -17,6 +17,7 @@ Singleton {
     property bool isPlaying: mpris.activePlayer?.isPlaying || false
     property int duration: mpris.activePlayer?.length || 0
     property int position: mpris.activePlayer?.position || 0
+    property bool isAvailable: mpris.activePlayer.trackTitle ? true : false
     Timer {
         interval: 1000
         repeat: true

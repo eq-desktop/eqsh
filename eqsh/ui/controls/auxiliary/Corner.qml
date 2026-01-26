@@ -7,6 +7,8 @@ Item {
     height: 48
 
     property string color: "black"
+    property string borderColor: "black"
+    property real borderWidth: 0
     property int radius: 16
     property int orientation: 0 // 0=TOP_LEFT, 1=TOP_RIGHT, 2=BOTTOM_LEFT, 3=BOTTOM_RIGHT
     property bool invertH: false
@@ -80,14 +82,21 @@ Item {
             }
 
             ctx.closePath();
-            ctx.clip("evenodd"); // <-- subtracts the corner curve from the rectangle
 
-            // fill remaining shape
+            // --- Fill ---
             ctx.fillStyle = color;
-            ctx.fillRect(0, 0, w, h);
+            ctx.fill("evenodd");
+
+            // --- Border ---
+            if (borderWidth > 0) {
+                ctx.lineWidth = borderWidth;
+                ctx.strokeStyle = borderColor;
+                ctx.stroke("evenodd");
+            }
 
             ctx.restore();
         }
+
 
         onWidthChanged: requestPaint()
         onHeightChanged: requestPaint()

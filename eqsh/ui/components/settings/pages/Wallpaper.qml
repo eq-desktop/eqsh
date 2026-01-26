@@ -69,6 +69,30 @@ ScrollView {
                 onToggled: Config.wallpaper.enable = checked
                 text: Translation.tr("Enable Wallpaper")
             }
+            FileDialog {
+                id: fileDialog
+                selectedFile: Config.wallpaper.path
+                nameFilters: ["Images (*.jpg *.jpeg *.png)", "All files (*)"]
+                onAccepted: {
+                    SPPathResolver.copy(selectedFile, Config.wallpaper.folder)
+                    Config.wallpaper.path = selectedFile
+                }
+            }
+
+            CFButton {
+                anchors {
+                    left: preview.right
+                    leftMargin: 20
+                    bottom: parent.bottom
+                    bottomMargin: 20
+                }
+                width: 150
+                text: Translation.tr("Add another wallpaper...")
+                primary: true
+                onClicked: {
+                    fileDialog.open()
+                }
+            }
 
             Rectangle {
                 anchors.bottom: parent.bottom
@@ -121,10 +145,37 @@ ScrollView {
                 }
 
                 MouseArea {
+                    id: marea
                     anchors.fill: parent
+                    hoverEnabled: true
                     onClicked: {
                         root.selectedWallpaper = fileURL
                         Config.wallpaper.path = fileURL
+                    }
+                }
+
+                Rectangle {
+                    id: delButton
+                    width: 20
+                    height: 20
+                    radius: 10
+                    color: Config.general.darkMode ? "#333" : "#999"
+                    opacity: marea.containsMouse || delbarea.containsMouse ? 1 : 0
+                    CFVI {
+                        anchors.centerIn: parent
+                        size: 15
+                        icon: "x.svg"
+                        colorized: true
+                        color: Config.general.darkMode ? "#999" : "#333"
+                    }
+                }
+                MouseArea {
+                    id: delbarea
+                    hoverEnabled: true
+                    anchors.fill: delButton
+                    onClicked: {
+                        let name = SPPathResolver.getName(fileURL)
+                        SPPathResolver.rename(fileURL, ".trashed." + name)
                     }
                 }
             }
