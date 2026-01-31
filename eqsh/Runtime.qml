@@ -56,27 +56,27 @@ Singleton {
         }
     }
     Component.onCompleted: {
-        Quickshell.execDetached(["mkdir", "-p", Directories.runtimeDir]);
+        Quickshell.execDetached(["mkdir", "-p", SPPathResolver.strip(Directories.runtimeDir)]);
     }
     Process {
-        command: ["ls", Directories.runtimeDir + "/config.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/config.json"]); }
+        command: ["ls", SPPathResolver.strip(Directories.runtimeDir) + "/config.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", SPPathResolver.strip(Directories.runtimeDir) + "/config.json"]); }
     }
     Process {
-        command: ["ls", Directories.runtimeDir + "/notifications.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/notifications.json"]); }
+        command: ["ls", SPPathResolver.strip(Directories.runtimeDir) + "/notifications.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", SPPathResolver.strip(Directories.runtimeDir) + "/notifications.json"]); }
     }
     Process {
-        command: ["ls", Directories.runtimeDir + "/widgets.json"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/widgets.json"]); }
+        command: ["ls", SPPathResolver.strip(Directories.runtimeDir) + "/widgets.json"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", SPPathResolver.strip(Directories.runtimeDir) + "/widgets.json"]); }
     }
     Process {
-        command: ["ls", Directories.runtimeDir + "/runtime"]
-        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", Directories.runtimeDir + "/runtime"]); }
+        command: ["ls", SPPathResolver.strip(Directories.runtimeDir) + "/runtime"]
+        running: true; stderr: StdioCollector { onStreamFinished: if (this.text != "") Quickshell.execDetached(["touch", SPPathResolver.strip(Directories.runtimeDir) + "/runtime"]); }
     }
     FileView {
         id: runtimeF
-        path: Directories.runtimeDir + "/runtime"
+        path: SPPathResolver.strip(Directories.runtimeDir) + "/runtime"
         blockLoading: true
         JsonAdapter {
             id: runtimeAd
