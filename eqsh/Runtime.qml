@@ -4,11 +4,21 @@ import QtQuick
 import Quickshell
 import Quickshell.Bluetooth
 import qs.config
+import qs.core.foundation
 import Quickshell.Io
 
 Singleton {
     property list<string> activeCCSW: [] // camera, microphone, audio
     // fuse /dev/video0
+
+    signal customDataUpdated(string updatedPath)
+
+    property var customRuntimeData: ({
+        plugins: {},
+        variables: {},
+    })
+
+    property var pluginConfig: ({})
 
     property string customAppName: ""
     property bool   locked: false

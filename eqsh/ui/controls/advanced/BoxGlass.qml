@@ -7,14 +7,13 @@ import qs.ui.controls.advanced
 Item {
     id: box
 
-    property color color: "#10ffffff"
+    property color color: "#10000000"
     property bool highlightEnabled: true
     property bool transparent: false
     
     property color light: '#40ffffff'
-    property var gradient: null
-    property var   lightDir: Qt.point(1, -0.2)
-    property real  rimSize: 0.8
+    property vector2d   lightDir: Qt.vector2d(-1, 1)
+    property real  rimSize: 0.01
     property real  rimStrength: 1.0
 
     property var negLight: ""
@@ -32,12 +31,10 @@ Item {
     GlassRim {
         id: boxContainer
         anchors.fill: parent
-        color: box.transparent ? "transparent" : box.color
+        baseColor: box.transparent ? "transparent" : box.color
         radius: box.radius
-        gradient: box.gradient
-        glowColor: box.highlightEnabled ? box.light : Qt.rgba(0,0,0,0)
+        glowColor: box.highlightEnabled ? box.light : "#00000000"
         lightDir: box.lightDir
         glowEdgeBand: box.rimSize
-        glowAngWidth: box.rimStrength
     }
 }

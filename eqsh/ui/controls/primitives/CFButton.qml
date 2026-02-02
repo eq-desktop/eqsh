@@ -10,7 +10,7 @@ Button {
     property bool primary: false
     property int radius: 20
     property real rimStrength: 0.4
-    property var lightDir: Qt.point(-1, 0.2)
+    property var lightDir: Qt.point(-1, 1)
     property string light: "#40ffffff"
     property bool highlightEnabled: true
     property string color: "#40000000"

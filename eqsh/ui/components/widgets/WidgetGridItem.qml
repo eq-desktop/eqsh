@@ -11,14 +11,16 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell
 import qs.ui.controls.auxiliary
+import qs.ui.controls.auxiliary.widget
 import qs.ui.controls.primitives
 import qs.ui.controls.windows
 import qs.ui.controls.windows.dropdown
 import qs.config
 import qs.ui.components.panel
 import qs.ui.controls.providers
-import qs
 import qs.ui.components.widgets.wi
+import qs.core.system
+import qs
 
 Item {
     id: root
@@ -101,24 +103,49 @@ Item {
             NumberAnimation { duration: 120; easing.type: Easing.OutQuad }
         }
 
-        Loader {
-            id: loader
-            anchors.fill: parent
-            property Component bCD2x2: BCD2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component bBD4x2: BBD4x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component cLD2x2: CLD2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component bWD2x2: BWD2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component dED2x2: DED2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component dCD2x2: DCD2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            property Component bID2x2: BID2x2 { widget: root; screen: root.screen; wallpaper: root.wallpaper; grid: root.grid }
-            sourceComponent: {
-                root.name == "basic-clock-digital-2x2" ? bCD2x2 :
-                root.name == "battery-bar-display-4x2" ? bBD4x2 :
-                root.name == "calender-display-2x2" ? cLD2x2 :
-                root.name == "basic-weather-display-2x2" ? bWD2x2 : 
-                root.name == "day-calendar-display-2x2" ? dCD2x2 : 
-                root.name == "day-event-display-2x2" ? dED2x2 : 
-                root.name == "basic-image-display-2x2" ? bID2x2 : undefined
+        property var _widget: root.name in Plugins.widgetRegistry ? Plugins.widgetRegistry[root.name] | ({}) : ({})
+        
+        
+        BaseWidget {
+            id: bw
+            widget: root
+            screen: root.screen
+            wallpaper: root.wallpaper
+            grid: root.grid
+            Component.onCompleted: {
+                if (!(options.enableBg ?? true)) {
+                    bw.bg = null
+                }
+            }
+            Connections {
+                target: Plugins
+                function onLoadedChanged() {
+                    if (!(root.name in Plugins.widgetRegistry)) return
+                    draggableRect._widget = Plugins.widgetRegistry[root.name]
+                    let pluginWidget = Qt.createQmlObject(draggableRect._widget.f("onRender").children[0].raw, bw)
+                    pluginWidget.options = root.options
+                    pluginWidget.textSize = bw.textSize
+                    pluginWidget.textSizeM = bw.textSizeM
+                    pluginWidget.textSizeL = bw.textSizeL
+                    pluginWidget.textSizeXL = bw.textSizeXL
+                    pluginWidget.textSizeXXL = bw.textSizeXXL
+                    pluginWidget.textSizeSL = bw.textSizeSL
+                    pluginWidget.textSizeSSL = bw.textSizeSSL
+                }
+                Component.onCompleted: {
+                    if (!Plugins.loaded) return;
+                    if (!(root.name in Plugins.widgetRegistry)) return
+                    draggableRect._widget = Plugins.widgetRegistry[root.name]
+                    let pluginWidget = Qt.createQmlObject(draggableRect._widget.f("onRender").children[0].raw, bw)
+                    pluginWidget.options = root.options
+                    pluginWidget.textSize = bw.textSize
+                    pluginWidget.textSizeM = bw.textSizeM
+                    pluginWidget.textSizeL = bw.textSizeL
+                    pluginWidget.textSizeXL = bw.textSizeXL
+                    pluginWidget.textSizeXXL = bw.textSizeXXL
+                    pluginWidget.textSizeSL = bw.textSizeSL
+                    pluginWidget.textSizeSSL = bw.textSizeSSL
+                }
             }
         }
 

@@ -303,5 +303,6 @@ Item {
 	}
 
 	component ControlCenter: JsonObject {
+		property bool   enable: true
 	}
 }

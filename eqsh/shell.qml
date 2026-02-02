@@ -37,6 +37,12 @@ Scope {
     Plugins.init()
     Logger.i("System", "Shell Loading Complete")
   }
+  IpcHandler {
+    target: "plugins"
+    function reload() {
+      Plugins.reloadPlugins()
+    }
+  }
   About {
     id: about
   }

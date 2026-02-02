@@ -35,14 +35,12 @@ Control {
     property Component bg: BoxGlass {
         id: bg
         anchors.fill: parent
+        anchors.margins: 1
         scale: 1
         radius: 25
         rotation: 0
-        gradient: LinearGradient {
-            y2: bg.height
-            GradientStop { position: 0.0; color: Config.general.darkMode ? "#222" : "#ffffff" }
-            GradientStop { position: 1.0; color: Config.general.darkMode ? "#111" : '#ffffff' }
-        }
+        light: "#50ffffff"
+        color: "#222"
     }
 
     contentItem: ClippingRectangle {

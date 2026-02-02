@@ -13,6 +13,7 @@ Image {
     property bool colorized: true
     property string icon: ""
     property bool useQIcon: false
+    fillMode: Image.PreserveAspectCrop
     source: useQIcon ? Quickshell.iconPath(icon) : Qt.resolvedUrl(Quickshell.shellDir + "/media/pngs/" + icon)
     width: size
     height: size
