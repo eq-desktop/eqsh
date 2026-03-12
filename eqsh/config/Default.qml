@@ -133,7 +133,7 @@ Item {
 
 	component Notch: JsonObject {
 		property bool   enable: true
-		property bool   camera: true // A falinuxke camera inside the notch
+		property bool   camera: false // A fake camera inside the notch
 		property bool   islandMode: false // Dynamic Island
 		property color  backgroundColor: "#000"
 		property color  color: "#ffffff"
