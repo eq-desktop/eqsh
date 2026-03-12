@@ -12,7 +12,7 @@ Singleton {
     Connections {
         target: Hyprland
         function onActiveToplevelChanged(event) {
-            const window = Hyprland.activeToplevel.wayland;
+            const window = Hyprland.activeToplevel?.wayland || null;
             if (window == null) {
                 root.applicationName = "";
                 root.appInFullscreen = false;
