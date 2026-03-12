@@ -163,7 +163,7 @@ Scope {
             radius: Config.dock.radius
             color: Config.dock.color
             rimStrength: 0.2
-            lightDir: Qt.point(1, -0.05)
+            lightDir: Qt.point(1, 1)
             anchors.bottomMargin: 6
           }
 

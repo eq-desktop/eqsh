@@ -12,7 +12,7 @@ Item {
     property bool transparent: false
     
     property color light: '#40ffffff'
-    property vector2d   lightDir: Qt.vector2d(-1, 1)
+    property vector2d   lightDir: Qt.vector2d(1, 1)
     property real  rimSize: 0.01
     property real  rimStrength: 1.0
 

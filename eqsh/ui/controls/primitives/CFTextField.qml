@@ -20,14 +20,16 @@ TextField {
     font.family: Fonts.sFProDisplayBlack.family
     property color backgroundColor: Config.general.darkMode ? "#20ffffff" : "#20555555"
     property real glassRimStrength: 0.4
-    property var glassLightDir: Qt.point(1, -0.1)
+    property var glassLightDir: Qt.point(1, 1)
     background: BoxGlass {
         id: bg
         anchors.fill: parent
         color: root.backgroundColor
         rimStrength: root.glassRimStrength
         lightDir: root.glassLightDir
-        radius: 15
+        radius: 30
     }
+    selectionColor: Config.general.darkMode ? "#50ffffff" : "#a0333333"
+    selectedTextColor: Config.general.darkMode ? "#fff" : "#fff"
     placeholderTextColor: Config.general.darkMode ? "#777" : "#888"
 }

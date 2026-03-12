@@ -17,7 +17,7 @@ Item {
     property var boxSize: Qt.size(boxW, boxH)
     
     property color light: '#40ffffff'
-    property var   lightDir: Qt.point(1, -0.2)
+    property var   lightDir: Qt.point(1, 1)
     property real  rimSize: 0.8
     property real  rimStrength: 1.0
 

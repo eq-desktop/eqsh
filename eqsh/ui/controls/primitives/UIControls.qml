@@ -11,7 +11,7 @@ Control {
     property real hoverScale: lightScale
     property real _actualScale: lightScale
     property real _rimStrength: 0.4
-    property var _lightDir: Qt.point(-1, -0.2)
+    property var _lightDir: Qt.point(1, 1)
     property bool _glassShader: false
     property var _glassSource: null
     property bool showBox: false

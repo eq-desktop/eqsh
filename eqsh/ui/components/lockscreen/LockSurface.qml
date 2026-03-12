@@ -104,7 +104,8 @@ Rectangle {
 	BackgroundImage {
 		id: backgroundImage
 		source: wallpaperImage
-		opacity: 0
+		opacity: 1
+		visible: true
 		anchors.fill: parent
 		Rectangle {
 			id: backgroundImageDim
@@ -153,49 +154,69 @@ Rectangle {
 			NumberAnimation { duration: Config.lockScreen.clockZoomDuration; easing.type: Easing.InOutQuad }
 		}
 
-		Backdrop {
+		MultiEffect {
+			id: mediaBackgroundBlur
+			anchors.fill: contentItem
+			source: backgroundImage
+			blurEnabled: true
+			autoPaddingEnabled: false
+			blur: 0.1
+			blurMax: 64 * Config.lockScreen.blurStrength
+			blurMultiplier: 1
+		}
+		ShaderEffectSource {
 			id: clockBlurSource
-			sourceItem: backgroundImage
-			sourceX: mediaGlass.x
-			sourceY: mediaGlass.y+contentItem.transformY
-			sourceW: mediaGlass.width
-			sourceH: mediaGlass.height
+			sourceItem: mediaBackgroundBlur
+			sourceRect: Qt.rect(
+				mediaGlass.x,
+				mediaGlass.y,
+				mediaGlass.width,
+				mediaGlass.height
+			)
 			hideSource: true
+			live: true
 			visible: false
-			anchors.centerIn: mediaGlass
 		}
 
-		GlassBox {
+		CFClippingRect {
 			id: mediaGlass
-			visible: MusicPlayerProvider.isAvailable
 			anchors.bottom: inputArea.top
 			anchors.horizontalCenter: inputArea.horizontalCenter
-			anchors.bottomMargin: 10
-			width: 380
-			opacity: contentItem.opacity == 1 ? 1 : 0
-			Behavior on opacity {
-				NumberAnimation { duration: 400 }
-			}
-			Behavior on width {
-				NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
-			}
-			height: 250
-			boxPos: Qt.point(25, 25)
-			boxSize: Qt.point(width-50, height-50)
-			source: clockBlurSource
-			blurSource: clockBlurSource
+			anchors.bottomMargin: 60
+			width: 330
+			height: 200
 			radius: 30
-			Behavior on glassBevel {
-				NumberAnimation { duration: 400 }
-			}
-			color: Qt.alpha(AccentColor.preferredAccentTextColor == "white" ? "#1e1e1e" : "#ffffff", 0.5)
-			glassBevel: 0
-			Component.onCompleted: {
-				mediaGlass.glassBevel = 30
-			}
-			glassMaxRefractionDistance: 50
-			glassHairlineReflectionDistance: 20
-			glassHairlineWidthPixels: 1
+			GlassBox {
+				anchors.top: parent.top
+				anchors.left: parent.left
+				anchors.leftMargin: -25
+				anchors.topMargin: -25
+				visible: MusicPlayerProvider.isAvailable
+				opacity: contentItem.opacity == 1 ? 1 : 0
+				Behavior on opacity {
+					NumberAnimation { duration: 400 }
+				}
+				Behavior on width {
+					NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
+				}
+				boxPos: Qt.point(25, 25)
+				boxSize: Qt.point(330, 200)
+				source: clockBlurSource
+				radius: 30
+				width: 380
+				height: 250
+				Behavior on glassBevel {
+					NumberAnimation { duration: 400 }
+				}
+				color: Qt.alpha(AccentColor.preferredAccentTextColor == "white" ? "#1e1e1e" : "#ffffff", 0.5)
+				glassBevel: 50
+				Component.onCompleted: {
+					mediaGlass.glassBevel = 50
+				}
+				glassMaxRefractionDistance: 0
+				glassHairlineReflectionDistance: 0
+				glassHairlineWidthPixels: 2
+			}	
 		}
 
 		Loader {
@@ -560,7 +581,7 @@ Rectangle {
 							rimStrength: 0.5
 							glassMaxRefractionDistance: 10
 							glassHairlineReflectionDistance: 5
-							lightDir: Qt.point(1, -0.05)
+							lightDir: Qt.point(1, 1)
 							color: '#00361905'
 						}
 						SequentialAnimation {

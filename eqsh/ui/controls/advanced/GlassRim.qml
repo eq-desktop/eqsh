@@ -14,7 +14,7 @@ Item {
     property real glowEdgeBand: 0.01
     property color baseColor: "#10000000"
     property color _baseColor: "#10000000"
-    property vector2d lightDir: Qt.vector2d(-1., 1.)
+    property vector2d lightDir: Qt.vector2d(1., 1.)
     ShaderEffect {
         id: glowBox
         anchors.fill: parent

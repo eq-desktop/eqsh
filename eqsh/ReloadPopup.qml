@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import qs.ui.controls.advanced
 
 Scope {
 	id: root
@@ -33,33 +34,47 @@ Scope {
 	LazyLoader {
 		id: popupLoader
 
+		active: true // SET TO TRUE TO ENABLE
+
 		PanelWindow {
 			id: popup
 
 			anchors {
 				top: true
 				left: true
+				right: true
+				bottom: true
 			}
-
-			margins {
-				top: 25
-				left: 25
-			}
-
-			implicitWidth: rect.width
-			implicitHeight: rect.height
 
 			// color blending is a bit odd as detailed in the type reference.
 			color: "transparent"
 
-			Rectangle {
+			mask: Region {
+				item: rect
+			}
+
+			BoxGlass {
 				id: rect
-				color: failed ?  "#40802020" : "#202020"
-                radius: 10
+				color: failed ?  "#802020" : "#202020"
+                radius: 25
                 clip: true
 
-				implicitHeight: layout.implicitHeight + 50
-				implicitWidth: layout.implicitWidth + 30
+				anchors {
+					top: parent.top
+					left: parent.left
+					margins: 25
+				}
+
+				implicitHeight: 0
+				implicitWidth: 0
+
+				Behavior on implicitWidth { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+				Behavior on implicitHeight { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+
+				Component.onCompleted: {
+					implicitHeight = layout.implicitHeight + 50
+					implicitWidth = layout.implicitWidth + 100
+				}
 
 				// Fills the whole area of the rectangle, making any clicks go to it,
 				// which dismiss the popup.
@@ -78,12 +93,18 @@ Scope {
 					anchors {
 						top: parent.top
 						topMargin: 20
-						horizontalCenter: parent.horizontalCenter
+						left: parent.left
+						leftMargin: 20
+						right: parent.right
+						rightMargin: 20
 					}
 
 					Text {
-						text: root.failed ? "Reload failed." : "Reloaded completed!"
+						id: title
+						text: root.failed ? "Reload failed." : "Reload completed!"
 						color: "white"
+						font.pixelSize: 12
+						verticalAlignment: Text.AlignVCenter
 					}
 
 					Text {

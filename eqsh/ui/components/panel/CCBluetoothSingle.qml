@@ -75,7 +75,7 @@ Scope {
                 color: root.glassColor
                 light: root.glassRimColor
                 rimStrength: 1.3
-                lightDir: Qt.point(1, -0.2)
+                lightDir: Qt.point(1, 1)
                 CCBluetooth {
                     width: 310
                     height: 250

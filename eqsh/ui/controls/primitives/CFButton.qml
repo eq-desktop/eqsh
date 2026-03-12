@@ -10,13 +10,13 @@ Button {
     property bool primary: false
     property int radius: 20
     property real rimStrength: 0.4
-    property var lightDir: Qt.point(-1, 1)
+    property var lightDir: Qt.point(1, 1)
     property string light: "#40ffffff"
     property bool highlightEnabled: true
     property string color: "#40000000"
     property string hoverColor: "#40FFFFFF"
     property string primaryColor: AccentColor.color
-    property string primaryHoverColor: Qt.lighter(primaryColor, 1.3)
+    property string primaryHoverColor: Qt.lighter(primaryColor, 1.1)
     background: BoxGlass {
         anchors.fill: parent
         rimStrength: button.rimStrength

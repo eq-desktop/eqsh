@@ -412,8 +412,6 @@ Scope {
                     required property var index
                     color: '#20ffffff'
                     light: '#50ffffff'
-                    rimStrength: 0.2
-                    lightDir: Qt.point(1, -0.05)
                     z: 1
                     width: 300
                     radius: 20

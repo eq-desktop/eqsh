@@ -136,7 +136,7 @@ ScrollView {
                     height: 25
                     width: 80
                     rimStrength: 2.5
-                    lightDir: Qt.point(-1, -1)
+                    lightDir: Qt.point(1, 1)
                     radius: 15
                     primary: false
                     color: Config.general.darkMode ? "#333" : "#aaa"
@@ -324,7 +324,7 @@ ScrollView {
                                 height: 25
                                 width: 25
                                 rimStrength: 2.5
-                                lightDir: Qt.point(-1, -1)
+                                lightDir: Qt.point(1, 1)
                                 radius: 15
                                 primary: false
                                 color: Config.general.darkMode ? "#333" : "#aaa"
@@ -412,7 +412,7 @@ ScrollView {
                             inputMethodHints: Qt.ImhSensitiveData
                             font.pixelSize: 10
                             glassRimStrength: 0.1
-                            glassLightDir: Qt.point(1, -0.01)
+                            glassLightDir: Qt.point(1, 1)
                             color: "#ffffff"
                             backgroundColor: "#a0333333"
                             opacity: wfNetworkItem.hasPasswordInterface ? 1 : 0

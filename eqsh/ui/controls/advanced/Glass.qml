@@ -42,6 +42,7 @@ Item {
         property var boxSize: box.boxSize
         property var cornerRadii: box.cornerRadii
         property var glowColor: box.glowColor
+        property var baseColor: box.color
         property real glowIntensity: box.glowIntensity
         property real glowEdgeBand: box.glowEdgeBand
         property real glowAngWidth: box.glowAngWidth

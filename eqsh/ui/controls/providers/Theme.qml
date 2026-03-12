@@ -19,6 +19,6 @@ Singleton {
     property real  glassRimStrengthWeak: 0.5
     property real  glassRimStrength: 1.0
     property real  glassRimStrengthStrong: 1.3
-    property point glassLightDirStrong: Qt.point(1, -0.2)
+    property point glassLightDirStrong: Qt.point(1, 1)
     property color textColor: "#ffffff"
 }

@@ -48,7 +48,7 @@ Scope {
             color: Theme.glassColor
             light: Theme.glassRimColor
             rimStrength: search.text == "" ? 0.2 : 1.7
-            lightDir: Qt.point(1, -0.05)
+            lightDir: Qt.point(1, 1)
 
             ColumnLayout {
                 anchors.fill: parent

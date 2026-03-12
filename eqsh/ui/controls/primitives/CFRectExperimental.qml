@@ -11,10 +11,12 @@ Item {
     property real topRightRadius:    root.radius
     property real bottomLeftRadius:  root.radius
     property real bottomRightRadius: root.radius
-    property color color: "#000000"
+    property color color: "transparent"
+    property color _color: color
+    Behavior on _color { ColorAnimation { duration: 30 } }
     property var gradient: undefined
     property color strokeColor: "black"
-    property real strokeWidth: 1
+    property real strokeWidth: 0
 
     Shape {
         id: shape
@@ -23,7 +25,7 @@ Item {
         fillMode: Shape.PreserveAspectFit
 
         ShapePath {
-            fillColor: root.gradient ? "transparent" : root.color
+            fillColor: root.gradient ? "transparent" : root._color
             fillGradient: root.gradient
             strokeColor: root.strokeColor
             strokeWidth: root.strokeWidth

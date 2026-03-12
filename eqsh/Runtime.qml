@@ -8,6 +8,7 @@ import qs.core.foundation
 import Quickshell.Io
 
 Singleton {
+    id: runtime
     property list<string> activeCCSW: [] // camera, microphone, audio
     // fuse /dev/video0
 
@@ -20,16 +21,35 @@ Singleton {
 
     property var pluginConfig: ({})
 
+    property alias widgets: adapter.widgets
+
+    FileView {
+        id: widgetFileView
+        watchChanges: true
+		blockLoading: true
+        onFileChanged: reload()
+        path: Qt.resolvedUrl(Directories.widgetsPath)
+        onAdapterUpdated: {
+            writeAdapter()
+        }
+        JsonAdapter {
+            id: adapter
+            property list<var> widgets: []
+        }
+    }
+
     property string customAppName: ""
     property bool   locked: false
     property int    notchHeight: 0
     property bool   settingsOpen: false
     property bool   aboutOpen: false
     property bool   spotlightOpen: false
+    property bool   widgetAddOpen: false
     property bool   aiOpen: false
     property bool   launchpadOpen: false
     property bool   showScrn: false
     property bool   widgetEditMode: false
+    onWidgetEditModeChanged: if (!widgetEditMode) { widgetAddOpen = false }
 
     property var bluetoothAdapter: Bluetooth.defaultAdapter
     // ---- Function subscription system ----

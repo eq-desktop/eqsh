@@ -65,6 +65,8 @@ Button {
   MouseArea {
     anchors.fill: parent
     hoverEnabled: true
+    propagateComposedEvents: true
+    preventStealing: true
     onEntered: {
       root.hover()
       root.isHovered = true
