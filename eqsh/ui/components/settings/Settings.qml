@@ -168,7 +168,7 @@ FloatingWindow {
                     anchors.topMargin: 10
                     anchors.leftMargin: 10
                     _rimStrength: 0.4
-                    _lightDir: Qt.point(1, -0.2)
+                    _lightDir: Qt.point(1, 1)
                     _glassShader: false
                     actionClose: () => {
                         Runtime.settingsOpen = false

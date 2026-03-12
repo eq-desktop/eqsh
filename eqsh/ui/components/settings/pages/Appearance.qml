@@ -87,6 +87,29 @@ ScrollView {
                                         color: AccentColor.color
                                     }
                                     color: "#ddd"
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            right: parent.right
+                                        }
+                                        height: 12
+                                        radius: 4
+                                        color: "#fff"
+                                    }
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            topMargin: 21
+                                            right: parent.right
+                                            bottom: parent.bottom
+                                        }
+                                        radius: 5
+                                        color: "#fff"
+                                    }
                                 }
                                 CFText {
                                     anchors.bottom: parent.bottom
@@ -117,6 +140,29 @@ ScrollView {
                                         color: AccentColor.color
                                     }
                                     color: "#333"
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            right: parent.right
+                                        }
+                                        height: 12
+                                        radius: 4
+                                        color: "#1e1e1e"
+                                    }
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            topMargin: 21
+                                            right: parent.right
+                                            bottom: parent.bottom
+                                        }
+                                        radius: 5
+                                        color: "#1e1e1e"
+                                    }
                                 }
                                 CFText {
                                     anchors.bottom: parent.bottom
@@ -147,6 +193,29 @@ ScrollView {
                                         color: AccentColor.color
                                     }
                                     color: "#555"
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            right: parent.right
+                                        }
+                                        height: 12
+                                        radius: 4
+                                        color: "#333"
+                                    }
+                                    Rectangle {
+                                        anchors {
+                                            top: parent.top
+                                            left: parent.left
+                                            margins: 7
+                                            topMargin: 21
+                                            right: parent.right
+                                            bottom: parent.bottom
+                                        }
+                                        radius: 5
+                                        color: "#333"
+                                    }
                                 }
                                 CFText {
                                     anchors.bottom: parent.bottom
