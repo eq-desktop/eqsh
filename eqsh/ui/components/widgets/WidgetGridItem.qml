@@ -47,6 +47,8 @@ Item {
     required property var modelData
     required property var deleteWidget
     property bool beingDragged: ghostRect.visible
+    property bool removing: false
+    signal removeRequested()
     signal widgetMoved()
     // Ghost rectangle
     Control {
@@ -103,8 +105,9 @@ Item {
             NumberAnimation { duration: 120; easing.type: Easing.OutQuad }
         }
 
-        property var _widget: root.name in Plugins.widgetRegistry ? Plugins.widgetRegistry[root.name] | ({}) : ({})
-        
+        property var _widget: (root.name in Plugins.widgetRegistry)
+            ? Plugins.widgetRegistry[root.name]
+            : ({})
         
         BaseWidget {
             id: bw
@@ -116,6 +119,32 @@ Item {
                 if (!(options.enableBg ?? true)) {
                     bw.bg = null
                 }
+            }
+            Timer {
+                id: removalTimer
+                interval: 180
+                running: false
+                repeat: false
+                onTriggered: root.removeRequested()
+            }
+
+            property alias removing: root.removing
+            opacity: removing ? 0 : 1
+            scale: removing ? 0.7 : 1
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1
+                blurMax: removing ? 64 : 0
+                Behavior on blurMax { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            }
+
+            Behavior on opacity { NumberAnimation { duration: 180 } }
+            Behavior on scale   { NumberAnimation { duration: 180; easing.type: Easing.InBack } }
+
+            onRemovingChanged: {
+                if (removing) removalTimer.start()
             }
             Connections {
                 target: Plugins
@@ -158,7 +187,7 @@ Item {
                     name: Translation.tr("Remove Widget.")
                     icon: Quickshell.iconPath("close-symbolic")
                     action: function() {
-                        root.deleteWidget(root)
+                        root.removing = true
                     }
                 }
             ]
@@ -198,7 +227,7 @@ Item {
                 // Snap rectangle to grid
                 if (root.xPos == gridXPos && root.yPos == gridYPos) {
                     draggableRect.x = root.xPos * gridSizeX
-                    draggableRect.y = root.YPos * gridSizeY
+                    draggableRect.y = root.yPos * gridSizeY
                 }
                 root.newXPos = gridXPos
                 root.newYPos = gridYPos
@@ -232,7 +261,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                root.deleteWidget(root);
+                root.removing = true
             }
         }
     }

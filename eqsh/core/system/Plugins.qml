@@ -17,6 +17,13 @@ Singleton {
     property var widgetRegistry: ({})
     property bool loaded: false
 
+    function asArray(obj) {
+        var arr = []
+        for (var key in obj)
+            arr.push({ id: key, value: obj[key] })
+        return arr
+    }
+
     function init() {
         Logger.i("Plugins", "Initializing plugin manager");
     }

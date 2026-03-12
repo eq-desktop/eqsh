@@ -15,6 +15,7 @@ import qs.ui.controls.windows
 import qs.ui.controls.windows.dropdown
 import qs.config
 import qs.ui.components.panel
+import qs.ui.components.background
 import qs.ui.controls.providers
 import qs
 
@@ -26,7 +27,6 @@ Item {
     property bool editMode: false
     property var wallpaper
     property var screen
-    property list<var> widgets: []
 
     // Compute usable size (excluding bar)
     property int usableWidth: parent.width
@@ -42,12 +42,12 @@ Item {
     signal widgetMoved(item: var);
 
     default property Component delegate: WidgetGridItem {
-        idVal: modelData.idVal || 0
-        name:  modelData.name || ""
-        size:  modelData.size || "1x1"
-        xPos:  modelData.xPos || 0
-        yPos:  modelData.yPos || 0
-        options: modelData.options || {}
+        idVal: modelData?.idVal || 0
+        name:  modelData?.name || ""
+        size:  modelData?.size || "1x1"
+        xPos:  modelData?.xPos || 0
+        yPos:  modelData?.yPos || 0
+        options: modelData?.options || {}
         editMode: root.editMode
         screen: root.screen
         wallpaper: root.wallpaper
@@ -56,59 +56,24 @@ Item {
         onWidgetMoved: {
             root.widgetMoved(this);
         }
-    }
-
-    FileView {
-        id: widgetFileView
-        watchChanges: true
-        path: Qt.resolvedUrl(Directories.widgetsPath)
-        onLoaded: {
-            const fileContents = widgetFileView.text();
-            root.widgets = JSON.parse(fileContents).widgets;
-        }
-        onFileChanged: {
-            this.reload();
-        }
+        onRemoveRequested: deleteWidget(this)
     }
 
     function save(item) {
-        // Find the index of the widget with the same idVal
-        const index = root.widgets.findIndex(w => w.idVal === item.idVal);
+        const existing = Runtime.widgets.filter(w => w.idVal !== item.idVal)
 
-        // If found, update the existing entry
-        if (index !== -1) {
-            root.widgets[index] = {
-                idVal: item.idVal,
-                name: item.name,
-                size: item.size,
-                xPos: item.newXPos,
-                yPos: item.newYPos,
-                options: item.options
-            };
-        } else {
-            // Otherwise, add it as a new widget
-            root.widgets.push({
-                idVal: item.idVal,
-                name: item.name,
-                size: item.size,
-                xPos: item.newXPos,
-                yPos: item.newYPos,
-                options: item.options
-            });
-        }
-
-        // Save updated widgets to disk
-        const fileContents = JSON.stringify({ widgets: root.widgets }, null, 4);
-        widgetFileView.setText(fileContents);
+        Runtime.widgets = existing.concat([{
+            idVal: item.idVal,
+            name: item.name,
+            size: item.size,
+            xPos: item.newXPos,
+            yPos: item.newYPos,
+            options: item.options
+        }])
     }
 
     function deleteWidget(item) {
-        const index = root.widgets.findIndex(w => w.idVal === item.idVal);
-        if (index !== -1) {
-            root.widgets.splice(index, 1);
-            const fileContents = JSON.stringify({ widgets: root.widgets }, null, 4);
-            widgetFileView.setText(fileContents);
-        }
+        Runtime.widgets = Runtime.widgets.filter(w => w.idVal !== item.idVal)
     }
 
     Rectangle {
@@ -158,7 +123,11 @@ Item {
             }
         }
 
-        CFButton {
+        WidgetAdd {
+
+        }
+
+        UIButton {
             width: 100
             anchors {
                 top: parent.top
@@ -169,21 +138,21 @@ Item {
             color: "#aaa"
             hoverColor: "#888"
             text: Translation.tr("Close")
-            onClicked: {
+            clicked: () => {
+                if (!Runtime.widgetEditMode) return;
                 Runtime.widgetEditMode = false
             }
-            transform: Translate {
-                id: translateClose
-                x: root.editMode ? 0 : -50
-                y: root.editMode ? 0 : -10
-                Behavior on x { NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }}
-                Behavior on y { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }}
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1
+                blurMax: root.editMode ? 0 : 64
+                Behavior on  blurMax { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             }
-            scale: root.editMode ? 1 : 0.5
             opacity: root.editMode ? 1 : 0
         }
 
-        CFButton {
+        UIButton {
             id: addButton
             width: 100
             anchors {
@@ -194,15 +163,18 @@ Item {
             }
             text: Translation.tr("+")
             primary: true
-            font.pixelSize: 16
-            transform: Translate {
-                id: translateAdd
-                x: root.editMode ? 0 : 50
-                y: root.editMode ? 0 : -10
-                Behavior on x { NumberAnimation { duration: 1000; easing.type: Easing.OutBack; easing.overshoot: 1 }}
-                Behavior on y { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 1 }}
+            liquid: true
+            clicked: () => {
+                if (!Runtime.widgetEditMode) return;
+                Runtime.widgetAddOpen = true
             }
-            scale: root.editMode ? 1 : 0.5
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1
+                blurMax: root.editMode ? 0 : 64
+                Behavior on  blurMax { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+            }
             opacity: root.editMode ? 1 : 0
         }
 
@@ -216,7 +188,7 @@ Item {
             Repeater {
                 anchors.fill: parent
                 model: ScriptModel {
-                    values: root.widgets
+                    values: Runtime.widgets
                 }
                 delegate: root.delegate
             }
