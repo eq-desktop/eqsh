@@ -1,0 +1,142 @@
+/*
+https://github.com/end-4/dots-hyprland/blob/main/dots/.config/quickshell/ii/services/Cliphist.qml
+Thanks end-4!
+*/
+
+pragma Singleton
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import Quickshell
+import Quickshell.Io
+
+Singleton {
+    id: root
+    property string cliphistBinary: "cliphist"
+    property real pasteDelay: 0.05
+    property string pressPasteCommand: "ydotool key -d 1 29:1 47:1 47:0 29:0"
+    property bool sloppySearch: true
+    property real scoreThreshold: 0.2
+    property list<string> entries: []
+    readonly property var preparedEntries: entries.map(a => ({
+        name: Fuzzy.prepare(`${a.replace(/^\s*\S+\s+/, "")}`),
+        entry: a
+    }))
+    function fuzzyQuery(search: string): var {
+        if (search.trim() === "") {
+            return entries;
+        }
+
+        return Fuzzy.go(search, preparedEntries, {
+            all: true,
+            key: "name"
+        }).map(r => {
+            return r.obj
+        });
+    }
+
+    function entryIsImage(entry) {
+        return !!(/^\d+\t\[\[.*binary data.*\d+x\d+.*\]\]$/.test(entry))
+    }
+
+    function entryIsFile(entry) {
+        return !!(/^\/\S+/.test(entry))
+    }
+
+    function entryType(entry) {
+        if (entryIsImage(entry)) return "image";
+        if (entryIsFile(entry)) return "file";
+        return "text";
+    }
+
+    function refresh() {
+        readProc.buffer = []
+        readProc.running = true
+    }
+
+    function copy(entry) {
+        Quickshell.execDetached(["bash", "-c", `printf '${String(entry).replace(/'/g, "'\\''")}' | ${root.cliphistBinary} decode | wl-copy`]);
+    }
+
+    function paste(entry) {
+        Quickshell.execDetached(["bash", "-c", `printf '${String(entry).replace(/'/g, "'\\''")}' | ${root.cliphistBinary} decode | wl-copy && wl-paste`]);
+    }
+
+    function superpaste(count, isImage = false) {
+        // Find entries
+        const targetEntries = entries.filter(entry => {
+            if (!isImage) return true;
+            return entryIsImage(entry);
+        }).slice(0, count)
+        const pasteCommands = [...targetEntries].reverse().map(entry => `printf '${String(entry).replace(/'/g, "'\\''")}' | ${root.cliphistBinary} decode | wl-copy && sleep ${root.pasteDelay} && ${root.pressPasteCommand}`)
+        // Act
+        Quickshell.execDetached(["bash", "-c", pasteCommands.join(` && sleep ${root.pasteDelay} && `)]);
+    }
+
+    Process {
+        id: deleteProc
+        property string entry: ""
+        command: ["bash", "-c", `echo '${String(deleteProc.entry).replace(/'/g, "'\\''")}' | ${root.cliphistBinary} delete`]
+        function deleteEntry(entry) {
+            deleteProc.entry = entry;
+            deleteProc.running = true;
+            deleteProc.entry = "";
+        }
+        onExited: (exitCode, exitStatus) => {
+            root.refresh();
+        }
+    }
+
+    function deleteEntry(entry) {
+        deleteProc.deleteEntry(entry);
+    }
+
+    Process {
+        id: wipeProc
+        command: [root.cliphistBinary, "wipe"]
+        onExited: (exitCode, exitStatus) => {
+            root.refresh();
+        }
+    }
+
+    function wipe() {
+        wipeProc.running = true;
+    }
+
+    Connections {
+        target: Quickshell
+        function onClipboardTextChanged() {
+            delayedUpdateTimer.restart()
+        }
+    }
+
+    Timer {
+        id: delayedUpdateTimer
+        interval: 1000
+        repeat: false
+        onTriggered: {
+            root.refresh()
+        }
+    }
+
+    Process {
+        id: readProc
+        property list<string> buffer: []
+
+        command: [root.cliphistBinary, "list"]
+
+        stdout: SplitParser {
+            onRead: (line) => {
+                readProc.buffer.push(line)
+            }
+        }
+
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode === 0) {
+                root.entries = readProc.buffer
+            } else {
+                console.error("[Cliphist] Failed to refresh with code", exitCode, "and status", exitStatus)
+            }
+        }
+    }
+}

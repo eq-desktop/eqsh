@@ -23,15 +23,33 @@ Scope {
   property bool   visible: true
   property bool   shown: false
   property bool   appInFullscreen: HyprlandExt.appInFullscreen
+  property bool   autoHide: Config.bar.autohide
   property bool   forceHide: Config.bar.autohide
+  onAutoHideChanged: {
+    if (!autoHide) {
+      bar.shown = false
+      bar.forceHide = false
+    } else {
+      bar.forceHide = true
+    }
+  }
   property bool   inFullscreen: shown ? forceHide : appInFullscreen || forceHide
   property var    focusedscreen: null
   property var    focusedwindow: null
   Connections {
-      target: Hyprland
-      function onFocusedMonitorChanged() {
-          root.focusedscreen = Quickshell.screens.filter(screen => screen.name == Hyprland.focusedMonitor.name)[0];
-      }
+    target: Hyprland
+    function onFocusedMonitorChanged() {
+      root.focusedscreen = Quickshell.screens.filter(screen => screen.name == Hyprland.focusedMonitor.name)[0];
+    }
+  }
+
+  Component.onCompleted: {
+    Ipc.mixin("eqdesktop.menubar", "toggle", () => {
+      root.forceHide = !root.forceHide;
+    });
+    Ipc.mixin("eqdesktop.menubar", "set", (visible) => {
+      root.forceHide = !visible;
+    });
   }
 
   Variants {
@@ -398,41 +416,79 @@ Scope {
               values: Config.bar.rightBarItems
             }
             delegate: Item {
+              id: delegateRoot
+              required property int index
+              required property var modelData
+
               Layout.minimumWidth: 50
               implicitWidth: itemLoader.implicitWidth
 
-              Loader {
-                id: itemLoader
-                anchors.centerIn: parent
-                sourceComponent: {
-                  switch(modelData) {
-                    case "systemTray":
-                      return systemTrayComponent
-                    case "battery":
-                      return batteryComponent
-                    case "wifi":
-                      return wifiComponent
-                    case "bluetooth":
-                      return bluetoothComponent
-                    case "search":
-                      return searchComponent
-                    case "controlCenter":
-                      return controlCenterComponent
-                    case "clock":
-                      return clockComponent
-                    case "ai":
-                      return aiComponent
-                    default:
-                      return null
+              z: dragArea.drag.active ? 1000 : 0
+
+              property int startIndex: index
+
+              DropArea {
+                anchors.fill: parent
+
+                onEntered: (drag) => {
+                  const from = drag.source.startIndex
+                  const to = delegateRoot.index
+
+                  if (from === to)
+                    return
+
+                  let arr = [...Config.bar.rightBarItems]
+                  const item = arr.splice(from, 1)[0]
+                  arr.splice(to, 0, item)
+
+                  Config.bar.rightBarItems = arr
+                }
+              }
+
+              MouseArea {
+                id: dragArea
+                anchors.fill: parent
+
+                drag.target: delegateRoot
+                drag.axis: Drag.XAxis
+                drag.filterChildren: true
+                preventStealing: true
+
+                onClicked: console.info("Clicked")
+
+                onPressed: delegateRoot.startIndex = delegateRoot.index
+
+                onReleased: {
+                  delegateRoot.x = 0
+                  console.info("Drag ended")
+                }
+                Loader {
+                  id: itemLoader
+                  anchors.centerIn: parent
+                  sourceComponent: {
+                    switch(modelData) {
+                      case "systemTray": return systemTrayComponent
+                      case "battery": return batteryComponent
+                      case "wifi": return wifiComponent
+                      case "bluetooth": return bluetoothComponent
+                      case "search": return searchComponent
+                      case "controlCenter": return controlCenterComponent
+                      case "clock": return clockComponent
+                      case "ai": return aiComponent
+                      default: return null
+                    }
                   }
                 }
               }
+
+              Drag.active: dragArea.drag.active
+              Drag.source: delegateRoot
             }
           }
 
           // Components for each item
           Component { id: systemTrayComponent; SystemTray {} }
-          Component { id: batteryComponent; UIBButton { Battery { iconSize: 25 } } }
+          Component { id: batteryComponent; Battery { iconSize: 25 } }
           Component { id: wifiComponent; UIBButton { Wifi { iconSize: 25 } } }
           Component {
             id: bluetoothComponent
