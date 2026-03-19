@@ -37,6 +37,7 @@ Scope {
   id: root
   Component.onCompleted: {
     Plugins.init()
+    Ipc.init()
     Logger.i("System", "Shell Loading Complete")
   }
   IpcHandler {
