@@ -13,7 +13,8 @@ import QtQuick.VectorImage
 VectorImage {
     id: vi
     property color color: "#fff"
-    Behavior on color { ColorAnimation { duration: 300 }}
+    property bool noAnimate: false
+    Behavior on color { ColorAnimation { duration: vi.noAnimate ? 0 : 300 }}
     property int size: 16
     property bool colorized: true
     property string icon: ""

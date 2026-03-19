@@ -22,6 +22,8 @@ Item {
     property real requestedH: 0
     property point requestedMoveVector: Qt.point(-20, -20)
     signal clicked(var mouse)
+    signal entered(var mouse)
+    signal exited(var mouse)
     scale: mouseArea.containsMouse ? (scaleModifier+(10/Math.max(width, height))) : 1
     transform: [
         Scale {
@@ -131,6 +133,7 @@ Item {
             root.scaleModifier = 1
         }
         onPositionChanged: (mouse) => {
+            if (!mouseArea.containsMouse) return;
             let dis_from_centerX = (parent.width/2) - mouse.x
             let dis_from_centerY = (parent.height/2) - mouse.y
             let scaleX = 1/parent.width
@@ -139,7 +142,11 @@ Item {
             root.disX = -(dis_from_centerX * scaleX)
             root.disY = -(dis_from_centerY * scaleY)
         }
-        onExited: {
+        onEntered: (mouse) => {
+            root.entered(mouse)
+        }
+        onExited: (mouse) => {
+            root.exited(mouse)
             root.disX = 0
             root.disY = 0
         }
