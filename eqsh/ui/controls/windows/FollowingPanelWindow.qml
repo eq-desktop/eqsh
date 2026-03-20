@@ -3,14 +3,16 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import qs
-
+import qs.services
 import qs.config
+
 PanelWindow {
     id: panelWindow
-    Connections {
-        target: Hyprland
-        function onFocusedMonitorChanged() {
-            panelWindow.screen = Quickshell.screens.filter(screen => screen.name == Hyprland.focusedMonitor.name)[0];
-        }
+    screen: {
+        if (CompositorService.isHyprland)
+            return Quickshell.screens.find(screen => screen.name == Hyprland.focusedMonitor.name)
+        if (CompositorService.isNiri)
+            return Quickshell.screens.find(screen => screen.name == NiriService.currentOutput)
+        return Quickshell.screens[0]
     }
 } 

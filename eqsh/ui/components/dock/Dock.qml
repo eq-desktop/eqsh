@@ -5,7 +5,6 @@ import QtQuick.VectorImage
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import qs.config
 import qs
 import qs.core.foundation
@@ -88,6 +87,7 @@ Scope {
       }
       if (launchpad) {
         Runtime.launchpadOpen = !Runtime.launchpadOpen
+        Ipc.runMixin("eqdesktop.launchpad", "toggle")
       } else if (settings) {
         Runtime.settingsOpen = !Runtime.settingsOpen
       }

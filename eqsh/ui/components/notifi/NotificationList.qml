@@ -179,31 +179,12 @@ Scope {
 			}
 		}
 	}
-	IpcHandler {
-		target: "notificationCenter"
-		function toggle() {
+	Component.onCompleted: {
+		Ipc.mixin("eqdesktop.notificationCenter", "toggle", () => {
 			scope.showAll = !scope.showAll;
-		}
-	}
-	CustomShortcut {
-		name: "notificationCenter"
-		description: "Toggle Notification Center"
-		onPressed: {
-			scope.showAll = !scope.showAll;
-		}
-	}
-	CustomShortcut {
-		name: "notificationCenterOpen"
-		description: "Open Notification Center"
-		onPressed: {
-			scope.showAll = true;
-		}
-	}
-	CustomShortcut {
-		name: "notificationCenterClose"
-		description: "Close Notification Center"
-		onPressed: {
-			scope.showAll = false;
-		}
+		});
+		Ipc.mixin("eqdesktop.notificationCenter", "set", (visible) => {
+			scope.showAll = visible;
+		});
 	}
 }

@@ -4,6 +4,7 @@ import QtQuick
 import qs.ui.controls.primitives
 import qs.ui.controls.providers
 import qs.config
+import qs.services
 import qs
 
 Scope {
@@ -19,7 +20,13 @@ Scope {
         onClosed: {
             Runtime.aboutOpen = false
         }
-        property bool focused: Hyprland.activeToplevel?.title ?? "" == "About this Mac"
+        property bool focused: {
+            if (CompositorService.isHyprland) 
+                return ((Hyprland.activeToplevel?.title ?? "") == "About this Mac");
+            else if (CompositorService.isNiri)
+                return NiriService.activeToplevel?.title === "About this Mac";
+            return false
+        }
         UIControls {
             id: controls
             focused: about.focused

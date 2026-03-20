@@ -4,7 +4,6 @@ import QtQuick.VectorImage
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import qs.config
 import qs
 import qs.core.foundation

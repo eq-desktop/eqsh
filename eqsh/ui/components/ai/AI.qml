@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Io
 import Quickshell.Services.UPower
@@ -54,424 +53,409 @@ Scope {
     function toggle() {
         Runtime.aiOpen = !Runtime.aiOpen;
     }
-    IpcHandler {
-        target: "sigrid"
-        function toggle() {
-            root.toggle();
-        }
+
+    Component.onCompleted: {
+        Ipc.mixin("eqdesktop.ai", "toggle", () => {
+            if (panelWindow.opened) {
+                panelWindow.clear()
+                return;
+            }
+            Runtime.aiOpen = true;
+        })
+        Ipc.mixin("eqdesktop.ai", "set", (visible) => {
+            if (!visible) {
+                panelWindow.clear()
+                return;
+            }
+            Runtime.aiOpen = true;
+        })
     }
-    CustomShortcut {
-        name: "sigrid"
-        description: "Toggle Sigrid"
-        onPressed: {
-            root.toggle();
-        }
-    }
-    FollowingPanelWindow {
+
+    FollowingPop {
         id: panelWindow
-        WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "eqsh:lock-blur"
-        anchors {
-            top: true
-            right: true
-            bottom: true
+        margins.right: 10
+        margins.top: Config.bar.height + 5
+        animationDuration: 300
+        keyboardFocus: WlrKeyboardFocus.Exclusive
+
+        onEscapePressed: () => {
+            Runtime.aiOpen = false;
         }
-        focusable: true
-        exclusiveZone: -1
-        color: "transparent"
-        implicitWidth: 400
-        margins {
-            top: Config.bar.height
-        }
-        mask: Region {
-            item: Runtime.aiOpen ? contentItem : null
-        }
-        visible: true
         property string state: "ask" // ask, answer, error
-        property bool showing: Runtime.aiOpen
-        property bool visibleC: false
+        opened: Runtime.aiOpen
         property list<var> answers: []
-        onShowingChanged: {
-            if (showing) {
-                showAIAnim.start()
-                hideAIAnim.stop()
-                grab.active = true
+        onOpenedChanged: {
+            if (opened) {
+                contentRoot.showAIAnim.start()
+                contentRoot.hideAIAnim.stop()
             } else {
-                hideAIAnim.start()
-                showAIAnim.stop()
-                grab.active = false
+                contentRoot.hideAIAnim.start()
+                contentRoot.showAIAnim.stop()
             }
         }
-
-        PropertyAnimation {
-            id: showAIAnim
-            target: contentItem
-            properties: "anchors.topMargin"
-            from: -10
-            to: 10
-            duration: 500
-            easing.type: Easing.OutBack
-            easing.overshoot: 0.5
-            onStarted: {
-                panelWindow.visibleC = true
-                contentItem.opacity = 1
-                contentItem.scale = 1
-            }
+        onClearing: {
+            contentRoot.hideAIAnim.start()
+            contentRoot.showAIAnim.stop()
         }
-
-        PropertyAnimation {
-            id: hideAIAnim
-            target: contentItem
-            properties: "anchors.topMargin"
-            from: 10
-            to: -10
-            duration: 500
-            easing.type: Easing.OutBack
-            easing.overshoot: 2
-            onStarted: {
-                contentItem.opacity = 0
-                contentItem.scale = 0.9
-            }
-            onFinished: {
-                panelWindow.visibleC = false
-            }
-        }
-
-        HyprlandFocusGrab {
-            id: grab
-            windows: [ panelWindow, statusbar ]
-            onCleared: {
-                Runtime.aiOpen = false
-            }
+        onCleared: {
+            Runtime.aiOpen = false;
         }
 
         Item {
-            id: contentItem
-            anchors {
-                top: parent.top
-                right: parent.right
-                rightMargin: 10
-                topMargin: -10
-                bottom: parent.bottom
+            id: contentRoot
+            property var showAIAnim: PropertyAnimation {
+                id: showAIAnim
+                target: contentItem
+                properties: "anchors.topMargin"
+                from: -10
+                to: 10
+                duration: 500
+                easing.type: Easing.OutBack
+                easing.overshoot: 0.5
+                onStarted: {
+                    contentRoot.opacity = 1
+                    contentItem.scale = 1
+                }
             }
-            scale: 0.9
-            Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+
+            property var hideAIAnim: PropertyAnimation {
+                id: hideAIAnim
+                target: contentItem
+                properties: "anchors.topMargin"
+                from: 10
+                to: -10
+                duration: 500
+                easing.type: Easing.OutBack
+                easing.overshoot: 2
+                onStarted: {
+                    contentRoot.opacity = 0
+                    contentItem.scale = 0.9
+                }
+            }
+            focus: true
             Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-            onScaleChanged: {
-                panelWindow.mask.changed();
-            }
-            opacity: 0
-            visible: panelWindow.visibleC
-            width: 300
-            BoxGlass {
-                id: input
+            Item {
+                id: contentItem
                 anchors {
                     top: parent.top
-                    horizontalCenter: parent.horizontalCenter
-                    margins: 10
-                }
-                z: 3
-                width: 300
-                height: 40
-                property real siconScale: 1
-                property real xOffset: 0
-                property bool error: false
-                property bool loading: false
-                transform: Translate { x: input.xOffset }
-                TextField {
-                    id: inputText
-                    anchors.fill: parent
-                    focus: Runtime.aiOpen
-                    color: "#fff"
-                    selectionColor: '#50ffffff'
-                    selectedTextColor: '#a0ffffff'
-                    leftPadding: 38
-                    CFI {
-                        id: sicon
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 4
-                        size: 34
-                        scale: input.siconScale
-                        sourceSize: Qt.size(128, 128)
-                        opacity: 1
-                        colorized: false
-                        icon: "ai.png"
-                    }
-                    background: CFText {
-                        anchors.fill: parent
-                        anchors.leftMargin: 38
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        color: input.error ? "#ff5f5f" : '#fff'
-                        font.weight: 500
-                        opacity: inputText.text == "" ? 1 : 0
-                        text: input.loading ? Translation.tr("Sigrid is thinking…") : input.error ? Translation.tr("Error: Please try again later…") : Translation.tr("Ask Sigrid…")
-                    }
-                    renderType: Text.NativeRendering
-                    font.family: Fonts.sFProDisplayRegular.family
-                    font.pixelSize: 16
-                    property var additional: (`
-                    Name of user: ${Config.account.name}
-                    deviceName: ${Config.account.deviceName}
-                    darkMode: ${Config.general.darkMode}
-                    language: ${Config.general.language}
-                    apps in dock: ${Config.dock.apps.join(", ")}
-                    Current time: ${Time.time}
-                    Location: ${Config.widgets.location}
-                    Temperature: ${Config.widgets.temperature}
-                    Temperature high/low: ${Config.widgets.hlVal}
-                    Battery percentage: ${(UPower.displayDevice.isLaptopBattery ? UPower.displayDevice.percentage : 1)*100}
-                    Battery powered: ${UPower.onBattery}
-                    Eqsh Version: ${Config.version} / ${Config.versionPretty}
-                    `)
-                    onAccepted: {
-                        Logger.d("AI", "Request AI answer to: " + inputText.text)
-                        acceptAnim.start()
-                        loadingAnim2.start()
-                        input.error = false
-                        input.loading = true
-                        panelWindow.answers.push(["user", inputText.text])
-                        agent.call(inputText.text, Config.sigrid.key, Config.sigrid.model, {systemPrompt: sigridPrompt.text(), previousMessages: panelWindow.answers.map(function(a) { return {role: a[0], content: a[1]} })}, function(success, response) {
-                            input.loading = false
-                            loadingAnim2.stop()
-                            input.siconScale = 1
-                            Runtime.aiOpen = true
-                            if (success) {
-                                panelWindow.state = "answer"
-                                // check if it can be parsed as json
-                                try {
-                                    let result = JSON.parse(response.candidates[0].content.parts[0].text)
-                                    if (result) {
-                                        switch (result.action) {
-                                            case "run_command":
-                                                Logger.d("AI", "Request to run command: " + result.command);
-                                                result.command = result.command.replace(/"/g, '\\"').replace(/'/g, "\\'")
-                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + result.command])
-                                                Runtime.run("modal", {
-                                                    appName: "Sigrid",
-                                                    title: Translation.tr("Let Sigrid Run A Command?"),
-                                                    description: result.command,
-                                                    actions: [
-                                                        [
-                                                            {
-                                                                type: "button",
-                                                                label: Translation.tr("Okay"),
-                                                                primary: true,
-                                                                command: result.command
-                                                            }
-                                                        ],
-                                                        [
-                                                            {
-                                                                type: "button",
-                                                                label: Translation.tr("Cancel"),
-                                                                primary: false
-                                                            }
-                                                        ]
-                                                    ],
-                                                    iconPath: "",
-                                                    useIcon: false
-                                                })
-                                                break;
-                                            case "lock_screen":
-                                                Logger.d("AI", "Locking screen per Sigrid request")
-                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Lock Screen"])
-                                                Runtime.run("lockscreen")
-                                            case "open_settings":
-                                                Logger.d("AI", "Opening Settings per Sigrid request")
-                                                panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
-                                                Runtime.settingsOpen = true
-                                                break;
-                                            default:
-                                                Logger.e("AI", "Unknown action: " + result.action)
-                                        }
-
-                                    }
-                                } catch (e) {
-                                    Logger.d("AI", "Response: " + response.candidates[0].content.parts[0].text)
-                                    panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
-                                }
-                            } else {
-                                Logger.e("AI", "Error getting AI response")
-                                panelWindow.state = "error"
-                                wiggleAnim.start()
-                                input.error = true
-                            }
-                        }, additional, Logger)
-                        inputText.text = ""
-                    }
-                }
-                SequentialAnimation {
-                    id: wiggleAnim
-                    running: false
-                    loops: 1
-                    PropertyAnimation { target: input; property: "xOffset"; to: input.x - 10; duration: 100; easing.type: Easing.InOutQuad }
-                    PropertyAnimation { target: input; property: "xOffset"; to: input.x + 10; duration: 100; easing.type: Easing.InOutQuad }
-                    PropertyAnimation { target: input; property: "xOffset"; to: input.x - 7; duration: 100; easing.type: Easing.InOutQuad }
-                    PropertyAnimation { target: input; property: "xOffset"; to: input.x + 7; duration: 100; easing.type: Easing.InOutQuad }
-                    PropertyAnimation { target: input; property: "xOffset"; to: input.x; duration: 100; easing.type: Easing.InOutQuad }
-                }
-                SequentialAnimation {
-                    id: acceptAnim
-                    running: false
-                    PropertyAnimation {
-                        target: input
-                        property: "scale"
-                        to: 1.02
-                        duration: 75
-                        easing.type: Easing.OutBack
-                        easing.overshoot: 2
-                    }
-                    PropertyAnimation {
-                        target: input
-                        property: "scale"
-                        to: 1
-                        duration: 75
-                        easing.type: Easing.OutBack
-                        easing.overshoot: 2
-                    }
-                }
-                SequentialAnimation {
-                    id: loadingAnim2
-                    running: false
-                    loops: -1
-                    PropertyAnimation {
-                        target: input
-                        property: "siconScale"
-                        to: 1.1
-                        duration: 500
-                        easing.type: Easing.OutBack
-                        easing.overshoot: 2
-                    }
-                    PropertyAnimation {
-                        target: input
-                        property: "siconScale"
-                        to: 1
-                        duration: 1000
-                        easing.type: Easing.OutBack
-                        easing.overshoot: 2
-                    }
-                }
-            }
-            ListView {
-                id: answers
-                anchors {
-                    top: input.bottom
-                    topMargin: 10
-                    horizontalCenter: parent.horizontalCenter
+                    right: parent.right
+                    topMargin: -10
                     bottom: parent.bottom
                 }
+                scale: 0.9
+                Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                visible: panelWindow.opened
                 width: 300
-                spacing: 10
-                model: ScriptModel {
-                    values: panelWindow.answers
-                }
-                add: Transition {
-                    NumberAnimation { properties: "scale"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                    NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                }
-                remove: Transition {
-                    NumberAnimation { properties: "scale"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                    NumberAnimation { properties: "opacity"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
-                }
-                header: Item {
+                BoxGlass {
+                    id: input
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                        margins: 10
+                    }
+                    z: 3
+                    width: 300
                     height: 40
-                    width: 300
-                    MouseArea {
+                    property real siconScale: 1
+                    property real xOffset: 0
+                    property bool error: false
+                    property bool loading: false
+                    transform: Translate { x: input.xOffset }
+                    TextField {
+                        id: inputText
                         anchors.fill: parent
-                        onClicked: {
-                            panelWindow.answers.splice(0, panelWindow.answers.length)
-                        }
-                        BoxGlass {
-                            id: header
-                            color: '#10ffffff'
-                            light: '#50ffffff'
-                            z: 1
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottomMargin: 10
-                            width: clearBtnText.implicitWidth + 20
-                            height: 30
-                            scale: 1
+                        focus: Runtime.aiOpen
+                        color: "#fff"
+                        selectionColor: '#50ffffff'
+                        selectedTextColor: '#a0ffffff'
+                        leftPadding: 38
+                        CFI {
+                            id: sicon
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 4
+                            size: 34
+                            scale: input.siconScale
+                            sourceSize: Qt.size(128, 128)
                             opacity: 1
-                            Text {
-                                id: clearBtnText
-                                anchors.fill: parent
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                                color: "#fff"
-                                text: Translation.tr("Clear")
-                                font.family: Fonts.sFProDisplayBlack.family
-                            }
+                            colorized: false
+                            icon: "ai.png"
+                        }
+                        background: CFText {
+                            anchors.fill: parent
+                            anchors.leftMargin: 38
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignLeft
+                            color: input.error ? "#ff5f5f" : '#fff'
+                            font.weight: 500
+                            opacity: inputText.text == "" ? 1 : 0
+                            text: input.loading ? Translation.tr("Sigrid is thinking…") : input.error ? Translation.tr("Error: Please try again later…") : Translation.tr("Ask Sigrid…")
+                        }
+                        renderType: Text.NativeRendering
+                        font.family: Fonts.sFProDisplayRegular.family
+                        font.pixelSize: 16
+                        property var additional: (`
+                        Name of user: ${Config.account.name}
+                        deviceName: ${Config.account.deviceName}
+                        darkMode: ${Config.general.darkMode}
+                        language: ${Config.general.language}
+                        apps in dock: ${Config.dock.apps.join(", ")}
+                        Current time: ${Time.time}
+                        Location: ${Config.widgets.location}
+                        Temperature: ${Config.widgets.temperature}
+                        Temperature high/low: ${Config.widgets.hlVal}
+                        Battery percentage: ${(UPower.displayDevice.isLaptopBattery ? UPower.displayDevice.percentage : 1)*100}
+                        Battery powered: ${UPower.onBattery}
+                        Eqsh Version: ${Config.version} / ${Config.versionPretty}
+                        `)
+                        onAccepted: {
+                            Logger.d("AI", "Request AI answer to: " + inputText.text)
+                            acceptAnim.start()
+                            loadingAnim2.start()
+                            input.error = false
+                            input.loading = true
+                            panelWindow.answers.push(["user", inputText.text])
+                            agent.call(inputText.text, Config.sigrid.key, Config.sigrid.model, {systemPrompt: sigridPrompt.text(), previousMessages: panelWindow.answers.map(function(a) { return {role: a[0], content: a[1]} })}, function(success, response) {
+                                input.loading = false
+                                loadingAnim2.stop()
+                                input.siconScale = 1
+                                Runtime.aiOpen = true
+                                if (success) {
+                                    panelWindow.state = "answer"
+                                    // check if it can be parsed as json
+                                    try {
+                                        let result = JSON.parse(response.candidates[0].content.parts[0].text)
+                                        if (result) {
+                                            switch (result.action) {
+                                                case "run_command":
+                                                    Logger.d("AI", "Request to run command: " + result.command);
+                                                    result.command = result.command.replace(/"/g, '\\"').replace(/'/g, "\\'")
+                                                    panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + result.command])
+                                                    Runtime.run("modal", {
+                                                        appName: "Sigrid",
+                                                        title: Translation.tr("Let Sigrid Run A Command?"),
+                                                        description: result.command,
+                                                        actions: [
+                                                            [
+                                                                {
+                                                                    type: "button",
+                                                                    label: Translation.tr("Okay"),
+                                                                    primary: true,
+                                                                    command: result.command
+                                                                }
+                                                            ],
+                                                            [
+                                                                {
+                                                                    type: "button",
+                                                                    label: Translation.tr("Cancel"),
+                                                                    primary: false
+                                                                }
+                                                            ]
+                                                        ],
+                                                        iconPath: "",
+                                                        useIcon: false
+                                                    })
+                                                    break;
+                                                case "lock_screen":
+                                                    Logger.d("AI", "Locking screen per Sigrid request")
+                                                    panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Lock Screen"])
+                                                    Runtime.run("lockscreen")
+                                                case "open_settings":
+                                                    Logger.d("AI", "Opening Settings per Sigrid request")
+                                                    panelWindow.answers.push(["sigrid", "<font color='#ff5f5f'>" + "Sigrid Action:" + "</font> " + "Open Settings"])
+                                                    Runtime.settingsOpen = true
+                                                    break;
+                                                default:
+                                                    Logger.e("AI", "Unknown action: " + result.action)
+                                            }
+
+                                        }
+                                    } catch (e) {
+                                        Logger.d("AI", "Response: " + response.candidates[0].content.parts[0].text)
+                                        panelWindow.answers.push(["sigrid", response.candidates[0].content.parts[0].text])
+                                    }
+                                } else {
+                                    Logger.e("AI", "Error getting AI response")
+                                    panelWindow.state = "error"
+                                    wiggleAnim.start()
+                                    input.error = true
+                                }
+                            }, additional, Logger)
+                            inputText.text = ""
+                        }
+                    }
+                    SequentialAnimation {
+                        id: wiggleAnim
+                        running: false
+                        loops: 1
+                        PropertyAnimation { target: input; property: "xOffset"; to: input.x - 10; duration: 100; easing.type: Easing.InOutQuad }
+                        PropertyAnimation { target: input; property: "xOffset"; to: input.x + 10; duration: 100; easing.type: Easing.InOutQuad }
+                        PropertyAnimation { target: input; property: "xOffset"; to: input.x - 7; duration: 100; easing.type: Easing.InOutQuad }
+                        PropertyAnimation { target: input; property: "xOffset"; to: input.x + 7; duration: 100; easing.type: Easing.InOutQuad }
+                        PropertyAnimation { target: input; property: "xOffset"; to: input.x; duration: 100; easing.type: Easing.InOutQuad }
+                    }
+                    SequentialAnimation {
+                        id: acceptAnim
+                        running: false
+                        PropertyAnimation {
+                            target: input
+                            property: "scale"
+                            to: 1.02
+                            duration: 75
+                            easing.type: Easing.OutBack
+                            easing.overshoot: 2
+                        }
+                        PropertyAnimation {
+                            target: input
+                            property: "scale"
+                            to: 1
+                            duration: 75
+                            easing.type: Easing.OutBack
+                            easing.overshoot: 2
+                        }
+                    }
+                    SequentialAnimation {
+                        id: loadingAnim2
+                        running: false
+                        loops: -1
+                        PropertyAnimation {
+                            target: input
+                            property: "siconScale"
+                            to: 1.1
+                            duration: 500
+                            easing.type: Easing.OutBack
+                            easing.overshoot: 2
+                        }
+                        PropertyAnimation {
+                            target: input
+                            property: "siconScale"
+                            to: 1
+                            duration: 1000
+                            easing.type: Easing.OutBack
+                            easing.overshoot: 2
                         }
                     }
                 }
-                headerPositioning: ListView.PullBackHeader
-                delegate: BoxGlass {
-                    id: output
-                    required property var modelData
-                    required property var index
-                    color: '#20ffffff'
-                    light: '#50ffffff'
-                    z: 1
-                    width: 300
-                    radius: 20
-                    property string text: modelData[0] == "user" ? "<font color=\"#aaa\">You: </font>" + modelData[1] : modelData[1]
-                    opacity: 1
-                    height: content.height + 20
-                    scale: 1
-
-                    MouseArea {
-                        id: mousearea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        ScrollView {
-                            id: content
-                            anchors {
-                                left: parent.left
-                                right: parent.right
-                                top: parent.top
-                                margins: 10
-                            }
-                            contentWidth: 280
-                            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                            height: Math.min(500, textO.implicitHeight)
-                            TextEdit {
-                                id: textO
-                                renderType: Text.NativeRendering
-                                font.family: Fonts.sFProDisplayBlack.family
-                                text: output.text
-                                color: "#fff"
-                                selectionColor: "#555"
-                                wrapMode: Text.Wrap
-                                readOnly: true
-                                width: 280
-                                textFormat: TextEdit.MarkdownText
-                            }
-                        }
+                ListView {
+                    id: answers
+                    anchors {
+                        top: input.bottom
+                        topMargin: 10
+                        horizontalCenter: parent.horizontalCenter
+                        bottom: parent.bottom
                     }
-
-                    BoxGlass {
-                        anchors {
-                            top: parent.top
-                            right: parent.right
-                            margins: 10.5
-                        }
-                        width: 15
-                        height: 15
-                        radius: 7.5
-                        color: "#20ffffff"
-                        scale: mousearea.containsMouse ? 1 : 0
-                        Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-                        CFVI {
-                            anchors.centerIn: parent
-                            size: 10
-                            opacity: 1
-                            icon: "x.svg"
-                        }
+                    width: 300
+                    spacing: 10
+                    model: ScriptModel {
+                        values: panelWindow.answers
+                    }
+                    add: Transition {
+                        NumberAnimation { properties: "scale"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                        NumberAnimation { properties: "opacity"; from: 0; to: 1; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                    }
+                    remove: Transition {
+                        NumberAnimation { properties: "scale"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                        NumberAnimation { properties: "opacity"; from: 1; to: 0; duration: 300; easing.type: Easing.OutBack; easing.overshoot: 2 }
+                    }
+                    header: Item {
+                        height: 40
+                        width: 300
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                panelWindow.answers.splice(output.index, 1)
+                                panelWindow.answers.splice(0, panelWindow.answers.length)
+                            }
+                            BoxGlass {
+                                id: header
+                                color: '#10ffffff'
+                                light: '#50ffffff'
+                                z: 1
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottomMargin: 10
+                                width: clearBtnText.implicitWidth + 20
+                                height: 30
+                                scale: 1
+                                opacity: 1
+                                Text {
+                                    id: clearBtnText
+                                    anchors.fill: parent
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    color: "#fff"
+                                    text: Translation.tr("Clear")
+                                    font.family: Fonts.sFProDisplayBlack.family
+                                }
+                            }
+                        }
+                    }
+                    headerPositioning: ListView.PullBackHeader
+                    delegate: BoxGlass {
+                        id: output
+                        required property var modelData
+                        required property var index
+                        color: '#20ffffff'
+                        light: '#50ffffff'
+                        z: 1
+                        width: 300
+                        radius: 20
+                        property string text: modelData[0] == "user" ? "<font color=\"#aaa\">You: </font>" + modelData[1] : modelData[1]
+                        opacity: 1
+                        height: content.height + 20
+                        scale: 1
+
+                        MouseArea {
+                            id: mousearea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            ScrollView {
+                                id: content
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    top: parent.top
+                                    margins: 10
+                                }
+                                contentWidth: 280
+                                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                height: Math.min(500, textO.implicitHeight)
+                                TextEdit {
+                                    id: textO
+                                    renderType: Text.NativeRendering
+                                    font.family: Fonts.sFProDisplayBlack.family
+                                    text: output.text
+                                    color: "#fff"
+                                    selectionColor: "#555"
+                                    wrapMode: Text.Wrap
+                                    readOnly: true
+                                    width: 280
+                                    textFormat: TextEdit.MarkdownText
+                                }
+                            }
+                        }
+
+                        BoxGlass {
+                            anchors {
+                                top: parent.top
+                                right: parent.right
+                                margins: 10.5
+                            }
+                            width: 15
+                            height: 15
+                            radius: 7.5
+                            color: "#20ffffff"
+                            scale: mousearea.containsMouse ? 1 : 0
+                            Behavior on scale { NumberAnimation { duration: 100; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                            CFVI {
+                                anchors.centerIn: parent
+                                size: 10
+                                opacity: 1
+                                icon: "x.svg"
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    panelWindow.answers.splice(output.index, 1)
+                                }
                             }
                         }
                     }

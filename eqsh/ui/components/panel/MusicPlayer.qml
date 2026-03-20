@@ -85,6 +85,7 @@ Item {
             icon {
                 width: 35
                 height: 35
+                color: "#ffffff"
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
             }
             onClicked: {
@@ -98,6 +99,7 @@ Item {
             icon {
                 width: 40
                 height: 40
+                color: "#ffffff"
                 source: MusicPlayerProvider.isPlaying ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
             }
             onClicked: {
@@ -111,6 +113,7 @@ Item {
             icon {
                 width: 35
                 height: 35
+                color: "#ffffff"
                 source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
             }
             onClicked: {

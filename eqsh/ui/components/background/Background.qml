@@ -13,24 +13,13 @@ import qs.ui.controls.primitives
 import qs.ui.controls.providers
 
 Scope {
-  IpcHandler {
-    target: "widgets"
-    function editMode() {
+  Component.onCompleted: {
+    Ipc.mixin("eqdesktop.widgets", "toggleEditMode", () => {
       Runtime.widgetEditMode = !Runtime.widgetEditMode
-    }
-  }
-  CustomShortcut {
-    name: "widgets"
-    description: "Enter Widget Edit Mode"
-    onPressed: {
-      Runtime.widgetEditMode = !Runtime.widgetEditMode
-    }
-  }
-  IpcHandler {
-    target: "wallpaper"
-    function change(path: string) {
+    })
+    Ipc.mixin("eqdesktop.wallpaper", "change", (path) => {
       Config.wallpaper.path = path
-    }
+    })
   }
   Variants {
     model: Quickshell.screens

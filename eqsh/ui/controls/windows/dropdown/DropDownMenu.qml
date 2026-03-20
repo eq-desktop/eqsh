@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import Quickshell.Widgets
-import Quickshell.Hyprland
 import qs.config
 import qs
 import qs.core.foundation
@@ -42,6 +41,7 @@ Scope {
     pop.opened = true
   }
   signal cleared()
+  signal clearing()
   property list<DropDownItem> model // ⌘, ⌃, ⌥, ⇧
   default property Component delegate: Item {
     id: dropItem
@@ -156,8 +156,12 @@ Scope {
     implicitHeight: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.heightV : 0) : height
     onCleared: {
       root.cleared()
+      opened = false
     }
-    content: Item {
+    onClearing: {
+      root.clearing()
+    }
+    Item {
       property int xV: box.x
       property int yV: box.y
       property int widthV: box.width

@@ -9,6 +9,7 @@ import QtQuick.Shapes
 import QtQuick.VectorImage
 import QtQuick.Effects
 import qs
+import qs.services
 import qs.config
 import qs.ui.controls.providers
 import qs.ui.controls.advanced
@@ -21,7 +22,13 @@ Control {
     property var wallpaper
     property var grid
     property var screen
-    property var monitor: Hyprland.monitorFor(screen)
+    property var monitor: {
+        if (CompositorService.isHyprland) 
+            return Hyprland.monitorFor(screen)
+        else if (CompositorService.isNiri)
+            return NiriService.monitorFor(screen)
+        return false
+    }
     property real sF: Math.min(0.7777, (1+(1-monitor.scale || 1)))
     property int textSize: 16*sF
     property int textSizeM: 20*sF

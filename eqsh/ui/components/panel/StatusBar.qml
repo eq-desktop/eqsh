@@ -8,6 +8,7 @@ import Quickshell.Hyprland
 import Quickshell.Widgets
 import qs.config
 import qs
+import qs.services
 import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
@@ -28,10 +29,10 @@ Scope {
   property var    focusedscreen: null
   property var    focusedwindow: null
   Connections {
-      target: Hyprland
-      function onFocusedMonitorChanged() {
-          root.focusedscreen = Quickshell.screens.filter(screen => screen.name == Hyprland.focusedMonitor.name)[0];
-      }
+    target: Hyprland
+    function onFocusedMonitorChanged() {
+      root.focusedscreen = Quickshell.screens.filter(screen => screen.name == (CompositorService.isHyprland ? Hyprland.focusedMonitor.name : NiriService.currentOutput))[0];
+    }
   }
 
   Variants {
@@ -484,7 +485,7 @@ Scope {
                 }
               }
               selected: Runtime.aiOpen
-              onClick: Runtime.aiOpen = !Runtime.aiOpen
+              onClick: Ipc.runMixin("eqdesktop.ai", "toggle")
             }
           }
           Component {

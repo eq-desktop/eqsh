@@ -1,7 +1,6 @@
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -26,15 +25,6 @@ Scope {
 
         mask: Region {
             item: Runtime.spotlightOpen ? background : null
-        }
-
-        HyprlandFocusGrab {
-            id: grab
-            windows: [ launcher ]
-            active: Runtime.spotlightOpen
-            onCleared: {
-                Runtime.spotlightOpen = false
-            }
         }
 
         BoxGlass {
@@ -169,17 +159,7 @@ Scope {
     function toggle() {
         Runtime.spotlightOpen = !Runtime.spotlightOpen;
     }
-    IpcHandler {
-        target: "spotlight"
-        function toggle() {
-            root.toggle();
-        }
-    }
-    CustomShortcut {
-        name: "spotlight"
-        description: "Toggle Spotlight"
-        onPressed: {
-            root.toggle();
-        }
+    Component.onCompleted: {
+        Ipc.mixin("eqdesktop.spotlight", "toggle", root.toggle);
     }
 }

@@ -1,6 +1,5 @@
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Widgets
 import Quickshell.Services.UPower
 import Quickshell.Io
@@ -94,10 +93,6 @@ Scope {
     } else {
       root.closeNotchInstance("lock")
     }
-  }
-
-  Component.onCompleted: {
-    launchByRId("audio")
   }
 
   function getIcon(path) {
@@ -351,41 +346,27 @@ Scope {
       }
     }
   }
-  CustomShortcut {
-    name: "toggleNotchActiveInstance"
-    description: "Toggle notch active instance"
-    onPressed: {
-      root.activateInstance();
-    }
-  }
-  CustomShortcut {
-    name: "toggleNotchInfo"
-    description: "Toggle notch info panel"
-    onPressed: {
-      root.informInstance();
-    }
-  }
-  IpcHandler {
-    target: "notch"
-    function instance(code: string) {
+  Component.onCompleted: {
+    launchByRId("audio")
+    Ipc.mixin("eqdesktop.notch", "activeInstance", () => {
+      Logger.d("IPC::Notch", "Activating notch instance");
+      root.activeInstance()
+    });
+    Ipc.mixin("eqdesktop.notch", "informInstance", () => {
+      Logger.d("IPC::Notch", "Informing notch instance");
+      root.informInstance()
+    });
+    Ipc.mixin("eqdesktop.notch", "instance", (code) => {
       Logger.d("IPC::Notch", "Notch instance requested");
       root.notchInstance(code);
-    }
-    function activateInstance() {
-      Logger.d("IPC::Notch", "Activating notch instance", root.meta.id);
-      root.activateInstance();
-    }
-    function informInstance() {
-      Logger.d("IPC::Notch", "Informing notch instance", root.meta.id);
-      root.informInstance();
-    }
-    function closeInstance() {
-      Logger.d("IPC::Notch", "Closing notch instance", root.meta.id);
+    });
+    Ipc.mixin("eqdesktop.notch", "closeInstance", () => {
+      Logger.d("IPC::Notch", "Closing notch instance");
       root.closeNotchInstanceFocused();
-    }
-    function closeAllInstances() {
+    });
+    Ipc.mixin("eqdesktop.notch", "closeAllInstances", () => {
       Logger.d("IPC::Notch", "Closing all notch instances");
       root.closeAllNotchInstances();
-    }
+    });
   }
 }

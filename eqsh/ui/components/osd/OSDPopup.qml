@@ -47,7 +47,7 @@ Scope {
         implicitWidth: 180
         implicitHeight: 360
         color: "transparent"
-        exclusiveZone: 0
+        exclusiveZone: -1
         focusable: false
         mask: Region {}
 

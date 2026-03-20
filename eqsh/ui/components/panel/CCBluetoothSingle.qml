@@ -34,20 +34,15 @@ Scope {
 
     required property var screen
     property alias opened: panelWindow.opened
-    CustomShortcut {
-        name: "controlCenterBluetooth"
-        description: "Open Control Center Bluetooth Menu"
-        onPressed: {
-            root.open()
-        }
-    }
     function openBluetooth() {
         root.open()
-        root.bluetoothOpened = true;
     }
     Component.onCompleted: {
       Runtime.subscribe("controlCenterBluetooth", () => {
         openBluetooth()
+      })
+      Ipc.mixin("eqdesktop.controlCenter.bluetooth", "open", () => {
+        root.open()
       })
     }
     Pop {
@@ -56,6 +51,10 @@ Scope {
         keyboardFocus: WlrKeyboardFocus.Exclusive
 
         onEscapePressed: () => {
+            panelWindow.opened = false;
+        }
+
+        onCleared: () => {
             panelWindow.opened = false;
         }
         

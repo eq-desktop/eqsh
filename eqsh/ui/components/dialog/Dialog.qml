@@ -1,6 +1,5 @@
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell
 import QtQuick

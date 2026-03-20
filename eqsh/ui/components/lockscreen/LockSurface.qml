@@ -15,6 +15,7 @@ import qs.ui.controls.primitives
 import qs.config
 import qs.ui.components.panel
 import qs.core.system
+import qs.services
 import qs
 
 Rectangle {
@@ -129,7 +130,7 @@ Rectangle {
 		}
 		opacity: Config.general.reduceMotion ? 1 : 0
 		readonly property bool showInteractive: {
-			Config.lockScreen.useFocusedScreen ? (Hyprland.focusedMonitor.name == screen?.name) :
+			Config.lockScreen.useFocusedScreen ? ((CompositorService.isHyprland ? Hyprland.focusedMonitor.name : NiriService.currentOutput) == screen?.name) :
 			Config.lockScreen.mainScreen != "" ? Config.lockScreen.mainScreen == screen.name :
 			Config.lockScreen.interactiveScreens.includes(screen.name)
 		}
@@ -352,6 +353,7 @@ Rectangle {
 						icon {
 							width: 35
 							height: 35
+							color: "#ffffff"
 							source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
 						}
 						onClicked: {
@@ -365,6 +367,7 @@ Rectangle {
 						icon {
 							width: 50
 							height: 50
+							color: "#ffffff"
 							source: MusicPlayerProvider.isPlaying ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
 						}
 						onClicked: {
@@ -378,6 +381,7 @@ Rectangle {
 						icon {
 							width: 35
 							height: 35
+							color: "#ffffff"
 							source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
 						}
 						onClicked: {

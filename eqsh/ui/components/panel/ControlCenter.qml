@@ -44,28 +44,6 @@ Scope {
     property bool bluetoothOpened: false
     property bool wifiOpened: false
     property bool windowOpened: bluetoothOpened || wifiOpened
-    CustomShortcut {
-        name: "controlCenter"
-        description: "Open Control Center"
-        onPressed: {
-            root.open()
-        }
-    }
-    IpcHandler {
-        target: "controlCenter"
-        function open() {
-            Runtime.run("controlCenterOpen")
-        }
-        function close() {
-            Runtime.run("controlCenterClose")
-        }
-        function openBluetooth() {
-            Runtime.run("controlCenterBluetooth")
-        }
-        function openWifi() {
-            Runtime.run("controlCenterWifi")
-        }
-    }
     function openCC() {
         root.open()
     }
@@ -79,6 +57,8 @@ Scope {
       Runtime.subscribe("controlCenterClose", () => {
         closeCC()
       })
+      Ipc.mixin("eqdesktop.controlCenter", "open", openCC)
+      Ipc.mixin("eqdesktop.controlCenter", "close", closeCC)
     }
     Pop {
         id: panelWindow
@@ -90,6 +70,22 @@ Scope {
         property int gridH: 6
         property int gridImplicitWidth: ((box*gridW)+(boxMargin*gridW)+boxMargin)
         property int gridImplicitHeight: ((box*gridH)+(boxMargin*gridH)+boxMargin)
+
+        onClearing: {
+        }
+
+        onCleared: {
+            root.close()
+            if (root.bluetoothOpened) {
+                root.bluetoothOpened = false;
+                return;
+            }
+            if (root.wifiOpened) {
+                root.wifiOpened = false;
+                return;
+            }
+            panelWindow.opened = false;
+        }
 
         function gridPos(x, y) {
             return {

@@ -30,20 +30,10 @@ FloatingWindow {
 
     property var history: []
 
-    IpcHandler {
-        id: ipcHandler
-        target: "settings"
-        function toggle() {
+    Component.onCompleted: {
+        Ipc.mixin("eqdesktop.settings", "toggle", () => {
             Runtime.settingsOpen = !Runtime.settingsOpen;
-        }
-    }
-
-    CustomShortcut {
-        name: "settings"
-        description: "Toggle Settings"
-        onPressed: {
-            Runtime.settingsOpen = !Runtime.settingsOpen;
-        }
+        })
     }
 
     color: "transparent"

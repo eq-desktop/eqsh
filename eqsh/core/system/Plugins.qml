@@ -124,13 +124,13 @@ Singleton {
         model: pluginModel
         delegate: QtObject {
             id: pluginItem
-            required property string fileURL
+            required property string fileUrl
             required property int index
             property int filesLoaded: 0
             property bool filesDone: false
             property var files: ({})
             property var pluginContentModel: FolderListModel {
-                folder: Qt.resolvedUrl(pluginItem.fileURL)
+                folder: Qt.resolvedUrl(pluginItem.fileUrl)
                 showFiles: true
                 showDirs: false
                 property var instantiator: Instantiator {
@@ -138,18 +138,18 @@ Singleton {
                     model: pluginContentModel
                     delegate: QtObject {
                         id: pluginContentItem
-                        required property string fileURL
+                        required property string fileUrl
                         required property int index
                         property bool filesDone: pluginContentKavo.loaded
                         property var pluginContentKavo: FileView {
                             id: pluginContentKavo
-                            path: fileURL
+                            path: fileUrl
                             blockLoading: true
                         }
                         onFilesDoneChanged: {
                             if (pluginContentItem.filesDone) {
                                 pluginItem.filesLoaded += 1;
-                                pluginItem.files[fileURL] = pluginContentKavo.text();
+                                pluginItem.files[fileUrl] = pluginContentKavo.text();
                                 pluginItem.filesDone = pluginItem.filesLoaded == pluginContentModel.count;
                             }
                         }
@@ -158,7 +158,7 @@ Singleton {
             }
             onFilesDoneChanged: {
                 if (filesDone) {
-                    loadPlugin(fileURL, pluginItem.files, index)
+                    loadPlugin(fileUrl, pluginItem.files, index)
                 }
             }
         }

@@ -57,43 +57,21 @@ Scope {
 		}
     }
 
-    CustomShortcut {
-        name: "lock"
-        description: "Lock the current session"
-        onPressed: {
+	Component.onCompleted: {
+		Ipc.mixin("eqdesktop.lock", "lock", () => {
 			root.lock();
 			loader.activeAsync = true;
-		}
-    }
-
-    CustomShortcut {
-        name: "unlock"
-        description: "Unlock the current session"
-        onPressed: {
+		});
+		Ipc.mixin("eqdesktop.lock", "unlock", () => {
 			root.unlock();
-		}
-    }
+		});
+		Ipc.mixin("eqdesktop.lock", "isLoaded", () => {
+			return loader.active;
+		});
+	}
 
 	function lockScreen() {
 		root.lock();
 		loader.activeAsync = true;
 	}
-
-    IpcHandler {
-        target: "eqlock"
-
-        function lock(): void {
-			root.lock();
-            loader.activeAsync = true;
-        }
-
-        function unlock(): void {
-			root.unlock();
-            loader.item.locked = false;
-        }
-
-        function isLocked(): bool {
-            return loader.active;
-        }
-    }
 }

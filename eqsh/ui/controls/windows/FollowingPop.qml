@@ -23,13 +23,15 @@ Scope {
     default property alias content: background.children
     signal clearing()
     signal cleared()
+    property bool isClearing: false
     function clear() {
         root.clearing();
+        root.isClearing = true;
         hideAnim.start();
     }
 
     signal escapePressed()
-    PanelWindow {
+    FollowingPanelWindow {
         id: panelWindow
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: root.blur ? "eqsh:blur" : "eqsh"
@@ -53,6 +55,7 @@ Scope {
             running: false
             interval: root.animationDuration
             onTriggered: {
+                root.isClearing = false;
                 root.cleared();
             }
         }
@@ -61,6 +64,7 @@ Scope {
             visible: parent.visible
             onClicked: {
                 root.clearing();
+                root.isClearing = true;
                 hideAnim.start();
             }
         }

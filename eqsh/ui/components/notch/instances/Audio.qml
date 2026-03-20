@@ -225,6 +225,7 @@ NotchApplication {
                 icon {
                     width: 35
                     height: 35
+                    color: "#ffffff"
                     source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/backward.svg")
                 }
                 onClicked: {
@@ -238,6 +239,7 @@ NotchApplication {
                 icon {
                     width: 50
                     height: 50
+                    color: "#ffffff"
                     source: MusicPlayerProvider.isPlaying ? Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/pause.svg") : Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/play.svg")
                 }
                 onClicked: {
@@ -251,6 +253,7 @@ NotchApplication {
                 icon {
                     width: 35
                     height: 35
+                    color: "#ffffff"
                     source: Qt.resolvedUrl(Quickshell.shellDir + "/media/icons/music/forward.svg")
                 }
                 onClicked: {

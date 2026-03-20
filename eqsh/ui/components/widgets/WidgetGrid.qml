@@ -6,7 +6,6 @@ import QtQuick.Effects
 import QtQuick.Controls.Fusion
 import Quickshell.Wayland
 import Quickshell.Widgets
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell
 import qs.ui.controls.auxiliary

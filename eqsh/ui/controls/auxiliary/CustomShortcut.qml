@@ -1,5 +1,9 @@
 import Quickshell.Hyprland
+import Quickshell
+import QtQuick
+import qs.services
 
 GlobalShortcut {
-	appid: "eqsh"
+    id: shortcut
+    appid: "eqsh"
 }

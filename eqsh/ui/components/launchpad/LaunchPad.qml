@@ -4,7 +4,6 @@ import QtQuick.VectorImage
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Io
 import qs.config
 import qs
@@ -18,18 +17,10 @@ import QtQuick.VectorImage
 Scope {
   id: root
   property bool showLP: Runtime.launchpadOpen
-  IpcHandler {
-    target: "launchpad"
-    function toggle() {
+  Component.onCompleted: {
+    Ipc.runMixin("eqdesktop.launchpad", "toggle", () => {
       Runtime.launchpadOpen = !Runtime.launchpadOpen
-    }
-  }
-  CustomShortcut {
-    name: "launchpad"
-    description: "Toggle Launchpad"
-    onPressed: {
-      Runtime.launchpadOpen = !Runtime.launchpadOpen
-    }
+    })
   }
   Variants {
     model: Quickshell.screens

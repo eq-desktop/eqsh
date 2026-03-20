@@ -8,6 +8,7 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import qs.config
 import qs
+import qs.services
 import qs.core.foundation
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
@@ -24,40 +25,24 @@ Scope {
   property bool takingScreenshot: false
   signal requestScreenshot(quick: bool)
   property var region: Qt.rect(0, 0, 0, 0)
-  property var outputMon: Hyprland.focusedMonitor
+  property var outputMon: (CompositorService.isHyprland ? Hyprland.focusedMonitor : NiriService.outputs[NiriService.currentOutput])
   property int optionsSaveTo: 0
   property int optionsTimer: 0
   property int mode: 1 // 0 = monitor, 1 = region, 2 = window
   property bool isQuick: false
   property list<bool> optionsOptions: [false, false, false]
-  IpcHandler {
-    target: "screenshot"
-    function toggle() {
+  Component.onCompleted: {
+    Ipc.mixin("eqdesktop.screenshot", "open", () => {
       requestScreenshot(false)
-    }
-  }
-  CustomShortcut {
-    name: "screenshot"
-    description: "Take Screenshot"
-    onPressed: {
-      requestScreenshot(false)
-    }
-  }
-  CustomShortcut {
-    name: "screenshotRegion"
-    description: "Take Screenshot Region"
-    onPressed: {
+    })
+    Ipc.mixin("eqdesktop.screenshot", "region", () => {
       root.mode = 1
       requestScreenshot(true)
-    }
-  }
-  CustomShortcut {
-    name: "screenshotEntireScreen"
-    description: "Take Screenshot of Screen"
-    onPressed: {
+    })
+     Ipc.mixin("eqdesktop.screenshot", "screen", () => {
       root.mode = 0
       takeScreenshotEntireProcess.running = true
-    }
+    })
   }
 
   function roundEven(v) {
@@ -83,7 +68,7 @@ Scope {
       root.takingScreenshot = false
     }
     stderr: StdioCollector {
-      onStreamFinished: if (text != "") Logger.error("Screenshot", "taking screenshot:", text);
+      onStreamFinished: if (text != "") Logger.e("Screenshot", "taking screenshot: " + text);
     }
   }
 
@@ -96,11 +81,11 @@ Scope {
     ]
     running: false
     onExited: {
-      Logger.info("Screenshot", "Screenshot taken");
+      Logger.i("Screenshot", "Screenshot taken");
       root.takingScreenshot = false;
     }
     stderr: StdioCollector {
-      onStreamFinished: if (text != "") Logger.error("Screenshot", "taking screenshot:", text);
+      onStreamFinished: if (text != "") Logger.e("Screenshot", "taking screenshot: " + text);
     }
   }
   onRequestScreenshot: (quick) => {
