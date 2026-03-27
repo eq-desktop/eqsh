@@ -129,8 +129,9 @@ guix install quickshell
 </summary>
 
 ```bash
-pip install git+https://github.com/eq-desktop/cli.git
-equora install
+git clone https://github.com/eq-desktop/cli.git
+cd cli/
+./install.sh
 ```
 
 </details>
@@ -141,10 +142,10 @@ equora install
 </summary>
 
 ```bash
-mkdir ~/eqSh
-mkdir ~/.config/quickshell
-git clone https://github.com/eq-desktop/eqSh ~/eqSh
+git clone https://github.com/eq-desktop/eqSh 
+cd eqSh
 git submodule update --init --recursive
+mkdir -p ~/.config/quickshell
 mv ~/eqSh/eqsh ~/.config/quickshell/
 ```
 
