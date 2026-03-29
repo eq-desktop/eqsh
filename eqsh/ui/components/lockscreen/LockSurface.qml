@@ -10,6 +10,7 @@ import Quickshell.Hyprland
 import Quickshell
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
+import qs.ui.advanced.glass
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import qs.config
@@ -165,6 +166,14 @@ Rectangle {
 			blurMax: 64 * Config.lockScreen.blurStrength
 			blurMultiplier: 1
 		}
+		PropertyAnimation {
+			target: mediaBackgroundBlur
+			property: "blur"
+			from: 0
+			to: 0.5
+			duration: 2000
+			id: mediaGlassShow1Animation
+		}
 		ShaderEffectSource {
 			id: clockBlurSource
 			sourceItem: mediaBackgroundBlur
@@ -187,11 +196,9 @@ Rectangle {
 			width: 330
 			height: 200
 			radius: 30
-			GlassBox {
-				anchors.top: parent.top
-				anchors.left: parent.left
-				anchors.leftMargin: -25
-				anchors.topMargin: -25
+			GlassMaterial {
+				id: mediaGlassInternal
+				anchors.fill: parent
 				visible: MusicPlayerProvider.isAvailable
 				opacity: contentItem.opacity == 1 ? 1 : 0
 				Behavior on opacity {
@@ -200,23 +207,39 @@ Rectangle {
 				Behavior on width {
 					NumberAnimation { duration: 400; easing.type: Easing.OutBack; easing.overshoot: 3 }
 				}
-				boxPos: Qt.point(25, 25)
-				boxSize: Qt.point(330, 200)
+				pos: Qt.point(1, 1)
+				size: Qt.point(328, 198)
 				source: clockBlurSource
-				radius: 30
-				width: 380
-				height: 250
-				Behavior on glassBevel {
-					NumberAnimation { duration: 400 }
+				blurSource: clockBlurSource
+				bloomSource: clockBlurSource
+				glassRefractionDim: 30
+				glassRefractionMag: 0
+				property real rimLightOpacity: 0.0
+				rimLightColor: Qt.vector4d(1, 1, 1, rimLightOpacity)
+				ParallelAnimation {
+					id: mediaGlassShow2Animation
+					PropertyAnimation {
+						target: mediaGlassInternal
+						property: "glassRefractionMag"
+						from: 0
+						to: 100
+						duration: 1000
+					}
+					PropertyAnimation {
+						target: mediaGlassInternal
+						property: "rimLightOpacity"
+						from: 0
+						to: 0.15
+						duration: 1000
+					}
 				}
-				color: Qt.alpha(AccentColor.preferredAccentTextColor == "white" ? "#1e1e1e" : "#ffffff", 0.5)
-				glassBevel: 50
 				Component.onCompleted: {
-					mediaGlass.glassBevel = 50
+					mediaGlassShow1Animation.restart()
+					mediaGlassShow2Animation.restart()
 				}
-				glassMaxRefractionDistance: 0
-				glassHairlineReflectionDistance: 0
-				glassHairlineWidthPixels: 2
+				glassRefractionAberration: 10
+				radius: 30
+				//glassTintColor: Qt.alpha(AccentColor.preferredAccentTextColor == "white" ? "#1e1e1e" : "#ffffff", 0.5)
 			}	
 		}
 
@@ -576,17 +599,18 @@ Rectangle {
 						Behavior on opacity {
 							NumberAnimation { duration: 100; easing.type: Easing.InOutQuad }
 						}
-						GlassBox {
-							width: parent.width
-							height: parent.height
+						GlassMaterial {
+							anchors.fill: parent
+							pos: Qt.point(1, 1)
+							size: Qt.point(198, 33)
+							radius: 16.5
+							glassRefractionDim: 20
+							glassRefractionMag: 20
+							glassRefractionAberration: 10
 							opacity: parent.opacity
 							source: sourceBackdrop
-							blurSource: blurSourceBackdrop
-							rimStrength: 0.5
-							glassMaxRefractionDistance: 10
-							glassHairlineReflectionDistance: 5
-							lightDir: Qt.point(1, 1)
-							color: '#00361905'
+							blurSource: sourceBackdrop
+							bloomSource: sourceBackdrop
 						}
 						SequentialAnimation {
 							id: wiggleAnim

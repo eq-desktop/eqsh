@@ -18,19 +18,23 @@ Item {
     property int translateModifierX: 0
     property int translateModifierY: 0
     property real scaleModifier: 1
+    property real forcedScaleModifier: 1
     property real requestedW: 0
     property real requestedH: 0
     property point requestedMoveVector: Qt.point(-20, -20)
+    property vector3d requestedScaleVector: Qt.vector3d(0.8, 1.1, 1)
+    property int requestedInterval: 300
+    property int requestedEasing: Easing.OutBack
     signal clicked(var mouse)
     signal entered(var mouse)
     signal exited(var mouse)
-    scale: mouseArea.containsMouse ? (scaleModifier+(10/Math.max(width, height))) : 1
+    scale: (mouseArea.containsMouse ? (scaleModifier+(10/Math.max(width, height))) : 1)
     transform: [
         Scale {
             origin.x: root.width/2
             origin.y: root.height/2
-            xScale: root.stretchingX ? 1+Math.abs(root.disX/10) : 1
-            yScale: root.stretchingY ? 1+Math.abs(root.disY/10) : 1
+            xScale: (forcedScaleModifier-1) + (root.stretchingX ? 1+Math.abs(root.disX/10) : 1)
+            yScale: (forcedScaleModifier-1) + (root.stretchingY ? 1+Math.abs(root.disY/10) : 1)
             Behavior on xScale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
             Behavior on yScale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
         },
@@ -49,6 +53,18 @@ Item {
         root.requestedW = w
         root.requestedH = h
         root.requestedMoveVector = moveVec
+        root.requestedScaleVector = Qt.vector3d(0.8, 1, 1)
+        root.requestedInterval = 300
+        root.requestedEasing = Easing.OutBack
+        sizeChangeAnim.restart()
+    }
+    function sizeToV2(w, h, moveVec, scaleVec, timing, easing) {
+        root.requestedW = w
+        root.requestedH = h
+        root.requestedMoveVector = moveVec
+        root.requestedScaleVector = scaleVec
+        root.requestedInterval = timing
+        root.requestedEasing = easing
         sizeChangeAnim.restart()
     }
     SequentialAnimation {
@@ -63,20 +79,20 @@ Item {
                 target: root
                 property: "width"
                 to: root.requestedW
-                duration: 300
-                easing.type: Easing.InOutBack
+                duration: root.requestedInterval
+                easing.type: root.requestedEasing
             }
             PropertyAnimation {
                 target: root
                 property: "height"
                 to: root.requestedH
-                duration: 300
-                easing.type: Easing.InOutBack
+                duration: root.requestedInterval
+                easing.type: root.requestedEasing
             }
             PropertyAction {
                 target: root
-                property: "scaleModifier"
-                value: 0.8
+                property: "forcedScaleModifier"
+                value: root.requestedScaleVector.x
             }
             SequentialAnimation {
                 ParallelAnimation {
@@ -91,7 +107,7 @@ Item {
                         value: root.requestedMoveVector.y
                     }
                 }
-                PauseAnimation { duration: 150 }
+                PauseAnimation { duration: root.requestedInterval/2 }
                 ParallelAnimation {
                     PropertyAction {
                         target: root
@@ -106,8 +122,14 @@ Item {
                 }
                 PropertyAction {
                     target: root
-                    property: "scaleModifier"
-                    value: 1
+                    property: "forcedScaleModifier"
+                    value: root.requestedScaleVector.x
+                }
+                PauseAnimation { duration: root.requestedInterval/2 }
+                PropertyAction {
+                    target: root
+                    property: "forcedScaleModifier"
+                    value: root.requestedScaleVector.z
                 }
             }
         }
