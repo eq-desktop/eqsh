@@ -128,25 +128,21 @@ guix install quickshell
 <b>2. Install using CLI</b>
 </summary>
 
+Install using curl:
+
 ```bash
-git clone https://github.com/eq-desktop/cli.git
-cd cli/
-./install.sh
+curl -fsSL https://eqsh-wiki.github.io/get | bash
+au run
 ```
 
-</details>
-
-<details>
-<summary>
-<b>2. Clone git repository (Old way of installing)</b>
-</summary>
+Manual installation: 
 
 ```bash
 git clone https://github.com/eq-desktop/eqSh 
 cd eqSh
 git submodule update --init --recursive
-mkdir -p ~/.config/quickshell
-mv ~/eqSh/eqsh ~/.config/quickshell/
+mkdir -p ~/.local/share/equora/
+mv ~/eqSh/ ~/.local/share/equora/
 ```
 
 For wallpapers do:
@@ -155,9 +151,6 @@ For wallpapers do:
 git clone https://github.com/eq-desktop/wallpapers.git ~/eqSh/wallpapers
 ```
 
-</details>
-
-<details>
 <summary>
 <b>3. Start eqSh</b>
 </summary>
