@@ -15,7 +15,13 @@ Item {
     Advanced NotchApplication Object
     Made by: Eq-Desktop
     License: Apache-2.0
-    Made for Elephant-1
+    Made for Elephant-2
+
+    // Adds:
+        - new Animations
+        - new borderColor property
+        - improved clipping shader without blurring the surface
+        - New start- Width/Height properties for better animations
 
     */
     id: root
@@ -24,8 +30,8 @@ Item {
     property Meta meta: Meta {}
     property Properties properties: Properties {}
     property bool onlyActive: false
-    property bool isActive: onlyActive
-    property string notchState: isActive ? "active" : "indicative" // indicative, active
+    property bool startActivate: onlyActive
+    property string notchState: startActivate ? "active" : "indicative" // indicative, active
     property bool   noMode: onlyActive
     property Component indicative: null
     property Component active: null
@@ -33,9 +39,19 @@ Item {
     property var notchContainer: parent
     property var isFocused: notch.focusedRunningInstance?.meta.id == meta.id || false
     property var indicativeShowAnim: indicativeShowAnimComp
+    property bool inCreation: meta.inCreation
+    property var states: ({})
 
     property alias scaleY: root.properties.scaleY
     property alias scaleX: root.properties.scaleX
+
+    property bool configIsLoaded: Config.loaded
+    
+    
+    signal clicked(bool pressed)
+    onClicked: (pressed) => {
+        root.activeNotchInternal()
+    }
 
     z: 99
 
@@ -78,6 +94,8 @@ Item {
         property var    id: null
         property bool   inCreation: false
         property string name: ""
+        property int    startWidth: notch.defaultWidth
+        property int    startHeight: notch.defaultHeight
         property int    width: notch.defaultWidth
         property int    height: notch.defaultHeight
         property int    xOffset: 0
@@ -85,6 +103,13 @@ Item {
         property int    indicativeHeight: notch.defaultHeight
         property int    informativeWidth: indicativeWidth+10
         property int    informativeHeight: indicativeHeight+5
+
+        onWidthChanged: {notch.assignState({"id": id, "state": "active", "width": width, "height": height})}
+        onHeightChanged: {notch.assignState({"id": id, "state": "active", "width": width, "height": height})}
+        onIndicativeWidthChanged: {notch.assignState({"id": id, "state": "indicative", "width": indicativeWidth, "height": indicativeHeight})}
+        onIndicativeHeightChanged: {notch.assignState({"id": id, "state": "indicative", "width": indicativeWidth, "height": indicativeHeight})}
+        onInformativeWidthChanged: {notch.assignState({"id": id, "state": "informative", "width": informativeWidth, "height": informativeHeight})}
+        onInformativeHeightChanged: {notch.assignState({"id": id, "state": "informative", "width": informativeWidth, "height": informativeHeight})}
 
         property int    closeAfterMs: -1
         property int    shrinkMs: 300
@@ -107,10 +132,12 @@ Item {
         property real startOpacity: 0
 
         property int  animDuration: 500
+
+        property string  _PRIV_borderColor: "-"
     }
 
     component Details: QtObject {
-        property string version: "Elephant-1"
+        property string version: "Elephant-2"
         /*deprecated*/ property string shadowColor: "#000000"
         property string appType: "indicator" // indicator, media
     }
@@ -118,70 +145,88 @@ Item {
     opacity: properties.startOpacity
     scale: properties.startScale
 
-    function activate() {
-        if (notchState !== "active") {
-            notchState = "active"
+    function sendMessage(message) {
+        if (notchState !== message) {
+            notchState = message
+            notch.state = {
+                "id": meta.id,
+                "state": message
+            }
         }
     }
 
-    function setIndicative() {
-        if (notchState !== "indicative") {
-            notchState = "indicative"
+    function activate() {root.sendMessage("active")}
+    function setActive() {root.active()}
+    function setIndicative() {root.sendMessage("indicative")}
+    function setInformative() {root.sendMessage("informative")}
+    function setState(state) {
+        notch.state = {
+            "id": meta.id,
+            "state": state
         }
     }
 
-    function setInformative() {
-        if (notchState !== "informative") {
-            notchState = "informative"
-        }
-    }
+    function isActive() {return notchState === "active"}
+    function isIndicative() {return notchState === "indicative" || notchState === "informative"}
 
-    function isIndicative() {
-        return notchState === "indicative" || notchState === "informative"
-    }
-
-    function setSize(width, height) {
-        notchContainer.width = width
-        notchContainer.height = height
-    }
-
-    function setSizeDefault() {
-        notchContainer.width = notch.defaultWidth
-        notchContainer.height = notch.defaultHeight
-    }
-
-    function setWidth(width) { notchContainer.width = width }
-    function setHeight(height) { notchContainer.height = height }
-
-    onNotchStateChanged: {
-        if (notchState === "closed") return;
-        resize()
-    }
-
-    function resize() {
-        if (notchState === "active") {
-            notchContainer.width = meta.width
-            notchContainer.height = meta.height
-        } else if (notchState === "indicative") {
-            notchContainer.width = meta.indicativeWidth
-            notchContainer.height = meta.indicativeHeight
-        } else if (notchState === "informative") {
-            notchContainer.width = meta.informativeWidth
-            notchContainer.height = meta.informativeHeight
-        } else {
-            notchContainer.width = meta.indicativeWidth
-            notchContainer.height = meta.indicativeHeight
+    function activeNotchInternal() {
+        if (!root.noMode) {
+            pressDownAnim.stop()
+            root.activate()
         }
     }
 
     function initSetup() {
         notchContainer.xOffset = root.meta.xOffset
+        notchContainer.borderColor = root.properties._PRIV_borderColor !== "-" ? root.properties._PRIV_borderColor : "#20ffffff"
     }
 
     Component.onCompleted: {
         opacity = 1
         scale = 1
-        resize()
+    }
+
+    onInCreationChanged: {
+        if (inCreation) {
+            return
+        } else {
+            notch.assignState({
+                "id": meta.id,
+                "state": "active",
+                "width": meta.width,
+                "height": meta.height,
+                "easing": Easing.EaseInOut
+            })
+            notch.assignState({
+                "id": meta.id,
+                "state": "indicative",
+                "width": meta.indicativeWidth,
+                "height": meta.indicativeHeight,
+                "easing": Easing.EaseInOut
+            })
+            notch.assignState({
+                "id": meta.id,
+                "state": "informative",
+                "width": meta.informativeWidth,
+                "height": meta.informativeHeight,
+                "easing": Easing.EaseInOut
+            })
+            // assign states from root.states
+            for (const [key, value] of Object.entries(root.states)) {
+                console.info(key, JSON.stringify(value))
+                notch.assignState({
+                    "id": meta.id,
+                    "state": key,
+                    "width": value.width,
+                    "height": value.height,
+                    "offset": value.offset,
+                    "curve": value.curve,
+                    "duration": value.duration,
+                    "easing": value.easing
+                })
+            }
+            root.setState(notchState)
+        }
     }
 
     Timer {
@@ -206,7 +251,7 @@ Item {
         target: notch
         function onActivateInstance() {
             if (root.isFocused) {
-                root.activateInstance();
+                root.setActive();
             }
         }
         function onInformInstance() {
@@ -219,7 +264,6 @@ Item {
                 root.closeMe()
             }
             if (instance.meta.id === root.meta.id) {
-                root.resize()
                 root.initSetup()
             }
         }
@@ -356,7 +400,7 @@ Item {
         interval: meta.shrinkMs
         repeat: false
         running: false
-        onTriggered: if (notchState === "active" && !root.noMode) notchState = "indicative"
+        onTriggered: if (root.isActive() && !root.noMode) root.setIndicative()
     }
 
     Timer {
@@ -364,18 +408,44 @@ Item {
         interval: Config.notch.openHoverMs
         repeat: false
         running: false
-        onTriggered: if (notchState === "indicative" && !root.noMode) notchState = "active"
+        onTriggered: if (root.isIndicative() && !root.noMode) root.setActive()
+    }
+
+    ParallelAnimation {
+        id: pressDownAnim
+        PropertyAnimation {
+            target: notchContainer
+            property: "width"
+            to: meta.width + 10
+            duration: 5000
+            easing.type: Easing.OutCubic
+        }
+        PropertyAnimation {
+            target: notchContainer
+            property: "height"
+            to: meta.height + 5
+            duration: 5000
+            easing.type: Easing.OutCubic
+        }
     }
 
     MouseArea {
         anchors.fill: parent
         z: 99
-        onClicked: {if (!root.noMode) root.activate()}
+        onClicked: {
+            root.clicked(false)
+        }
+        onPressed: {
+            if (root.noMode) return;
+            pressDownAnim.start()
+        }
+        pressAndHoldInterval: 500
+        onPressAndHold: {
+            root.clicked(true)
+        }
         hoverEnabled: true
         scrollGestureEnabled: true
         onEntered: {
-            notchContainer.width = meta.indicativeWidth+10
-            notchContainer.height = meta.indicativeHeight+5
             root.setInformative()
             shadowOpacity = 0.5
             if (Config.notch.openOnHover) {
@@ -384,8 +454,6 @@ Item {
         }
         onExited: {
             if (notchState !== "active") {
-                notchContainer.width = meta.indicativeWidth
-                notchContainer.height = meta.indicativeHeight
                 root.setIndicative()
                 shadowOpacity = 0
             }

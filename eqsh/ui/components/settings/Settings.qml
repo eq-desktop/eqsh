@@ -113,7 +113,7 @@ FloatingWindow {
                 clip: true
                 radius: 20
                 rimStrength: 1.8
-                color: Config.general.darkMode ? "#ee2a2a2a" : "#ccfefefe"
+                color: Config.general.darkMode ? "#aa2a2a2a" : "#ccfefefe"
 
                 Item {
                     id: searchBar
@@ -507,11 +507,6 @@ FloatingWindow {
                             model: [Translation.tr("No"), Translation.tr("Yes")]
                             currentIndex: Config.notch.onlyVisual ? 1 : 0
                             onCurrentIndexChanged: Config.notch.onlyVisual = currentIndex == 1
-                        }
-                        UILabel { text: Translation.tr("Signature") }
-                        UITextField {
-                            text: Config.notch.signature
-                            onEditingFinished: Config.notch.signature = text
                         }
                         UILabel { text: Translation.tr("Auto hide") }
                         ComboBox {
