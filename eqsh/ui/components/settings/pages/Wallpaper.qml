@@ -124,10 +124,10 @@ ScrollView {
                 width: 140
                 height: 90
                 radius: 19
-                required property string fileURL
-                border.width: root.selectedWallpaper === fileURL ? 3 : 0
+                required property string fileUrl
+                border.width: root.selectedWallpaper === fileUrl ? 3 : 0
                 Behavior on border.width { NumberAnimation { duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1 }}
-                border.color: root.selectedWallpaper === fileURL ? AccentColor.color : "transparent"
+                border.color: root.selectedWallpaper === fileUrl ? AccentColor.color : "transparent"
                 color: "transparent"
 
                 ClippingRectangle {
@@ -137,7 +137,7 @@ ScrollView {
                     color: "#33111111"
                     CFI {
                         anchors.fill: parent
-                        source: fileURL
+                        source: fileUrl
                         asynchronous: true
                         colorized: false
                         sourceSize: Qt.size(width, height)
@@ -149,8 +149,8 @@ ScrollView {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        root.selectedWallpaper = fileURL
-                        Config.wallpaper.path = fileURL
+                        root.selectedWallpaper = fileUrl
+                        Config.wallpaper.path = fileUrl
                     }
                 }
 
@@ -174,8 +174,8 @@ ScrollView {
                     hoverEnabled: true
                     anchors.fill: delButton
                     onClicked: {
-                        let name = SPPathResolver.getName(fileURL)
-                        SPPathResolver.rename(fileURL, ".trashed." + name)
+                        let name = SPPathResolver.getName(fileUrl)
+                        SPPathResolver.rename(fileUrl, ".trashed." + name)
                     }
                 }
             }

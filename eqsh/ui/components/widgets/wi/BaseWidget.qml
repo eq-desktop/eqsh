@@ -47,7 +47,7 @@ Control {
         radius: 25
         rotation: 0
         light: "#50ffffff"
-        color: "#222"
+        color: Config.general.darkMode ? "#222" : "#eee"
     }
 
     contentItem: ClippingRectangle {

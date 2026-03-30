@@ -1,0 +1,16 @@
+# type(scope): short summary (max 50 chars)
+
+# --- Body (optional, wrap at ~72 chars) ---
+# Explain *what* and *why*, not *how*
+# - Motivation for the change
+# - Context if needed
+# - Side effects or limitations
+
+# --- Footer (optional) ---
+# Issue references:
+# Closes #<issue>
+# Fixes #<issue>
+# Refs #<issue>
+
+# Breaking changes:
+# BREAKING CHANGE: describe what breaks and how to migrate

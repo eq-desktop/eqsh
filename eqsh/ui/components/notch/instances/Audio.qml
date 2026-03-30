@@ -12,12 +12,14 @@ import QtQuick.VectorImage
 import QtQuick.Controls
 import QtQuick.Effects
 
-NotchApplication {
+NotchApplicationEl2 {
     id: root
-    details.version: "Elephant-1"
     details.appType: "media"
     immortal: true
-    meta.indicativeWidth: 210
+    meta.startWidth: notch.defaultWidth
+    meta.startHeight: notch.defaultHeight
+    meta.indicativeWidth: notch.defaultWidth
+    meta.informativeWidth: 210
     meta.informativeHeight: meta.indicativeHeight + 20
     meta.height: 200
     meta.width: 400

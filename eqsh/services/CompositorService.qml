@@ -162,7 +162,7 @@ Singleton {
                 }
             }
         } catch (e) {
-            console.warn("CompositorService: workspace snapshot failed:", e);
+            Logger.w("CompositorService", "workspace snapshot failed: " + e);
         }
 
         if (currentWorkspaceId === null)

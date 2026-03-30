@@ -12,6 +12,7 @@ NotchApplication {
     details.appType: "indicator"
     noMode: true
     meta.height: notch.defaultHeight+10
+    properties._PRIV_borderColor: "#50ff3333"
 
     indicative: Item {
         Rectangle {

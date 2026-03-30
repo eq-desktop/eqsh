@@ -148,11 +148,7 @@ Item {
 		property int    hideDuration: 125
 		property bool   fluidEdge: true // Cutout corners
 		property real   fluidEdgeStrength: 0.6 // can be 0-1
-		property string signature: "" // A custom string that displays when Notch is not being used. Leave empty to disable
-		property color  signatureColor: "#fff"
 		property bool   autohide: false
-		/* == HIGH SECURITY RISK == */
-		property bool   interactiveLockscreen: false // If true, the notch will be interactive on the lockscreen. This is a huge security risk
 	}
 
 	component Launchpad: JsonObject {

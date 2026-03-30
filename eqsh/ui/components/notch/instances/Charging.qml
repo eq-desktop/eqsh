@@ -9,8 +9,9 @@ import qs.ui.components.panel
 import QtQuick.VectorImage
 import QtQuick.Effects
 
-NotchApplication {
-    details.version: "Elephant-1"
+NotchApplicationEl2 {
+    meta.startWidth: 300
+    meta.startHeight: notch.defaultHeight+10
     meta.height: notch.defaultHeight+10
     meta.width: 300
     meta.closeAfterMs: 2000

@@ -13,6 +13,7 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
+import qs.ui.advanced.shader.blur
 import Quickshell.Io
 import Quickshell.Widgets
 

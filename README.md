@@ -68,7 +68,7 @@ It’s more than a bar. eqSh is your **panel, notch, launcher, notifications hub
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 <h3><a href="https://eqsh-wiki.github.io/"><b>Wiki</b></a></h3>
 
@@ -155,13 +155,13 @@ git clone https://github.com/eq-desktop/wallpapers.git ~/eqSh/wallpapers
 </summary>
 
 ```bash
-equora run
+au run
 ```
 
 Or make it permanent by adding this to `~/.config/hypr/hyprland.conf`:
 
 ```bash
-exec-once = equora run
+exec-once = /usr/local/bin/au run
 ```
 
 </details>
@@ -217,9 +217,9 @@ Hyprland Config: [Hyprland Config](https://github.com/eq-desktop/hyprland-config
 
 ---
 
-## 📖 Documentation
+## Documentation
 
-👉 Full docs & guides: [Wiki](https://eqsh-wiki.github.io/)
+- Full docs & guides: [Wiki](https://eqsh-wiki.github.io/)
 
 ---
 
