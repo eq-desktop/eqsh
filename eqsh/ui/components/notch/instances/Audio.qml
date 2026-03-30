@@ -19,9 +19,6 @@ NotchApplicationEl2 {
     meta.startWidth: notch.defaultWidth
     meta.startHeight: notch.defaultHeight
     meta.indicativeWidth: notch.defaultWidth
-    Component.onCompleted: {
-        console.info(notch.defaultWidth)
-    }
     meta.informativeWidth: 210
     meta.informativeHeight: meta.indicativeHeight + 20
     meta.height: 200

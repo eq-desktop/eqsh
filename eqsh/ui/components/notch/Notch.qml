@@ -33,10 +33,6 @@ Scope {
   property list<var> runningNotchInstances: []
   property var stateMachine: ({
   })
-  property var state: {
-    "id": null,
-    "state": "null"
-  }
 
   function assignState(state) {
     if (state.id === null) return;
@@ -276,10 +272,14 @@ Scope {
         }
 
         property string borderColor: "#20ffffff"
+        property var state: {
+          "id": null,
+          "state": "null"
+        }
 
         function updateSizing() {
-            if (root.state.id in root.stateMachine) {
-              const state = root.stateMachine[root.state.id][root.state.state];
+            if (notchBg.state.id in root.stateMachine) {
+              const state = root.stateMachine[notchBg.state.id][notchBg.state.state];
               if (state) {
                 //notchBg.width = state.width;
                 //notchBg.height = state.height;
@@ -294,12 +294,12 @@ Scope {
               }
             }
         }
+        onStateChanged: {
+          notchBg.updateSizing();
+        }
 
         Connections {
           target: root
-          function onStateChanged() {
-            notchBg.updateSizing();
-          }
           function onFocusedInstance() {
             notchBg.updateSizing();
           }

@@ -148,7 +148,7 @@ Item {
     function sendMessage(message) {
         if (notchState !== message) {
             notchState = message
-            notch.state = {
+            notchContainer.state = {
                 "id": meta.id,
                 "state": message
             }
@@ -160,7 +160,7 @@ Item {
     function setIndicative() {root.sendMessage("indicative")}
     function setInformative() {root.sendMessage("informative")}
     function setState(state) {
-        notch.state = {
+        notchContainer.state = {
             "id": meta.id,
             "state": state
         }
@@ -213,7 +213,6 @@ Item {
             })
             // assign states from root.states
             for (const [key, value] of Object.entries(root.states)) {
-                console.info(key, JSON.stringify(value))
                 notch.assignState({
                     "id": meta.id,
                     "state": key,

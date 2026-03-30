@@ -12,6 +12,7 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
 import qs.ui.controls.providers
+import qs.ui.controls.windows
 import QtQuick.Controls.Fusion
 
 Scope {
@@ -101,93 +102,86 @@ Scope {
     }
   }
 
-  Variants {
-    model: Quickshell.screens
+  FollowingPanelWindow {
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.namespace: "eqsh:blur"
+    anchors {
+      bottom: true
+    }
 
-    PanelWindow {
-      WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.namespace: "eqsh:blur"
-      required property var modelData
-      screen: modelData
+    mask: Region {
+      item: root.shown ? dock : null
+    }
 
-      anchors {
-        bottom: true
+    implicitHeight: 120
+    implicitWidth: dock.implicitWidth + 10
+    exclusiveZone: -1
+    color: "transparent"
+    visible: true
+    MouseArea {
+      id: dockMouseArea
+      anchors.fill: parent
+      hoverEnabled: true
+      onEntered: {
+        dock.mouseInside = true
+        dock.mouseX = mouseX
       }
-
-      mask: Region {
-        item: root.shown ? dock : null
+      onPositionChanged: dock.mouseX = mouseX
+      onExited: {
+        dock.mouseInside = false
+        dock.mouseX = mouseX
       }
-
-      implicitHeight: 120
-      implicitWidth: dock.implicitWidth + 10
-      exclusiveZone: -1
-      color: "transparent"
-      visible: true
-      MouseArea {
-        id: dockMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-          dock.mouseInside = true
-          dock.mouseX = mouseX
-        }
-        onPositionChanged: dock.mouseX = mouseX
-        onExited: {
-          dock.mouseInside = false
-          dock.mouseX = mouseX
-        }
-        propagateComposedEvents: true
-        onClicked: (mouse)=> {
-          mouse.accepted = false
-        }
-        Item {
-          id: dock
-          implicitWidth: dockRow.implicitWidth + 20
-          anchors {
-            fill: parent
-            bottomMargin: root.shown ? 0 : -100
-            Behavior on bottomMargin {
-              NumberAnimation {
-                duration: Config.dock.showAnimation ? 500 : 0
-                easing.type: Easing.InOutQuad
-              }
+      propagateComposedEvents: true
+      onClicked: (mouse)=> {
+        mouse.accepted = false
+      }
+      Item {
+        id: dock
+        implicitWidth: dockRow.implicitWidth + 20
+        anchors {
+          fill: parent
+          bottomMargin: root.shown ? 0 : -100
+          Behavior on bottomMargin {
+            NumberAnimation {
+              duration: Config.dock.showAnimation ? 500 : 0
+              easing.type: Easing.InOutQuad
             }
           }
+        }
 
-          BoxGlass {
-            id: dockBackground
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            implicitWidth: dockRow.implicitWidth + 20
-            implicitHeight: 65
-            radius: Config.dock.radius
-            color: Config.dock.color
-            rimStrength: 0.2
-            lightDir: Qt.point(1, 1)
-            anchors.bottomMargin: 6
-          }
+        BoxGlass {
+          id: dockBackground
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.bottom: parent.bottom
+          implicitWidth: dockRow.implicitWidth + 20
+          implicitHeight: 65
+          radius: Config.dock.radius
+          color: Config.dock.color
+          rimStrength: 0.2
+          lightDir: Qt.point(1, 1)
+          anchors.bottomMargin: 6
+        }
 
-          // Public state für Maus
-          property real mouseX: 0
-          property bool mouseInside: false
+        // Public state für Maus
+        property real mouseX: 0
+        property bool mouseInside: false
 
-          RowLayout {
-            id: dockRow
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 15
-            spacing: 8
+        RowLayout {
+          id: dockRow
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.bottom: parent.bottom
+          anchors.bottomMargin: 15
+          spacing: 8
 
-            Repeater {
-              id: dockRepeater
-              model: Config.dock.apps
-              delegate: DockItem {
-                appName: modelData
-                width: modelData == "eq:spacer" ? 10 : 50
-                launchpad: modelData == "eq:launchpad"
-                settings: modelData == "eq:settings"
-                spacer: modelData == "eq:spacer"
-              }
+          Repeater {
+            id: dockRepeater
+            model: Config.dock.apps
+            delegate: DockItem {
+              appName: modelData
+              width: modelData == "eq:spacer" ? 10 : 50
+              launchpad: modelData == "eq:launchpad"
+              settings: modelData == "eq:settings"
+              spacer: modelData == "eq:spacer"
             }
           }
         }
