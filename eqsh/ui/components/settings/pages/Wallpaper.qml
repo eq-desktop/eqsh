@@ -89,6 +89,7 @@ ScrollView {
                 width: 150
                 text: Translation.tr("Add another wallpaper...")
                 primary: true
+                palette.buttonText: AccentColor.textColor
                 onClicked: {
                     fileDialog.open()
                 }

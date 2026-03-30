@@ -160,6 +160,7 @@ Scope {
 										}
 										return Translation.tr(modelData)
 									}
+									color: "white"
 								}
 								MouseArea {
 									id: mousearea

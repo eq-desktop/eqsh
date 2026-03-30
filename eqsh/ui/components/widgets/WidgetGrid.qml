@@ -167,6 +167,7 @@ Item {
                 if (!Runtime.widgetEditMode) return;
                 Runtime.widgetAddOpen = true
             }
+            textColor: AccentColor.textColor
             layer.enabled: true
             layer.effect: MultiEffect {
                 blurEnabled: true

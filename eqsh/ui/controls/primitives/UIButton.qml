@@ -19,6 +19,7 @@ Item {
     property bool highlightEnabled: true
     property bool liquid: false
     property string color: "#40000000"
+    property string textColor: "#ffffff"
     property string hoverColor: "#555"
     property string primaryColor: AccentColor.color
     property string primaryHoverColor: Qt.lighter(primaryColor, 1.1)
@@ -49,6 +50,7 @@ Item {
         id: buttonText
         anchors.centerIn: parent
         text: button.text
+        color: button.textColor
     }
     MouseArea {
         id: mouseArea
