@@ -10,7 +10,7 @@ Scope {
 
     PanelWindow {
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.namespace: "eqsh:lock"
+      WlrLayershell.namespace: "eqsh:screencorners"
       id: panelWindow
       required property var modelData
       property int radius: Config.screenEdges.radius

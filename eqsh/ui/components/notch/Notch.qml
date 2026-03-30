@@ -207,7 +207,7 @@ Scope {
 
     PanelWindow {
       WlrLayershell.layer: WlrLayer.Overlay
-      WlrLayershell.namespace: "eqsh:lock"
+      WlrLayershell.namespace: "eqsh:notch"
       id: panelWindow
       required property var modelData
       screen: modelData

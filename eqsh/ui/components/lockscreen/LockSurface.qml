@@ -10,7 +10,10 @@ import Quickshell.Hyprland
 import Quickshell
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
-import qs.ui.advanced.glass
+
+import qs.ui.advanced.shader
+import qs.ui.advanced.shader.glass
+
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import qs.config

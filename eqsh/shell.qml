@@ -29,6 +29,9 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
 import qs.ui.controls.providers
+
+import qs.modules.screencorners as ScreenCorners
+
 import qs.config
 import qs.core.foundation
 import qs.core.system
@@ -164,5 +167,5 @@ Scope {
   ActivateLinux {}
   Version {}
   Loader { active: Config.screenshot.enable; asynchronous: true; sourceComponent: Screenshot {}}
-  ScreenCorners {}
+  ScreenCorners.ScreenCorners {}
 }
