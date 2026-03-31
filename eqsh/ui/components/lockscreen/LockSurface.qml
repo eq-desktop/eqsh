@@ -258,7 +258,7 @@ Rectangle {
 			GlassMaterial {
 				id: mediaGlassInternal
 				anchors.fill: parent
-				visible: true
+				visible: MusicPlayerProvider.isAvailable
 				opacity: contentItem.opacity == 1 ? 1 : 0
 				Behavior on opacity {
 					NumberAnimation { duration: 400 }
