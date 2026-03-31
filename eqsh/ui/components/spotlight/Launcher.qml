@@ -12,154 +12,386 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.providers
 import qs.ui.controls.primitives
 import qs.ui.controls.windows
+import qs.ui.controls.windows.dropdown
 
 Scope {
     id: root
 
+    property bool actionsShown: false
+    property string selectedAction: ""
+    property string hoveredAction: ""
+    property string glassColor: "#a0ffffff"
+    property string textColor: "#1e1e1e"
+
+    function clickAction(action: string) {
+        root.hoveredAction = ""
+        root.selectedAction = action
+        root.actionsShown = false
+    }
+
+    Component.onCompleted: {
+        Ipc.mixin("eqdesktop.spotlight", "toggle", () => {
+            Runtime.spotlightOpen = !Runtime.spotlightOpen;
+        });
+        Ipc.mixin("eqdesktop.spotlight", "set", (visible) => {
+            Runtime.spotlightOpen = visible;
+        });
+    }
+
     FollowingPanelWindow {
         id: launcher
-        implicitWidth: 600
-        implicitHeight: 600
         color: "transparent"
         WlrLayershell.namespace: "eqsh:blur"
+        WlrLayershell.layer: WlrLayershell.Overlay
+        WlrLayershell.keyboardFocus: launcher.isVisible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
+        focusable: true
 
         mask: Region {
-            item: Runtime.spotlightOpen ? background : null
+            item: Runtime.spotlightOpen ? spotlight : null
         }
 
-        BoxGlass {
-            id: background
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            visible: Runtime.spotlightOpen
-            width: parent.width * 0.85
-            implicitHeight: results.height + search.height + 8
-            radius: 25
-            color: Theme.glassColor
-            light: Theme.glassRimColor
-            rimStrength: search.text == "" ? 0.2 : 1.7
-            lightDir: Qt.point(1, 1)
+        anchors {
+            top: true
+            bottom: true
+            left: true
+            right: true
+        }
 
-            ColumnLayout {
+        property bool isVisible: Runtime.spotlightOpen
+
+        onIsVisibleChanged: {
+            if (isVisible) {
+                root.actionsShown = false;
+                root.hoveredAction = "";
+                root.selectedAction = "";
+                search.focus = true
+                hideAnim.stop()
+                showAnim.start()
+            } else {
+                search.text = ""
+                root.actionsShown = false
+                root.hoveredAction = ""
+                showAnim.stop()
+                hideAnim.start()
+            }
+        }
+
+        SequentialAnimation {
+            id: showAnim
+            ParallelAnimation {
+                PropertyAnimation {
+                    target: background
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 200
+                    easing.type: Easing.OutBack
+                    easing.overshoot: 1
+                }
+                PropertyAnimation {
+                    target: background
+                    property: "scaleX"
+                    from: 1.3
+                    to: 1
+                    duration: 200
+                    easing.type: Easing.OutBack
+                    easing.overshoot: 1
+                }
+            }
+        }
+
+        SequentialAnimation {
+            id: hideAnim
+            ParallelAnimation {
+                PropertyAnimation {
+                    target: background
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: 200
+                }
+                PropertyAnimation {
+                    target: background
+                    property: "scaleX"
+                    from: 1
+                    to: 1.1
+                    duration: 130
+                }
+            }
+        }
+        Item {
+            id: spotlight
+            anchors.fill: parent
+            MouseArea {
                 anchors.fill: parent
-                anchors.margins: 4
-                spacing: 10
-
-                TextField {
-                    id: search
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 40
-                    leftPadding: 34
-                    font.pixelSize: 26
-                    color: "white"
-                    CFVI {
-                        id: sicon
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 12
-                        size: 20
-                        opacity: 0.5
-                        icon: "search.svg"
-                    }
-                    background: Text {
-                        anchors.fill: parent
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignLeft
-                        anchors.leftMargin: 34
-                        font.pixelSize: 20
-                        color: "#fff"
-                        opacity: 0.5
-                        visible: search.text == ""
-                        text: Translation.tr("Search...")
-                    }
-                    focus: true
-                    Keys.onPressed: (event) => {
-                        if (event.key === Qt.Key_Escape) {
-                            root.toggle();
-                        }
+                onClicked: {
+                    Runtime.spotlightOpen = false;
+                }
+            }
+            BoxGlass {
+                id: background
+                z: 99
+                anchors.top: parent.top
+                anchors.topMargin: 200
+                anchors.left: parent.left
+                anchors.leftMargin: parent.width / 2 - 270
+                visible: true
+                opacity: 0
+                width: root.actionsShown ? 340 : 540
+                Behavior on width {
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutBack
+                        easing.overshoot: 2
                     }
                 }
+                implicitHeight: results.height + search.height + 8
+                radius: 30
+                color: root.glassColor
+                rimStrength: 1.7
+                light: "#20ffffff"
+                lightDir: Qt.point(1, 1)
+                layer.enabled: true
+                property real scaleX: 1
+                transform: Scale {
+                    xScale: background.scaleX
+                    origin.x: background.width / 2
+                }
 
-                ListView {
-                    id: results
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    clip: true
-                    height: search.text == "" ? 0 : 400
-                    spacing: 4
-
-                    model: ScriptModel {
-                        values: search.text == "" ? [] : DesktopEntries.applications.values.filter(a => a.name.toLowerCase().includes(search.text.toLowerCase()))
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onPositionChanged: (mouse) => {
+                        if (root.selectedAction != "") return;
+                        root.actionsShown = true
+                        root.hoveredAction = ""
                     }
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 4
+                        spacing: 10
 
-                    delegate: Rectangle {
-                        required property DesktopEntry modelData
-                        width: parent ? parent.width : 0
-                        height: 40
-                        radius: 15
-                        color: hovered ? AccentColor.color : "transparent"
-
-                        property bool hovered: false
-
-                        Image {
-                            id: icon
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
-                            anchors.leftMargin: 12
-                            source: Quickshell.iconPath(modelData.icon)
-                            width: 24
-                            height: 24
-                            smooth: true
-                            mipmap: true
-                            layer.enabled: true
-                            scale: 0
-                            Behavior on scale {
-                                NumberAnimation {
-                                    duration: 200
-                                    easing.type: Easing.OutBack
-                                    easing.overshoot: 1
+                        TextField {
+                            id: search
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 50
+                            leftPadding: 44
+                            font.pixelSize: 30
+                            color: root.textColor
+                            CFVI {
+                                id: sicon
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 12
+                                size: {
+                                    if (root.selectedAction == "applications") {
+                                        30
+                                    } else if (root.selectedAction == "files") {
+                                        25
+                                    } else if (root.selectedAction == "actions") {
+                                        30
+                                    } else if (root.selectedAction == "clipboard") {
+                                        30
+                                    } else {
+                                        25
+                                    }
+                                }
+                                opacity: 0.5
+                                color: root.textColor
+                                icon: {
+                                    if (["", "search"].includes(root.selectedAction)) {
+                                        "search.svg"
+                                    } else if (root.selectedAction == "applications") {
+                                        "spotlight/applications.svg"
+                                    } else if (root.selectedAction == "files") {
+                                        "spotlight/files.svg"
+                                    } else if (root.selectedAction == "actions") {
+                                        "spotlight/actions.svg"
+                                    } else if (root.selectedAction == "clipboard") {
+                                        "spotlight/clipboard.svg"
+                                    }
                                 }
                             }
-                            Component.onCompleted: {
-                                scale = 1
+                            background: Text {
+                                anchors.fill: parent
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignLeft
+                                anchors.leftMargin: 44
+                                font.pixelSize: 26
+                                font.weight: 500
+                                color: root.textColor
+                                opacity: 0.7
+                                visible: search.text == ""
+                                text: {
+                                    if (root.hoveredAction == "" && root.selectedAction == "") {
+                                        return Translation.tr("Spotlight Search")
+                                    } else {
+                                        switch (root.hoveredAction == "" ? root.selectedAction : root.hoveredAction) { // This has to be hardcoded, because of the Translation manager
+                                            case "applications": return Translation.tr("Applications")
+                                            case "files": return Translation.tr("Files")
+                                            case "actions": return Translation.tr("Actions")
+                                            case "clipboard": return Translation.tr("Clipboard")
+                                            default: return Translation.tr("Spotlight Search")
+                                        }
+                                    }
+                                }
+                                Key {
+                                    anchors {
+                                        right: parent.right
+                                        rightMargin: 50
+                                        verticalCenter: parent.verticalCenter
+                                    }
+                                    key: "⌃"
+                                    keyColor: root.textColor
+                                    visible: root.hoveredAction != ""
+                                }
+                                Key {
+                                    anchors {
+                                        right: parent.right
+                                        rightMargin: 20
+                                        verticalCenter: parent.verticalCenter
+                                    }
+                                    keyColor: root.textColor
+                                    key: {
+                                        switch (root.hoveredAction) {
+                                            case "applications": return "1"
+                                            case "files": return "2"
+                                            case "actions": return "3"
+                                            case "clipboard": return "4"
+                                            default: return ""
+                                        }
+                                    }
+                                    visible: root.hoveredAction != ""
+                                }
+                            }
+                            focus: true
+                            Keys.onPressed: (event) => {
+                                results.keyPressed(event)
+                                if (event.key === Qt.Key_Escape) Ipc.runMixin("eqdesktop.spotlight", "toggle")
+                                // action keys
+                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_0) root.clickAction("search")
+                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_1) root.clickAction("applications")
+                                else if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_2) root.clickAction("files")
+                                else if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_3) root.clickAction("actions")
+                                else if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_4) root.clickAction("clipboard")
+                            }
+                            onTextEdited: {
+                                if (text == "") {
+                                    root.clickAction("");
+                                    return;
+                                }
+                                if (root.selectedAction != "") return;
+                                root.clickAction("search");
+                            }
+
+                            Rectangle {
+                                anchors {
+                                    right: parent.right
+                                    rightMargin: 12
+                                    verticalCenter: parent.verticalCenter
+                                }
+                                width: 18; height: 18
+                                radius: 12
+                                color: root.textColor
+                                visible: root.selectedAction == "clipboard"
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: (mouse) => {
+                                        rightClickMenuClipboard.x = mouse.x + background.x + 500
+                                        rightClickMenuClipboard.y = mouse.y + background.y + 20
+                                        rightClickMenuClipboard.open()
+                                    }
+                                }
                             }
                         }
 
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
-                            anchors.leftMargin: 40
-                            text: modelData.name
-                            color: Config.general.darkMode ? "#fff" : hovered ? AccentColor.textColor : "#222"
-                            font.pixelSize: 15
-                            elide: Text.ElideRight
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onEntered: parent.hovered = true
-                            onExited: parent.hovered = false
-                            onClicked: {modelData.execute(); root.toggle();}
+                        ContentView {
+                            id: results
+                            text: search.text
+                            selectedAction: root.selectedAction
+                            textColor: root.textColor
+                            shown: root.selectedAction != ""
+                            onActionClicked: {
+                                Ipc.runMixin("eqdesktop.spotlight", "toggle")
+                            }
                         }
                     }
                 }
             }
-        }
-        property bool spotlightOpen: Runtime.spotlightOpen
-        onSpotlightOpenChanged: {
-            if (spotlightOpen) {
-                search.focus = true;
-            } else {
-                search.text = "";
+            DropDownMenu {
+                id: rightClickMenuClipboard
+                model: [
+                    DropDownItem {
+                        name: Translation.tr("Clear History")
+                        action: function() {Cliphist.wipe()}
+                    }
+                ]
+            }
+            ActionButton {
+                id: applications
+                z: 1
+
+                actionsShown: root.actionsShown
+                launcherVisible: launcher.isVisible
+                textColor: root.textColor
+                glassColor: root.glassColor
+
+                onHoveredAction: (action) => {root.hoveredAction = action}
+                onSelectedAction: (action) => {root.clickAction(action)}
+
+                position: 0
+                action: "applications"
+            }
+            
+            ActionButton {
+                id: files
+                z: 1
+
+                actionsShown: root.actionsShown
+                launcherVisible: launcher.isVisible
+                textColor: root.textColor
+                glassColor: root.glassColor
+
+                onHoveredAction: (action) => {root.hoveredAction = action}
+                onSelectedAction: (action) => {root.clickAction(action)}
+
+                position: 1
+                action: "files"
+            }
+            
+            ActionButton {
+                id: actions
+                z: 1
+
+                actionsShown: root.actionsShown
+                launcherVisible: launcher.isVisible
+                textColor: root.textColor
+                glassColor: root.glassColor
+
+                onHoveredAction: (action) => {root.hoveredAction = action}
+                onSelectedAction: (action) => {root.clickAction(action)}
+
+                position: 2
+                action: "actions"
+            }
+            
+            ActionButton {
+                id: clipboard
+                z: 1
+
+                actionsShown: root.actionsShown
+                launcherVisible: launcher.isVisible
+                textColor: root.textColor
+                glassColor: root.glassColor
+
+                onHoveredAction: (action) => {root.hoveredAction = action}
+                onSelectedAction: (action) => {root.clickAction(action)}
+
+                position: 3
+                iconSize: 38
+                action: "clipboard"
             }
         }
-    }
-
-    function toggle() {
-        Runtime.spotlightOpen = !Runtime.spotlightOpen;
-    }
-    Component.onCompleted: {
-        Ipc.mixin("eqdesktop.spotlight", "toggle", root.toggle);
     }
 }

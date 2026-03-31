@@ -10,6 +10,7 @@ Item {
 	property Bar            bar: adapter.bar
 	property ScreenEdges    screenEdges: adapter.screenEdges
 	property LockScreen     lockScreen: adapter.lockScreen
+	property Spotlight      spotlight: adapter.spotlight
 	property Misc           misc: adapter.misc
 	property Wallpaper      wallpaper: adapter.wallpaper
 	property Notifications  notifications: adapter.notifications
@@ -42,6 +43,7 @@ Item {
 			property Bar            bar: Bar {}
 			property ScreenEdges    screenEdges: ScreenEdges {}
 			property LockScreen     lockScreen: LockScreen {}
+			property Spotlight      spotlight: Spotlight {}
 			property Misc           misc: Misc {}
 			property Wallpaper      wallpaper: Wallpaper {}
 			property Notifications  notifications: Notifications {}
@@ -238,6 +240,10 @@ Item {
 		property int          zoomDuration: 0
 		property bool         useCustomWallpaper: false
 		property string       customWallpaperPath: root.homeDirectory+"/.local/share/equora/wallpapers/Sequoia-Sunrise.png"
+	}
+
+	component Spotlight: JsonObject {
+		property bool   enable: true
 	}
 
 	component Screenshot: JsonObject {
