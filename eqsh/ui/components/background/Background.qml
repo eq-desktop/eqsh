@@ -27,6 +27,7 @@ Scope {
     PanelWindow {
       id: panelWindow
       WlrLayershell.layer: WlrLayer.Background
+      WlrLayershell.namespace: "eqsh"
       WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
       required property var modelData
       screen: modelData

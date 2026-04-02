@@ -7,6 +7,7 @@ import qs.ui.controls.advanced
 import qs.ui.controls.auxiliary
 import qs.ui.controls.primitives
 import qs.ui.controls.providers
+import qs.services
 
 import "root:/agents/time.js" as TimeUtils
 
@@ -36,12 +37,13 @@ ListView {
         }
 
         if (event.key === Qt.Key_Return) {
+            if (root.selected !== -1 && root.selected < model.values.length) {
+                model.values[root.selected]?.clicked()
+                return
+            }
             if (root.selected === -1 && root.recommended !== -1) {
                 model.values[root.recommended]?.clicked()
                 return
-            }
-            if (root.selected !== -1 && root.selected < model.values.length) {
-                model.values[root.selected]?.clicked()
             }
         }
     }
@@ -52,44 +54,50 @@ ListView {
     required property string text
     required property list<var> answers
     model: ScriptModel {
-        values: Cliphist.preparedEntries.map(entry => ({
-            type: Cliphist.entryType(entry.name.target),
-            text: entry.name.target,
-            time: Date.now(),
+        values: ClipboardService.history.map(entry => ({
+            type: entry.type,
+            text: entry.data,
+            time: entry.date,
+            b64: entry.b64,
+            path: entry.path,
             clicked: (mouse) => {
                 if (!mouse) {
                     root.actionClicked()
-                    Cliphist.paste(entry.target)
+                    Quickshell.clipboardText = entry.data
                     return;
                 }
                 if (mouse.button === Qt.LeftButton) {
                     root.actionClicked()
-                    Cliphist.paste(entry.name.target)
+                    Quickshell.clipboardText = entry.data
                 } else {
-                    Cliphist.deleteEntry(entry.entry)
+                    return;
+                    //Cliphist.deleteEntry(entry.entry)
                 }
             }
-        }))
+        })).sort((a, b) => b.time - a.time)
     }
     onTextChanged: {
-        model.values = Cliphist.fuzzyQuery(root.text).map(entry => ({
-            type: Cliphist.entryType(entry.name.target),
-            text: entry.name.target,
-            time: Date.now(),
+        model.values = ClipboardService.fuzzyQuery(root.text).map(entry => ({
+            type: "text",
+            text: entry ? entry.name : "",
+            time: entry.date,
+            b64: entry.b64,
+            path: entry.path,
             clicked: (mouse) => {
                 if (!mouse) {
                     root.actionClicked()
-                    Cliphist.copy(entry.entry)
+                    Quickshell.clipboardText = entry.data
                     return;
                 }
                 if (mouse.button === Qt.LeftButton) {
                     root.actionClicked()
-                    Cliphist.copy(entry.entry)
+                    Quickshell.clipboardText = entry.data
                 } else {
-                    Cliphist.deleteEntry(entry.entry)
+                    return;
+                    //Cliphist.deleteEntry(entry.entry)
                 }
             }
-        }))
+        })).sort((a, b) => b.time - a.time)
         root.currentIndex = 0
         root.recommended = 0
     }
@@ -109,11 +117,11 @@ ListView {
         property bool isRecommended: root.recommended === contentItem.index
         property bool isSelected: root.selected === contentItem.index
         color: isSelected ? AccentColor.color : (isRecommended ? "#50555555" : "transparent")
-        textColor: isSelected ? AccentColor.textColor : "#222"
+        textColor: isSelected ? AccentColor.textColor : Config.general.darkMode ? "#dfdfdf" : "#222"
         descColor: isSelected ? Qt.alpha(AccentColor.textColor, 0.5) : "#a0555555"
-        title: modelData?.text ?? ""
-        description: modelData ? `${modelData.type.charAt(0).toUpperCase() + modelData.type.slice(1)}` : ""
-        icon: Quickshell.iconPath("text")
+        title: modelData.type == "Image" ? "Image" : modelData.text.replace(/\n/g, "")
+        description: modelData.type == "Image" ? TimeUtils.getFriendlyTime(modelData.time, Translation) : `${modelData.type.charAt(0).toUpperCase() + modelData.type.slice(1)} · ${TimeUtils.getFriendlyTime(modelData.time, Translation)}`
+        icon: modelData.type == "Image" ? "file://" + modelData.path : Quickshell.iconPath("text")
         clicked: modelData?.clicked ?? (() => {})
 
         bgForIcon: false

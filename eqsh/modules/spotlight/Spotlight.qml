@@ -20,8 +20,8 @@ Scope {
     property bool actionsShown: false
     property string selectedAction: ""
     property string hoveredAction: ""
-    property string glassColor: "#a0ffffff"
-    property string textColor: "#1e1e1e"
+    property string glassColor: Config.general.darkMode ? "#a01e1e1e" : "#a0ffffff"
+    property string textColor: Config.general.darkMode ? "#dfdfdf" : "#1e1e1e"
 
     function clickAction(action: string) {
         root.hoveredAction = ""
@@ -41,7 +41,7 @@ Scope {
     FollowingPanelWindow {
         id: launcher
         color: "transparent"
-        WlrLayershell.namespace: "eqsh:blur"
+        WlrLayershell.namespace: "eqsh:spotlight"
         WlrLayershell.layer: WlrLayershell.Overlay
         WlrLayershell.keyboardFocus: launcher.isVisible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
@@ -324,7 +324,7 @@ Scope {
                 model: [
                     DropDownItem {
                         name: Translation.tr("Clear History")
-                        action: function() {Cliphist.wipe()}
+                        action: function() {ClipboardService.clear()}
                     }
                 ]
             }

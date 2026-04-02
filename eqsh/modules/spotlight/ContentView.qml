@@ -67,11 +67,6 @@ Item {
         color: "#40555555"
         visible: root.selectedAction != ""
     }
-    onSelectedActionChanged: {
-        if (root.selectedAction == "clipboard") {
-            Cliphist.refresh()
-        }
-    }
     CFClippingRect {
         id: clippingRect
         anchors.fill: parent

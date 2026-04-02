@@ -16,7 +16,7 @@ Rectangle {
     property string icon: Quickshell.iconPath(modelData.icon)
     property var clicked: modelData.clicked
     property bool bgForIcon: true
-    property string textColor: "#222"
+    property string textColor: Config.general.darkMode ? "#dfdfdf" : "#222"
     property string descColor: "#a0555555"
 
     transform: Translate {

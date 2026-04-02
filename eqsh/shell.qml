@@ -18,7 +18,6 @@ import qs.ui.components.modal
 import qs.ui.components.modal.polkit
 import qs.ui.components.notch
 import qs.ui.components.popup
-import qs.ui.components.spotlight
 import qs.ui.components.widgets
 import qs.ui.components.settings
 import qs.ui.components.background
@@ -29,8 +28,10 @@ import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
 import qs.ui.controls.providers
+import qs.services
 
 import qs.modules.screencorners as ScreenCorners
+import qs.modules.spotlight     as Spotlight
 
 import qs.config
 import qs.core.foundation
@@ -39,6 +40,7 @@ import qs.core.system
 Scope {
   id: root
   Component.onCompleted: {
+    ClipboardService.init()
     Plugins.init()
     Ipc.init()
     Logger.i("System", "Shell Loading Complete")
@@ -130,7 +132,7 @@ Scope {
   }
   Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: VolumeOSD {} }
   Loader { active: Config.osd.enable; asynchronous: true; sourceComponent: BrightnessOSD {} }
-  Launcher {}
+  Spotlight.Spotlight {}
   Popup {}
   Notch {
     id: notch
