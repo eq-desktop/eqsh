@@ -16,6 +16,13 @@ Item {
             Common.Proc.runCommand("hyprpersist::bp",  ["hyprctl", "keyword", "layerrule", "blurpopups, ^.*\$"])
             Common.Proc.runCommand("hyprpersist::ms",  ["hyprctl", "keyword", "misc:session_lock_xray", "true"])
 
+            Common.Proc.runCommand("hyprpersist::ddmo",  ["hyprctl", "keyword", "layerrule", "order -52, ^eqsh:ddm\$"])
+            Common.Proc.runCommand("hyprpersist::ddmbo",  ["hyprctl", "keyword", "layerrule", "order -53, ^eqsh:ddm-blur\$"])
+            Common.Proc.runCommand("hyprpersist::ddmbb",  ["hyprctl", "keyword", "layerrule", "blur, ^eqsh:ddm-blur\$"])
+
+            Common.Proc.runCommand("hyprpersist::slb",  ["hyprctl", "keyword", "layerrule", "blur, ^eqsh:spotlight\$"])
+            Common.Proc.runCommand("hyprpersist::sla",  ["hyprctl", "keyword", "layerrule", "ignorealpha 0.5, ^eqsh:spotlight\$"])
+            Common.Proc.runCommand("hyprpersist::slo",  ["hyprctl", "keyword", "layerrule", "order -50, ^eqsh:spotlight\$"])
             // Indexing
             Common.Proc.runCommand("hyprpersist::no",  ["hyprctl", "keyword", "layerrule", "order -100, ^eqsh:notch\$"])
             Common.Proc.runCommand("hyprpersist::al",  ["hyprctl", "keyword", "layerrule", "abovelock true, ^eqsh:notch\$"])

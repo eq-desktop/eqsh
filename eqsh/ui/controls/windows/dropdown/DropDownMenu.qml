@@ -149,11 +149,13 @@ Scope {
       right: root.margins[2]
       bottom: root.margins[3]
     }
+    namespace: pop.blur ? "eqsh:ddm-blur" : "eqsh:ddm"
+    keyboardFocus: WlrKeyboardFocus.Exclusive
     new_Focus_Method: root.new_Focus_Method
     new_Focus_Method_X: pop.contentItem ? pop.contentItem.xV : 0
     new_Focus_Method_Y: pop.contentItem ? pop.contentItem.yV : 0
-    implicitWidth: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.widthV : 0) : width
-    implicitHeight: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.heightV : 0) : height
+    implicitWidth: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.widthV : 0) : (0)
+    implicitHeight: root.new_Focus_Method ? (pop.contentItem ? pop.contentItem.heightV : 0) : (0)
     onCleared: {
       root.cleared()
       opened = false
@@ -161,7 +163,11 @@ Scope {
     onClearing: {
       root.clearing()
     }
+    Component.onCompleted: {
+      item.forceActiveFocus()
+    }
     Item {
+      id: item
       property int xV: box.x
       property int yV: box.y
       property int widthV: box.width
