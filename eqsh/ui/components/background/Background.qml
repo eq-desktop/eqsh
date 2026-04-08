@@ -28,9 +28,11 @@ Scope {
       id: panelWindow
       WlrLayershell.layer: WlrLayer.Background
       WlrLayershell.namespace: "eqsh"
-      WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
       required property var modelData
       screen: modelData
+
+      focusable: true
 
       anchors {
         top: true

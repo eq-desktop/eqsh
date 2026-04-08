@@ -311,8 +311,15 @@ Scope {
 											MouseArea {
 												anchors.fill: parent
 												onClicked: {
+													// get biggest id
+													let biggestId = 0
+													for (let i = 0; i < Runtime.widgets.length; i++) {
+														if (Runtime.widgets[i].idVal > biggestId) {
+															biggestId = Runtime.widgets[i].idVal
+														}
+													}
 													Runtime.widgets.push({
-														idVal: Runtime.widgets.length,
+														idVal: biggestId + 1,
 														name: modelData.id,
 														options: {},
 														size: prefSize,

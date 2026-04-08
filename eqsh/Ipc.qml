@@ -272,7 +272,6 @@ Singleton {
         name: "lock"
         description: "Lock the screen"
         onPressed: {
-            console.info("Locking the screen...")
             runMixin("eqdesktop.lock", "lock")
         }
     }

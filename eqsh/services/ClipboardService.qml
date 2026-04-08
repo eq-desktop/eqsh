@@ -21,7 +21,6 @@ Singleton {
             all: true,
             key: "name"
         })
-        console.info(fuzzyRes.map(res => res.obj.entry))
         return fuzzyRes.map(res => res.obj.entry)
     }
 
@@ -93,7 +92,6 @@ Singleton {
                 let type = parts[2]
                 let dims = ""
                 let payload = ""
-                console.info(parts)
 
                 if (type === "Image") {
                     dims = parts[3]
@@ -111,7 +109,6 @@ Singleton {
                     }
                     return
                 }
-                console.info("New clipboard entry:", hash, ts, type, dims)
 
                 // convert to types
                 entry = entryInternal.createObject(root, {
