@@ -185,6 +185,27 @@ Singleton {
     property bool isHypr: CompositorService.isHyprland
     // ===============================================================
     CustomShortcut {
+        name: "screenshot"
+        description: "Open Screenshot"
+        onPressed: {
+            runMixin("eqdesktop.screenshot", "open");
+        }
+    }
+    CustomShortcut {
+        name: "screenshotEntireScreen"
+        description: "Take Screenshot of Entire Screen"
+        onPressed: {
+            runMixin("eqdesktop.screenshot", "screen");
+        }
+    }
+    CustomShortcut {
+        name: "screenshotRegion"
+        description: "Take Screenshot of Selected Region"
+        onPressed: {
+            runMixin("eqdesktop.screenshot", "region");
+        }
+    }
+    CustomShortcut {
         name: "spotlight"
         description: "Toggle Spotlight"
         onPressed: {
@@ -251,7 +272,6 @@ Singleton {
         name: "lock"
         description: "Lock the screen"
         onPressed: {
-            console.info("Locking the screen...")
             runMixin("eqdesktop.lock", "lock")
         }
     }

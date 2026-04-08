@@ -84,28 +84,6 @@ Rectangle {
 		root.opacity = 1;
 	}
 
-	MultiEffect {
-		id: backgroundImageBlur
-		anchors.fill: backgroundImage
-		source: backgroundImage
-		blurEnabled: true
-		autoPaddingEnabled: false
-		blur: 0
-		blurMax: 64 * Config.lockScreen.blurStrength
-		blurMultiplier: 1
-		scale: 1
-		Component.onCompleted: {
-			backgroundImageBlur.scale = Config.general.reduceMotion ? 1 : Config.lockScreen.zoom;
-			backgroundImageBlur.blur = Config.lockScreen.blur;
-		}
-		Behavior on scale {
-			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
-		}
-		Behavior on blur {
-			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
-		}
-	}
-
 	BackgroundImage {
 		id: backgroundImage
 		source: wallpaperImage
@@ -117,6 +95,29 @@ Rectangle {
 			anchors.fill: parent
 			color: Config.lockScreen.dimColor
 			opacity: Config.lockScreen.dimOpacity
+		}
+	}
+
+	MultiEffect {
+		id: backgroundImageBlur
+		anchors.fill: backgroundImage
+		source: backgroundImage
+		blurEnabled: true
+		autoPaddingEnabled: false
+		blur: 0
+		blurMax: 64 * Config.lockScreen.blurStrength
+		blurMultiplier: 1
+		scale: 1
+		layer.enabled: true
+		Component.onCompleted: {
+			backgroundImageBlur.scale = Config.general.reduceMotion ? 1 : Config.lockScreen.zoom;
+			backgroundImageBlur.blur = Config.lockScreen.blur;
+		}
+		Behavior on scale {
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
+		}
+		Behavior on blur {
+			NumberAnimation { duration: Config.lockScreen.zoomDuration; easing.type: Easing.InOutQuad }
 		}
 	}
 
@@ -162,7 +163,7 @@ Rectangle {
 		MultiEffect {
 			id: mediaBackgroundBlur
 			anchors.fill: contentItem
-			source: backgroundImage
+			source: backgroundImageBlur
 			blurEnabled: true
 			autoPaddingEnabled: false
 			blur: 0.1
@@ -178,7 +179,7 @@ Rectangle {
 			id: mediaGlassShow1Animation
 		}
 		ShaderEffectSource {
-			id: clockBlurSource
+			id: mediaBlurSource
 			sourceItem: mediaBackgroundBlur
 			sourceRect: Qt.rect(
 				mediaGlass.x,
@@ -189,6 +190,61 @@ Rectangle {
 			hideSource: true
 			live: true
 			visible: false
+		}
+
+		ShaderEffectSource {
+			id: clockBlurSource
+			anchors {
+				left: clock.left
+				top: clock.top
+				right: clock.right
+				bottom: clock.bottom
+			}
+			sourceItem: backgroundImage
+			sourceRect: Qt.rect(clock.x, clock.y, clock.width, clock.height)
+			hideSource: false
+			live: true
+			samples: 128
+		}
+
+		MultiEffect {
+			id: clockBlur
+			anchors.centerIn: clock
+			width: clock.width
+			height: clock.height
+			source: clockBlurSource
+			blurEnabled: true
+			blur: 1
+			blurMax: 64
+			blurMultiplier: 1.2
+			brightness: 0.4
+			autoPaddingEnabled: false
+			maskEnabled: true
+			maskSource: clock
+			maskSpreadAtMin: 0.1
+			maskThresholdMin: 0.1
+			antialiasing: true
+		}
+
+		Label {
+			id: clock
+
+			anchors {
+				horizontalCenter: parent.horizontalCenter
+				top: parent.top
+				topMargin: 100
+			}
+
+			renderType: Text.NativeRendering
+			color: "#33ffffff"
+			font.family: Fonts.sFProRoundedRegular.family
+			font.pointSize: 80
+			font.weight: 900
+			layer.enabled: true
+			layer.smooth: true
+
+			//text: root.context.currentText == "" ? Time.getTime(Config.lockScreen.timeFormat) : root.context.currentText
+			text: Time.getTime(Config.lockScreen.timeFormat)
 		}
 
 		CFClippingRect {
@@ -212,9 +268,9 @@ Rectangle {
 				}
 				pos: Qt.point(1, 1)
 				size: Qt.point(328, 198)
-				source: clockBlurSource
-				blurSource: clockBlurSource
-				bloomSource: clockBlurSource
+				source: mediaBlurSource
+				blurSource: mediaBlurSource
+				bloomSource: mediaBlurSource
 				glassRefractionDim: 30
 				glassRefractionMag: 0
 				property real rimLightOpacity: 0.0
@@ -418,27 +474,6 @@ Rectangle {
 			}
 		}
 
-		Label {
-			id: clock
-
-			anchors {
-				horizontalCenter: parent.horizontalCenter
-				top: parent.top
-				topMargin: 100
-			}
-
-			renderType: Text.NativeRendering
-			color: "#ffffff"
-			font.family: Fonts.sFProRoundedRegular.family
-			font.pointSize: 80
-			font.weight: 900
-			layer.enabled: true
-			layer.smooth: true
-
-			//text: root.context.currentText == "" ? Time.getTime(Config.lockScreen.timeFormat) : root.context.currentText
-			text: Time.getTime(Config.lockScreen.timeFormat)
-		}
-
 		ShaderEffectSource {
 			id: dateClockBlurSource
 			sourceItem: backgroundImage
@@ -567,7 +602,7 @@ Rectangle {
 					}
 					Backdrop {
 						id: sourceBackdrop
-						sourceItem: backgroundImage
+						sourceItem: backgroundImageBlur
 						sourceX: inputArea.x+passwordBoxLayout.x+passwordBoxContainer.x
 						sourceY: inputArea.y+passwordBoxLayout.y+passwordBoxContainer.y+contentItem.transformY
 						sourceW: passwordBoxContainer.width

@@ -11,6 +11,7 @@ Item {
     width: buttonText.contentWidth
     height: 30
     clip: false
+    property int animSpeed: 300
     property bool primary: false
     property int radius: 20
     property real rimStrength: 0.4
@@ -19,6 +20,7 @@ Item {
     property bool highlightEnabled: true
     property bool liquid: false
     property string color: "#40000000"
+    property string textColor: "#ffffff"
     property string hoverColor: "#555"
     property string primaryColor: AccentColor.color
     property string primaryHoverColor: Qt.lighter(primaryColor, 1.1)
@@ -29,8 +31,8 @@ Item {
         anchors.centerIn: parent
         width: button.width
         height: button.height
-        Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
-        Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
+        Behavior on width { NumberAnimation { duration: button.animSpeed; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
+        Behavior on height { NumberAnimation { duration: button.animSpeed; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
         rimStrength: button.rimStrength
         radius: button.radius
         lightDir: button.lightDir
@@ -42,13 +44,14 @@ Item {
     transform: Translate {
         x: button.disX*5
         y: button.disY*5
-        Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
-        Behavior on y { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
+        Behavior on x { NumberAnimation { duration: button.animSpeed; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
+        Behavior on y { NumberAnimation { duration: button.animSpeed; easing.type: Easing.OutBack; easing.overshoot: 1.5 } }
     }
     CFText {
         id: buttonText
         anchors.centerIn: parent
         text: button.text
+        color: button.textColor
     }
     MouseArea {
         id: mouseArea
@@ -71,6 +74,6 @@ Item {
             button.disY = 0
         }
     }
-    Behavior on scale { NumberAnimation { duration: 300; easing.type: Easing.OutBack; easing.overshoot: 3 }}
-    Behavior on opacity { NumberAnimation { duration: 500; easing.type: Easing.InOutQuad }}
+    Behavior on scale { NumberAnimation { duration: button.animSpeed; easing.type: Easing.OutBack; easing.overshoot: 3 }}
+    Behavior on opacity { NumberAnimation { duration: button.animSpeed; easing.type: Easing.InOutQuad }}
 }

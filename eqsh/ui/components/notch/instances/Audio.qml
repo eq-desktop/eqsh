@@ -140,6 +140,7 @@ NotchApplicationEl2 {
                 leftMargin: 10
                 rightMargin: 10
             }
+            color: "#ffffff"
             text: MusicPlayerProvider.title
             elide: Text.ElideRight
             font.weight: 600

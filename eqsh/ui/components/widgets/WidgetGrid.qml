@@ -39,6 +39,9 @@ Item {
     property int marginX: Math.floor((usableWidth - gridSizeX * cellsX) / 2)
     property int marginY: Math.floor((usableHeight - gridSizeY * cellsY) / 2) + Config.bar.height
     signal widgetMoved(item: var);
+    signal zoomOut()
+    signal zoomIn()
+    signal clickedBg()
 
     default property Component delegate: WidgetGridItem {
         idVal: modelData?.idVal || 0
@@ -54,6 +57,14 @@ Item {
         grid: root
         onWidgetMoved: {
             root.widgetMoved(this);
+        }
+        onZoomOut: {
+            root.zoomOut()
+            this.scaleCustom = 1.25
+        }
+        onZoomIn: {
+            root.zoomIn()
+            this.scaleCustom = 1
         }
         onRemoveRequested: deleteWidget(this)
     }
@@ -114,6 +125,7 @@ Item {
             onClicked: (mouse) => {
                 if (mouse.button == Qt.LeftButton) {
                     if (Runtime.widgetEditMode) Runtime.widgetEditMode = false
+                    root.clickedBg()
                     return;
                 }
                 rightClickMenu.x = mouse.x
@@ -122,9 +134,7 @@ Item {
             }
         }
 
-        WidgetAdd {
-
-        }
+        WidgetAdd {}
 
         UIButton {
             width: 100
@@ -146,9 +156,10 @@ Item {
                 blurEnabled: true
                 blur: 1
                 blurMax: root.editMode ? 0 : 64
-                Behavior on  blurMax { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                Behavior on  blurMax { NumberAnimation { duration: 250; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             }
             opacity: root.editMode ? 1 : 0
+            animSpeed: 250
         }
 
         UIButton {
@@ -167,14 +178,16 @@ Item {
                 if (!Runtime.widgetEditMode) return;
                 Runtime.widgetAddOpen = true
             }
+            textColor: AccentColor.textColor
             layer.enabled: true
             layer.effect: MultiEffect {
                 blurEnabled: true
                 blur: 1
                 blurMax: root.editMode ? 0 : 64
-                Behavior on  blurMax { NumberAnimation { duration: 500; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
+                Behavior on  blurMax { NumberAnimation { duration: 250; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
             }
             opacity: root.editMode ? 1 : 0
+            animSpeed: 250
         }
 
         Control {
@@ -190,6 +203,28 @@ Item {
                     values: Runtime.widgets
                 }
                 delegate: root.delegate
+            }
+            property real scaleCustom: 1
+            transform: Scale {
+                origin.x: gridContainer.width / 2
+                origin.y: gridContainer.height / 2
+                xScale: gridContainer.scaleCustom
+                yScale: gridContainer.scaleCustom
+                Behavior on xScale {
+                    NumberAnimation { duration: 300; easing.type: Easing.Linear; easing.overshoot: 1 }
+                }
+                Behavior on yScale {
+                    NumberAnimation { duration: 300; easing.type: Easing.Linear; easing.overshoot: 1 }
+                }
+            }
+            Connections {
+                target: root
+                function onZoomIn() {
+                    gridContainer.scaleCustom = 1
+                }
+                function onZoomOut() {
+                    gridContainer.scaleCustom = 0.8
+                }
             }
         }
     }

@@ -20,6 +20,7 @@ Scope {
     property alias screen: panelWindow.screen
     property alias mask: panelWindow.mask
     property int animationDuration: 100
+    property string namespace: root.blur ? "eqsh:blur" : "eqsh"
     default property alias content: background.children
     signal clearing()
     signal cleared()
@@ -32,7 +33,7 @@ Scope {
     PanelWindow {
         id: panelWindow
         WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: root.blur ? "eqsh:blur" : "eqsh"
+        WlrLayershell.namespace: root.namespace
         WlrLayershell.keyboardFocus: root.keyboardFocus
         focusable: true
         color: "transparent"

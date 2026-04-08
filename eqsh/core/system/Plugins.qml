@@ -16,6 +16,11 @@ Singleton {
     property var loadedPlugins: []
     property var widgetRegistry: ({})
     property bool loaded: false
+    property int pluginsToLoad: pluginModel.count
+    property int pluginsLoadedCount: 0
+
+    signal pluginLoaded(plugin: var);
+    signal widgetInstantiated(widget: var);
 
     function asArray(obj) {
         var arr = []
@@ -31,10 +36,24 @@ Singleton {
     function reloadPlugins() {
         Logger.i("Plugins", "Reloading plugins");
         loadedPlugins = []
+        pluginsLoadedCount = 0
         widgetRegistry = ({})
         loaded = false
         pluginInstantiator.model = []
         pluginInstantiator.model = pluginModel
+    }
+
+    function nameFromId(id) {
+        // get Name of a plugin from its ID
+        for (let i = 0; i < loadedPlugins.length; i++) {
+            let kavo = loadedPlugins[i].kavo;
+            let plugin = kavo.nav("plugin");
+            let plId = Object.keys(plugin.properties)[0];
+            if (plId === id) {
+                return plugin.nav("meta.name");
+            }
+        }
+        return null;
     }
 
     function loadPlugin(pluginPath, files, index) {
@@ -94,6 +113,7 @@ Singleton {
             let widgetId = widgetMeta.f("id").value;
             Logger.d("Plugins", "Plugin: " + id + " Loading widget:", widgetMeta.f("name").value, "ID:", id + ":" + widgetId);
             plugins.widgetRegistry[id + ":" + widgetId] = widget
+            plugins.widgetInstantiated({ id: id + ":" + widgetId, widget: widget });
         }
 
         Logger.d("Plugins", "Finished loading plugin:", id);
@@ -105,9 +125,11 @@ Singleton {
             kavo: kavo
         }
         loadedPlugins.push(finishedPlugin);
-        if (index == pluginModel.count - 1) {
-            // Last plugin loaded
-            plugins.loaded = true;
+
+        plugins.pluginLoaded(finishedPlugin);
+        pluginsLoadedCount++
+        if (pluginsLoadedCount === pluginsToLoad) {
+            plugins.loaded = true
         }
     }
 

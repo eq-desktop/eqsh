@@ -14,6 +14,7 @@ import qs.config
 import qs.ui.controls.providers
 import qs.ui.controls.advanced
 import qs.ui.controls.primitives
+import qs.ui.common
 
 Control {
     id: root
@@ -39,6 +40,7 @@ Control {
     property int textSizeSSL: 86*sF
     property Component content: null
     property var widget: null
+    property bool isOpened: true
     property Component bg: BoxGlass {
         id: bg
         anchors.fill: parent
@@ -51,19 +53,14 @@ Control {
     }
 
     contentItem: ClippingRectangle {
+        anchors.fill: parent
         radius: Config.widgets.radius
         color: "transparent"
         Loader {
             id: loader
             anchors.fill: parent
+            active: root.isOpened
             sourceComponent: root.bg
-        }
-
-        Loader {
-            id: contentLoader
-            anchors.fill: parent
-            active: true
-            sourceComponent: root.content
         }
     }
 }
