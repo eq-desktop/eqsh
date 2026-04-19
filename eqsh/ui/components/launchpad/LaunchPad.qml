@@ -46,62 +46,26 @@ Scope {
 
     focusable: true
 
-    component FullMask: Region {
+    property var fullMask: Region {
       x: 0
       y: 0
-      width: root.width
-      height: root.height
+      width: panelWindow.width
+      height: panelWindow.height
     }
 
-    mask: Region {}
+    property var emptyMask: Region {}
+
+    mask: Runtime.launchpadOpen ? fullMask : emptyMask
 
     exclusiveZone: -1
     color: "transparent"
     Loader {
       id: launchpadLoader
-      asynchronous: true
-      active: true
-      focus: true
-      property real scaleVal: Config.launchpad.zoom
-      property real blurVal
-      property bool shown: false
+      active: Runtime.launchpadOpen
+      focus: Runtime.launchpadOpen ? true : false
       anchors.fill: parent
       Keys.onEscapePressed: {
         Runtime.launchpadOpen = false
-      }
-      PropertyAnimation {
-        id: showAnim
-        target: launchpadLoader.item
-        property: "opacity"
-        to: 1
-        running: false
-        duration: Config.launchpad.fadeDuration
-        easing.type: Easing.InOutQuad
-        onStarted: {
-          launchpadLoader.focus = true;
-          const width = root.width
-          const height = root.height
-          panelWindow.mask = FullMask
-          launchpadLoader.scaleVal = 1
-          launchpadLoader.blurVal = 1
-        }
-      }
-      PropertyAnimation {
-        id: hideAnim
-        target: launchpadLoader.item
-        property: "opacity"
-        to: 0
-        running: false
-        duration: Config.launchpad.fadeDuration
-        easing.type: Easing.InOutQuad
-        onStarted: {
-          launchpadLoader.scaleVal = Config.launchpad.zoom
-          launchpadLoader.blurVal = 0
-        }
-        onFinished: {
-          launchpadLoader.focus = false;
-          panelWindow.mask = Qt.createQmlObject("import Quickshell; Region {}", hideAnim);
-        }
       }
       sourceComponent: Item {
         id: launchpadContainer
@@ -109,14 +73,17 @@ Scope {
         Behavior on opacity {
           NumberAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad}
         }
+        Component.onCompleted: {
+          launchpadContainer.opacity = 1
+        }
         Loader {
           id: backgroundImage
           anchors.fill: parent
           active: Config.wallpaper.enable
           sourceComponent: BackgroundImage {
             blurEnabled: true
-            blurMax: 64
-            blur: launchpadLoader.blurVal
+            blurMax: 32
+            blur: Runtime.launchpadOpen ? 1 : 0
           }
         }
         Backdrop {
@@ -198,7 +165,7 @@ Scope {
         }
         Item {
           anchors.fill: parent
-          scale: launchpadLoader.scaleVal
+          scale: Runtime.launchpadOpen ? 1 : Config.launchpad.zoom
           Behavior on scale {
             NumberAnimation { duration: Config.launchpad.fadeDuration; easing.type: Easing.InOutQuad}
           }
@@ -266,16 +233,6 @@ Scope {
             }
           }
         }
-      }
-    }
-    property bool showLP: Runtime.launchpadOpen
-    onShowLPChanged: {
-      if (panelWindow.showLP) {
-        launchpadLoader.shown = true
-        showAnim.start()
-      } else {
-        launchpadLoader.shown = false
-        hideAnim.start()
       }
     }
   }
