@@ -15,7 +15,7 @@ Singleton {
     let level = args.pop()
     var t = getFormattedTimestamp()
     if (args.length > 1) {
-      const maxLength = 14
+      const maxLength = 20
       var module = args.shift().substring(0, maxLength).padStart(maxLength, " ")
       return `\x1b[${level === "i" ? "34m" : level === "e" ? "31m" : level === "w" ? "33m" : "35m"}[${t}]\x1b[0m \x1b[${level === "i" ? "34m" : level === "e" ? "31m" : level === "w" ? "33m" : "35m"}[${module}]\x1b[0m ` + args.join(" ")
     } else {

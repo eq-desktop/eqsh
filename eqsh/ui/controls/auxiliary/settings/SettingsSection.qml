@@ -8,7 +8,7 @@ import QtQuick.Shapes
 import QtQuick.VectorImage
 import Quickshell
 import qs
-import qs.ui.components.settings.pages
+import qs.modules.settings.pages
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
@@ -30,7 +30,8 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 10
         text: ""
-        font.pixelSize: 20
+        font.pixelSize: 16
+        font.weight: 500
         height: 30
         visible: hasTitle
     }
@@ -43,13 +44,6 @@ Item {
         id: contentContainer
         height: content.height
 
-        RectangularShadow {
-            anchors.fill: parent
-            color: "#20000000"
-            radius: 20
-            blur: 20
-            spread: 5
-        }
         Rectangle {
             id: content
             anchors {
@@ -60,9 +54,9 @@ Item {
                 top: parent.top
             }
             width: root.width - 20
-            radius: 20
+            radius: 15
             height: content.children.map((child) => child.implicitHeight).reduce((a, b) => { return a + b; }, 0) + 28
-            color: Config.general.darkMode ? "#222" : "#ffffff"
+            color: Config.general.darkMode ? "#222" : "#f8f8f8"
         }
     }
 }
