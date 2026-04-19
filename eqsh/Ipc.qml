@@ -6,6 +6,7 @@ import Quickshell.Bluetooth
 import Quickshell.Services.Pipewire
 import Quickshell.Io
 import qs.services
+import qs
 import qs.ui.controls.auxiliary
 
 import "root:/config/mixins.js" as Mixins
@@ -17,6 +18,7 @@ Singleton {
     property var audioSink: Pipewire.defaultAudioSink
     function getMixin(name: string): var {return mixins[name] || {}}
     function runMixin(name: string, method: string, ...args) {
+        Logger.d("Ipc::runMixin", name, method, args)
         const mixin = getMixin(name)
         if (mixin[method]) {
             for (const handler of mixin[method]) {
@@ -25,6 +27,7 @@ Singleton {
         }
     }
     function returnMixin(name: string, method: string, ...args): var {
+        Logger.d("Ipc::returnMixin", name, method, args)
         const mixin = getMixin(name)
         let result = []
         if (mixin[method]) {
@@ -35,6 +38,7 @@ Singleton {
         return result
     }
     function returnLastMixin(name: string, method: string, ...args): var {
+        Logger.d("Ipc::returnLastMixin", name, method, args)
         const result = returnMixin(name, method, ...args)
         if (result.length > 0) {
             return result[result.length - 1]
@@ -42,6 +46,8 @@ Singleton {
         return undefined
     }
     function mixin(name: string, method: string, handler: var) {
+        Logger.d("Ipc::mixin", name, method, handler)
+        Logger.d("Ipc", "Assigning new handler", name, method, handler)
         if (!mixins[name]) throw new Error(`Mixin ${name} does not exist`)
         mixins[name][method].push(handler)
     }

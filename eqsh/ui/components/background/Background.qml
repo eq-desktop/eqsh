@@ -55,7 +55,7 @@ Scope {
           duration: 300
           fadeIn: true
         }
-        Loader { active: Config.wallpaper.desktopEnable; anchors.fill: parent; sourceComponent: Desktop {}}
+        //Loader { active: Config.wallpaper.desktopEnable; anchors.fill: parent; sourceComponent: Desktop {}}
         Loader { active: Config.widgets.enable; anchors.fill: parent; sourceComponent: WidgetGrid {
           id: grid
           anchors.fill: parent

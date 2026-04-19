@@ -60,14 +60,13 @@ Item {
 		}
 	}
 
-	readonly property string version: "Pre-Release 0.0.85-alpha"
-	readonly property string versionPretty: "Tahiti pr0.0.85a"
+	readonly property string version: "26.1.1"
+	readonly property string versionPretty: "Tahiti 26.1.1"
 	readonly property string versionApple: "Tahoe 26.2"
 	// 0.1.0 = Tahiti
 	// 0.2.0 = Niagara
 
 	component Account: JsonObject {
-		property string activationKey: "060-XXX-YYY-ZZZ-000"
 		property string serialNumber: "FHGOU82OWLDG"
 		property string name: ""
 		property string deviceName: "MacBook Air"

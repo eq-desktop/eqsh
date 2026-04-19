@@ -5,6 +5,7 @@ import QtQuick.VectorImage
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import qs.config
 import qs
 import qs.core.foundation
@@ -21,17 +22,45 @@ Scope {
   property bool shown: false
   property var desktopentries: DesktopEntries
 
+  property var specials: [
+    "eq:launchpad",
+    "eq:settings",
+    "eq:spacer"
+  ]
+
   component DockItem: Button {
     id: app
     width: 50
     height: 50
     implicitWidth: width
     implicitHeight: height
+
+    function isAppRunning() {
+      if (isEqSpecial || entry == null) return false;
+      let toplevels = Hyprland.toplevels.values
+      for (let t of toplevels) {
+        if ((t.wayland?.appId || "") == entry.id)
+          return true
+        if ((t.wayland?.appId || "") == fallbackName)
+          return true
+      }
+      return false
+    }
+
+    function getFallbackName() {
+      let name = entry ? entry.command[0] : appName
+      if (name.includes("/")) name = name.split("/")[name.split("/").length - 1]
+      return name
+    }
+
     property string appName: ""
     property bool   launchpad: false
     property bool   settings: false
     property bool   spacer: false
-    property var    entry: (launchpad || settings || spacer) ? null : appName != "" ? desktopentries.heuristicLookup(appName) : null
+    property var    isEqSpecial: appName in root.specials
+    property bool   running: isAppRunning()
+    property var    entry: !isEqSpecial && appName != "" && desktopentries ? desktopentries.heuristicLookup(appName) : null
+    property var    fallbackName: getFallbackName()
 
     background: Rectangle {
       anchors.fill: parent
@@ -45,7 +74,6 @@ Scope {
         sourceSize: Qt.size(app.width, app.height)
         width: app.width
         height: app.height
-        asynchronous: true
         smooth: true
         mipmap: true
         layer.enabled: true
@@ -62,10 +90,9 @@ Scope {
         anchors.centerIn: parent
         width: app.width
         height: app.height
-        asynchronous: true
         smooth: true
         mipmap: true
-        visible: entry !== null && !(launchpad || settings || spacer)
+        visible: entry !== null && !isEqSpecial
         sourceSize: Qt.size(app.width, app.height)
         source: entry ? Quickshell.iconPath(entry.icon) : ""
         layer.enabled: true
@@ -77,7 +104,7 @@ Scope {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: -6
-        visible: appName == "org.gnome.Nautilus" && !(launchpad || settings || spacer)
+        visible: app.running
         color: Config.general.darkMode ? "#80ffffff" : "#80000000"
       }
     }
@@ -98,7 +125,8 @@ Scope {
   Connections {
     target: DesktopEntries
     function onApplicationsChanged() {
-      desktopentries = DesktopEntries
+      root.desktopentries = null
+      root.desktopentries = DesktopEntries
     }
   }
 
@@ -143,7 +171,7 @@ Scope {
           bottomMargin: root.shown ? 0 : -100
           Behavior on bottomMargin {
             NumberAnimation {
-              duration: Config.dock.showAnimation ? 500 : 0
+              duration: Config.dock.showAnimation ? 200 : 0
               easing.type: Easing.InOutQuad
             }
           }
@@ -162,7 +190,7 @@ Scope {
           anchors.bottomMargin: 6
         }
 
-        // Public state für Maus
+        // Public state for mouse
         property real mouseX: 0
         property bool mouseInside: false
 

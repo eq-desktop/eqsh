@@ -9,6 +9,7 @@ import Quickshell.Io
 
 Singleton {
     id: runtime
+    function init() {}
     property list<string> activeCCSW: [] // camera, microphone, audio
     // fuse /dev/video0
 
@@ -114,6 +115,7 @@ Singleton {
         }
         Component.onCompleted: {
             runtimeAd.processId = Quickshell.processId
+            Logger.d("Runtime", "Process ID: " + runtimeAd.processId, Quickshell.processId)
             writeAdapter()
         }
     }

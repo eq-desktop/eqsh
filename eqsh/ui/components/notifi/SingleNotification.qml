@@ -32,6 +32,7 @@ BoxGlass {
 	implicitHeight:	notifSize
 	implicitWidth: 400
 	anchors.topMargin: 20
+	color: Config.general.darkMode ? "#a0333333" : "#a0ffffff"
 
 	Behavior on implicitHeight {
 		PropertyAnimation {
@@ -377,6 +378,7 @@ BoxGlass {
 				width: 45
 				height: 25
 				radius: 50
+				color: Config.general.darkMode ? "#a0333333" : "#a0888888"
 				visible: true
 
 				Behavior on color {

@@ -8,7 +8,7 @@ import QtQuick.Shapes
 import QtQuick.VectorImage
 import Quickshell
 import qs
-import qs.ui.components.settings.pages
+import qs.modules.settings.pages
 import qs.ui.controls.auxiliary
 import qs.ui.controls.advanced
 import qs.ui.controls.providers
