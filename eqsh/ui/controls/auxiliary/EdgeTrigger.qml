@@ -25,8 +25,11 @@ Scope {
   property int rightMargin: 0
   property int bottomMargin: 0
   property int leftMargin: 0
+  property int duration: 200
 
   property bool active: false
+  property bool debug: false
+  property bool newMethod: false
 
   Variants {
     model: Quickshell.screens
@@ -35,7 +38,7 @@ Scope {
       WlrLayershell.layer: layer
       required property var modelData
       screen: modelData
-      color: "transparent"
+      color: root.debug ? "#20ff0000" : "transparent"
 
       function hasPosition(position) {
         return root.position.indexOf(position) != -1;
@@ -63,16 +66,23 @@ Scope {
       Timer {
         id: timer
         running: false
-        interval: root.active ? 0 : 200
+        interval: root.active ? 0 : duration
         onTriggered: {
           root.hovered(modelData)
         }
       }
 
       MouseArea {
+        id: marea
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: timer.start();
+        onEntered: {
+          let x = marea.mouseX
+          let y = marea.mouseY
+          Logger.d("EdgeTrigger", "Mouse:", x, y)//, mouse.accepted, mouse.button, mouse.buttons, mouse.flags, mouse.modifiers, mouse.wasHeld, mouse.x, mouse.y)
+          if (y != 1 && !root.active && root.newMethod) return
+          timer.start()
+        }
         onExited: {
           root.exited(modelData);
           timer.stop();

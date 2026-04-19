@@ -9,10 +9,11 @@ import qs.config
 PanelWindow {
     id: panelWindow
     screen: {
+        let result;
         if (CompositorService.isHyprland)
-            return Quickshell.screens.find(screen => screen.name == Hyprland.focusedMonitor.name)
+            result = Quickshell.screens.find(screen => screen.name == (Hyprland.focusedMonitor?.name || ""))
         if (CompositorService.isNiri)
-            return Quickshell.screens.find(screen => screen.name == NiriService.currentOutput)
-        return Quickshell.screens[0]
+            result = Quickshell.screens.find(screen => screen.name == NiriService.currentOutput)
+        return result ? result : Quickshell.screens[0]
     }
 } 
