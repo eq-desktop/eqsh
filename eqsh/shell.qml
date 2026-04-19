@@ -20,7 +20,6 @@ import qs.ui.components.modal.polkit
 import qs.ui.components.notch
 import qs.ui.components.popup
 import qs.ui.components.widgets
-import qs.ui.components.settings
 import qs.ui.components.background
 import qs.ui.components.screenshot
 import qs.ui.components.ai
@@ -33,6 +32,7 @@ import qs.services
 
 import qs.modules.screencorners as ScreenCorners
 import qs.modules.spotlight     as Spotlight
+import qs.modules.settings      as Settings
 
 import qs.config
 import qs.core.foundation
@@ -44,6 +44,7 @@ Scope {
     ClipboardService.init()
     Plugins.init()
     Ipc.init()
+    Runtime.init()
     Logger.i("System", "Shell Loading Complete")
   }
   IpcHandler {
@@ -59,14 +60,13 @@ Scope {
   AI {
     statusbar: root.statusbar
   }
-  Settings {}
+  Settings.Settings {}
   HyprPersist {}
   ReloadPopup {}
   //Greeter {}
   Loader { active: Config.wallpaper.enable; sourceComponent: Background {}}
   Loader {
     active: Config.lockScreen.enable
-    asynchronous: true
     sourceComponent: Lock {
       id: lock
       onUnlocking: if (!Config.notch.delayedLockAnim) Runtime.locked = false
@@ -115,7 +115,9 @@ Scope {
     EdgeTrigger {
       id: triggerDock
       position: "blr"
-      height: 1
+      height: 2
+      duration: 150
+      debug: false
       onHovered: (monitor) => {
         if (triggerDock.active) {
           triggerDock.active = false
@@ -167,7 +169,6 @@ Scope {
   Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Dialog {}}
   Loader { active: Config.dialogs.enable; asynchronous: true; sourceComponent: Modal {}}
   Polkit {}
-  ActivateLinux {}
   Version {}
   Loader { active: Config.screenshot.enable; asynchronous: true; sourceComponent: Screenshot {}}
   ScreenCorners.ScreenCorners {}
